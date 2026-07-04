@@ -1,0 +1,104 @@
+{
+  "type": "minecraft:multi_action",
+  "title": { "text": "Stopwatch Config Generator" },
+  "body": {
+    "type": "minecraft:plain_message",
+    "contents": "Trage deine Stopwatch-Einstellungen ein. Nach dem Klicken erhaeltst du einen Chat-Link zum Kopieren des Befehls."
+  },
+  "columns": 1,
+  "inputs": [
+    {
+      "type": "minecraft:text",
+      "key": "player",
+      "label": "Spieler (z.B. @a oder ein Name)",
+      "initial": "@a"
+    },
+    {
+      "type": "minecraft:text",
+      "key": "sw",
+      "label": "Stopwatch Name (z.B. demo)"
+    },
+    {
+      "type": "minecraft:single_option",
+      "key": "format",
+      "label": "Anzeigeformat",
+      "options": [
+        { "id": "digital", "display": "Digital (HH:MM:SS)", "initial": true },
+        { "id": "digital_short", "display": "Digital Short (MM:SS.ms)" },
+        { "id": "letters", "display": "Letters (Xd Xh Xm Xs)" },
+        { "id": "dynamic", "display": "Dynamic (automatisch kuerzen)" }
+      ]
+    },
+    {
+      "type": "minecraft:single_option",
+      "key": "color",
+      "label": "Hauptfarbe (Prefix/Suffix)",
+      "options": [
+        { "id": "gold", "display": "Gold", "initial": true },
+        { "id": "yellow", "display": "Gelb" },
+        { "id": "white", "display": "Weiss" },
+        { "id": "gray", "display": "Grau" },
+        { "id": "red", "display": "Rot" },
+        { "id": "green", "display": "Gruen" },
+        { "id": "blue", "display": "Blau" }
+      ]
+    },
+    {
+      "type": "minecraft:single_option",
+      "key": "color_sec",
+      "label": "Sekundaerfarbe (Trennzeichen)",
+      "options": [
+        { "id": "yellow", "display": "Gelb", "initial": true },
+        { "id": "gold", "display": "Gold" },
+        { "id": "white", "display": "Weiss" },
+        { "id": "gray", "display": "Grau" },
+        { "id": "red", "display": "Rot" },
+        { "id": "green", "display": "Gruen" },
+        { "id": "blue", "display": "Blau" }
+      ]
+    },
+    {
+      "type": "minecraft:single_option",
+      "key": "color_num",
+      "label": "Zahlenfarbe",
+      "options": [
+        { "id": "white", "display": "Weiss", "initial": true },
+        { "id": "gold", "display": "Gold" },
+        { "id": "yellow", "display": "Gelb" },
+        { "id": "gray", "display": "Grau" },
+        { "id": "red", "display": "Rot" },
+        { "id": "green", "display": "Gruen" },
+        { "id": "blue", "display": "Blau" }
+      ]
+    },
+    {
+      "type": "minecraft:text",
+      "key": "prefix",
+      "label": "Praefix (z.B. 'Timer: ')",
+      "initial": "Timer: "
+    },
+    {
+      "type": "minecraft:text",
+      "key": "suffix",
+      "label": "Suffix (z.B. ' vergangen')"
+    },
+    {
+      "type": "minecraft:single_option",
+      "key": "bold",
+      "label": "Fettgedruckt?",
+      "options": [
+        { "id": "false", "display": "Nein", "initial": true },
+        { "id": "true", "display": "Ja" }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "label": "Befehl generieren",
+      "action": {
+        "type": "minecraft:dynamic/run_command",
+        "template": "tellraw @s [\"\",{\"text\":\"Dein Befehl wurde generiert! \",\"color\":\"green\"},{\"text\":\"[KLICKE HIER ZUM KOPIEREN]\",\"color\":\"yellow\",\"bold\":true,\"clickEvent\":{\"action\":\"copy_to_clipboard\",\"value\":\"/function fb:sw/display_ab_custom {player:\\\"$(player)\\\",sw:\\\"$(sw)\\\",format:\\\"$(format)\\\",color:\\\"$(color)\\\",color_sec:\\\"$(color_sec)\\\",color_num:\\\"$(color_num)\\\",prefix:\\\"$(prefix)\\\",suffix:\\\"$(suffix)\\\",bold:\\\"$(bold)\\\"}\"}}]"
+      }
+    }
+  ]
+}
