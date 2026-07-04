@@ -289,8 +289,52 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = isGoldFrame ? '>> TIME EXPIRED <<' : '> TIME EXPIRED <';
         const color = isGoldFrame ? colorMap.gold : colorMap.yellow;
         animHtml = buildSpan(text, color, bold, false);
-      } else {
+      } else if (animType === 'blackout') {
         animHtml = buildSpan('00:00.00', colorMap.dark_gray, bold, false);
+      } else if (animType === 'none') {
+        const format = cdFormatInput.value;
+        const color = cdColorInput.value;
+        const colorSec = cdColorSecInput.value;
+        const colorNum = cdColorNumInput.value;
+        const prefix = cdPrefixInput.value;
+        const suffix = cdSuffixInput.value;
+        
+        let previewHtml = '';
+        const colMain = colorMap[color];
+        const colSec = colorMap[colorSec];
+        const colNum = colorMap[colorNum];
+
+        if (prefix) previewHtml += buildSpan(prefix, colMain, bold, false);
+
+        if (format === 'digital') {
+          previewHtml += buildSpan('00', colNum, bold, false);
+          previewHtml += buildSpan(':', colSec, bold, false);
+          previewHtml += buildSpan('00', colNum, bold, false);
+          previewHtml += buildSpan(':', colSec, bold, false);
+          previewHtml += buildSpan('00', colNum, bold, false);
+        } else if (format === 'digital_short') {
+          previewHtml += buildSpan('00', colNum, bold, false);
+          previewHtml += buildSpan(':', colSec, bold, false);
+          previewHtml += buildSpan('00', colNum, bold, false);
+          previewHtml += buildSpan('.', colSec, bold, false);
+          previewHtml += buildSpan('00', colNum, bold, false);
+        } else if (format === 'letters') {
+          const h = parseInt(cdHInput.value) || 0;
+          if (h > 0) {
+            previewHtml += buildSpan('0', colNum, bold, false);
+            previewHtml += buildSpan('h ', colSec, bold, false);
+          }
+          previewHtml += buildSpan('0', colNum, bold, false);
+          previewHtml += buildSpan('m ', colSec, bold, false);
+          previewHtml += buildSpan('0', colNum, bold, false);
+          previewHtml += buildSpan('s', colSec, bold, false);
+        } else if (format === 'dynamic') {
+          previewHtml += buildSpan('0', colNum, bold, false);
+          previewHtml += buildSpan('s', colSec, bold, false);
+        }
+
+        if (suffix) previewHtml += buildSpan(suffix, colMain, bold, false);
+        animHtml = previewHtml;
       }
 
       cdActionbarPreview.innerHTML = animHtml;
