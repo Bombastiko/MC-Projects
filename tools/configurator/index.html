@@ -49,6 +49,14 @@
                 <input type="text" id="player" value="@a" placeholder="e.g. @a or oneBombastiko" required>
               </div>
 
+              <div class="input-group" id="global-type-group">
+                <label for="global_type">Global Type</label>
+                <select id="global_type">
+                  <option value="soft" selected>Soft (Custom Override)</option>
+                  <option value="hard">Hard (Force All)</option>
+                </select>
+              </div>
+
               <div class="input-group">
                 <label for="sw">Stopwatch Name</label>
                 <input type="text" id="sw" value="demo" placeholder="e.g. demo" required>
@@ -147,7 +155,7 @@
           <div class="card output-card">
             <h2>Generated Command</h2>
             <div class="command-box">
-              <code id="commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false"}</code>
+              <code id="commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code>
               <button id="copyBtn" class="btn-copy">Copy</button>
             </div>
           </div>
@@ -184,8 +192,13 @@
           <h2>⚙ Actionbar Display System</h2>
           <p>You can choose to register a custom display configuration for any player or group of players:</p>
           <ul>
-            <li><strong>Global Configuration:</strong> Use <code>@a</code> as the player. This displays the stopwatch to everyone who doesn't have an individual config.</li>
-            <li><strong>Individual Priority:</strong> Setting a config for a specific player (e.g. <code>oneBombastiko</code>) overrides the global configuration for them automatically.</li>
+            <li><strong>Global Configuration:</strong> Use <code>@a</code> as the player. You can choose between:
+              <ul>
+                <li><code>soft</code>: Displays to everyone except those with an individual configuration.</li>
+                <li><code>hard</code>: Forcefully displays to everyone, overriding any custom configs.</li>
+              </ul>
+            </li>
+            <li><strong>Individual Priority:</strong> Setting a config for a specific player (e.g. <code>oneBombastiko</code>) overrides soft global layouts.</li>
           </ul>
           <p><strong>Reset Display:</strong> To clear a player's actionbar layout, run:</p>
           <pre><code>/function fb:display/ab/clear {player:"oneBombastiko"}</code></pre>

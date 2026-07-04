@@ -6,11 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Page switching logic
   menuItems.forEach(item => {
     item.addEventListener('click', () => {
-      // Toggle active menu class
       menuItems.forEach(i => i.classList.remove('active'));
       item.classList.add('active');
 
-      // Show/hide pages
       const targetPage = item.getAttribute('data-page');
       pages.forEach(page => {
         if (page.id === targetPage) {
@@ -24,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Configurator elements
   const playerInput = document.getElementById('player');
+  const globalTypeGroup = document.getElementById('global-type-group');
+  const globalTypeInput = document.getElementById('global_type');
   const swInput = document.getElementById('sw');
   const formatInput = document.getElementById('format');
   const colorInput = document.getElementById('color');
@@ -54,6 +54,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Generate Minecraft command and update HUD preview
   function updateAll() {
     const player = playerInput.value.trim() || '@a';
+    
+    // Hide/show global type selector depending on player target
+    const isGlobalTarget = player === '@a';
+    if (isGlobalTarget) {
+      globalTypeGroup.style.display = 'flex';
+    } else {
+      globalTypeGroup.style.display = 'none';
+    }
+
+    const globalType = isGlobalTarget ? globalTypeInput.value : 'soft';
     const sw = swInput.value.trim() || 'demo';
     const format = formatInput.value;
     const color = colorInput.value;
@@ -67,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Generate Command
     const escapedPrefix = prefix.replace(/"/g, '\\"');
     const escapedSuffix = suffix.replace(/"/g, '\\"');
-    const command = `/function fb:sw/display_ab_custom {player:"${player}",sw:"${sw}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}"}`;
+    const command = `/function fb:sw/display_ab_custom {player:"${player}",sw:"${sw}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
     commandOutput.textContent = command;
 
     // 2. Render HUD Preview
@@ -129,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Event Listeners for inputs
   const configInputs = [
-    playerInput, swInput, formatInput, colorInput, 
+    playerInput, globalTypeInput, swInput, formatInput, colorInput, 
     colorSecInput, colorNumInput, prefixInput, suffixInput, boldInput, previewPaused
   ];
 
@@ -152,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
         copyBtn.style.color = '';
       }, 1500);
     }).catch(err => {
-      // Fallback
       const textarea = document.createElement('textarea');
       textarea.value = textToCopy;
       document.body.appendChild(textarea);

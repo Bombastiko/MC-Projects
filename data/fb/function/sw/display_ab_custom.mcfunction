@@ -3,7 +3,12 @@ $data modify storage fb:tmp check set value {name: "$(player)"}
 
 # Setup config values in temporary storage
 data modify storage fb:tmp config_setup set value {key: "global", target: "@a[tag=!fb.ab.custom]", is_global: 1b}
-$execute unless data storage fb:tmp {check:{name:"@a"}} run data modify storage fb:tmp config_setup set value {key: "$(player)", target: "$(player)", is_global: 0b}
+$data modify storage fb:tmp config_setup.global_type set value "$(global_type)"
+
+# If player is @a and global_type is hard, change target to @a
+execute if data storage fb:tmp {check:{name:"@a"}} if data storage fb:tmp {config_setup:{global_type:"hard"}} run data modify storage fb:tmp config_setup.target set value "@a"
+
+$execute unless data storage fb:tmp {check:{name:"@a"}} run data modify storage fb:tmp config_setup set value {key: "$(player)", target: "$(player)", is_global: 0b, global_type: "none"}
 
 # Copy formatting parameters to config_setup
 $data modify storage fb:tmp config_setup.sw set value "$(sw)"
