@@ -3,11 +3,11 @@ $execute if data storage fb:config {debug: 1b} run tellraw @a [{"text": "[FB DEB
 $scoreboard players add #$(name) fb.sw.t 1
 $scoreboard players add #$(name) fb.sw.at 1
 
-$scoreboard players operation #$(name) fb.sw.ms = #$(name) fb.sw.t
-$scoreboard players operation #$(name) fb.sw.ms *= #5 fb.sw.ms
-
 $execute if score #$(name) fb.sw.t matches 20.. run scoreboard players add #$(name) fb.sw.s 1
 $execute if score #$(name) fb.sw.t matches 20.. run scoreboard players set #$(name) fb.sw.t 0
+
+$scoreboard players operation #$(name) fb.sw.ms = #$(name) fb.sw.t
+$scoreboard players operation #$(name) fb.sw.ms *= #5 fb.sw.ms
 
 $execute if score #$(name) fb.sw.s matches 60.. run scoreboard players add #$(name) fb.sw.m 1
 $execute if score #$(name) fb.sw.s matches 60.. run scoreboard players set #$(name) fb.sw.s 0
