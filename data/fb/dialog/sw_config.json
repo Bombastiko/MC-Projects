@@ -97,7 +97,7 @@
       "label": "Generate Command",
       "action": {
         "type": "minecraft:dynamic/run_command",
-        "template": "tellraw @s [\"\",{\"text\":\"Your command was generated! \",\"color\":\"green\"},{\"text\":\"[CLICK TO AUTOFILL/COPY]\",\"color\":\"yellow\",\"bold\":true,\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/function fb:sw/display_ab_custom {player:'$(player)',sw:'$(sw)',format:'$(format)',color:'$(color)',color_sec:'$(color_sec)',color_num:'$(color_num)',prefix:'$(prefix)',suffix:'$(suffix)',bold:'$(bold)'}\"}}]"
+        "template": "tellraw @s [\"\",{\"text\":\"Your command was generated! \",\"color\":\"green\"},{\"text\":\"[AUTOFILL]\",\"color\":\"yellow\",\"bold\":true,\"clickEvent\":{\"action\":\"suggest_command\",\"command\":\"/function fb:sw/display_ab_custom {player:'$(player)',sw:'$(sw)',format:'$(format)',color:'$(color)',color_sec:'$(color_sec)',color_num:'$(color_num)',prefix:'$(prefix)',suffix:'$(suffix)',bold:'$(bold)'}\"}},{\"text\":\" or \",\"color\":\"gray\"},{\"text\":\"[COPY]\",\"color\":\"gold\",\"bold\":true,\"clickEvent\":{\"action\":\"copy_to_clipboard\",\"value\":\"/function fb:sw/display_ab_custom {player:'$(player)',sw:'$(sw)',format:'$(format)',color:'$(color)',color_sec:'$(color_sec)',color_num:'$(color_num)',prefix:'$(prefix)',suffix:'$(suffix)',bold:'$(bold)'}\"}}]"
       }
     }
   ]
