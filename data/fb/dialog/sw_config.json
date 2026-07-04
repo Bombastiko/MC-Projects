@@ -3,101 +3,101 @@
   "title": { "text": "Stopwatch Config Generator" },
   "body": {
     "type": "minecraft:plain_message",
-    "contents": "Trage deine Stopwatch-Einstellungen ein. Nach dem Klicken erhaeltst du einen Chat-Link zum Kopieren des Befehls."
+    "contents": "Enter your stopwatch settings. Click the button to receive a copyable chat link."
   },
   "columns": 1,
   "inputs": [
     {
       "type": "minecraft:text",
       "key": "player",
-      "label": "Spieler (z.B. @a oder ein Name)",
+      "label": "Player (e.g. @a or name)",
       "initial": "@a"
     },
     {
       "type": "minecraft:text",
       "key": "sw",
-      "label": "Stopwatch Name (z.B. demo)"
+      "label": "Stopwatch Name (e.g. demo)"
     },
     {
       "type": "minecraft:single_option",
       "key": "format",
-      "label": "Anzeigeformat",
+      "label": "Format",
       "options": [
         { "id": "digital", "display": "Digital (HH:MM:SS)", "initial": true },
         { "id": "digital_short", "display": "Digital Short (MM:SS.ms)" },
         { "id": "letters", "display": "Letters (Xd Xh Xm Xs)" },
-        { "id": "dynamic", "display": "Dynamic (automatisch kuerzen)" }
+        { "id": "dynamic", "display": "Dynamic (auto-truncate)" }
       ]
     },
     {
       "type": "minecraft:single_option",
       "key": "color",
-      "label": "Hauptfarbe (Prefix/Suffix)",
+      "label": "Primary Color (Prefix/Suffix)",
       "options": [
         { "id": "gold", "display": "Gold", "initial": true },
-        { "id": "yellow", "display": "Gelb" },
-        { "id": "white", "display": "Weiss" },
-        { "id": "gray", "display": "Grau" },
-        { "id": "red", "display": "Rot" },
-        { "id": "green", "display": "Gruen" },
-        { "id": "blue", "display": "Blau" }
+        { "id": "yellow", "display": "Yellow" },
+        { "id": "white", "display": "White" },
+        { "id": "gray", "display": "Gray" },
+        { "id": "red", "display": "Red" },
+        { "id": "green", "display": "Green" },
+        { "id": "blue", "display": "Blue" }
       ]
     },
     {
       "type": "minecraft:single_option",
       "key": "color_sec",
-      "label": "Sekundaerfarbe (Trennzeichen)",
+      "label": "Secondary Color (Separators)",
       "options": [
-        { "id": "yellow", "display": "Gelb", "initial": true },
+        { "id": "yellow", "display": "Yellow", "initial": true },
         { "id": "gold", "display": "Gold" },
-        { "id": "white", "display": "Weiss" },
-        { "id": "gray", "display": "Grau" },
-        { "id": "red", "display": "Rot" },
-        { "id": "green", "display": "Gruen" },
-        { "id": "blue", "display": "Blau" }
+        { "id": "white", "display": "White" },
+        { "id": "gray", "display": "Gray" },
+        { "id": "red", "display": "Red" },
+        { "id": "green", "display": "Green" },
+        { "id": "blue", "display": "Blue" }
       ]
     },
     {
       "type": "minecraft:single_option",
       "key": "color_num",
-      "label": "Zahlenfarbe",
+      "label": "Number Color",
       "options": [
-        { "id": "white", "display": "Weiss", "initial": true },
+        { "id": "white", "display": "White", "initial": true },
         { "id": "gold", "display": "Gold" },
-        { "id": "yellow", "display": "Gelb" },
-        { "id": "gray", "display": "Grau" },
-        { "id": "red", "display": "Rot" },
-        { "id": "green", "display": "Gruen" },
-        { "id": "blue", "display": "Blau" }
+        { "id": "yellow", "display": "Yellow" },
+        { "id": "gray", "display": "Gray" },
+        { "id": "red", "display": "Red" },
+        { "id": "green", "display": "Green" },
+        { "id": "blue", "display": "Blue" }
       ]
     },
     {
       "type": "minecraft:text",
       "key": "prefix",
-      "label": "Praefix (z.B. 'Timer: ')",
+      "label": "Prefix (e.g. 'Timer: ')",
       "initial": "Timer: "
     },
     {
       "type": "minecraft:text",
       "key": "suffix",
-      "label": "Suffix (z.B. ' vergangen')"
+      "label": "Suffix (e.g. ' elapsed')"
     },
     {
       "type": "minecraft:single_option",
       "key": "bold",
-      "label": "Fettgedruckt?",
+      "label": "Bold?",
       "options": [
-        { "id": "false", "display": "Nein", "initial": true },
-        { "id": "true", "display": "Ja" }
+        { "id": "false", "display": "No", "initial": true },
+        { "id": "true", "display": "Yes" }
       ]
     }
   ],
   "actions": [
     {
-      "label": "Befehl generieren",
+      "label": "Generate Command",
       "action": {
         "type": "minecraft:dynamic/run_command",
-        "template": "tellraw @s [\"\",{\"text\":\"Dein Befehl wurde generiert! \",\"color\":\"green\"},{\"text\":\"[KLICKE HIER ZUM KOPIEREN]\",\"color\":\"yellow\",\"bold\":true,\"clickEvent\":{\"action\":\"copy_to_clipboard\",\"value\":\"/function fb:sw/display_ab_custom {player:\\\"$(player)\\\",sw:\\\"$(sw)\\\",format:\\\"$(format)\\\",color:\\\"$(color)\\\",color_sec:\\\"$(color_sec)\\\",color_num:\\\"$(color_num)\\\",prefix:\\\"$(prefix)\\\",suffix:\\\"$(suffix)\\\",bold:\\\"$(bold)\\\"}\"}}]"
+        "template": "tellraw @s [\"\",{\"text\":\"Your command was generated! \",\"color\":\"green\"},{\"text\":\"[CLICK HERE TO COPY]\",\"color\":\"yellow\",\"bold\":true,\"clickEvent\":{\"action\":\"copy_to_clipboard\",\"value\":\"/function fb:sw/display_ab_custom {player:'$(player)',sw:'$(sw)',format:'$(format)',color:'$(color)',color_sec:'$(color_sec)',color_num:'$(color_num)',prefix:'$(prefix)',suffix:'$(suffix)',bold:'$(bold)'}\"}}]"
       }
     }
   ]
