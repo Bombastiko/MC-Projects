@@ -10,7 +10,8 @@ execute if data storage fb:tmp check[{name:"@a"}] if data storage fb:tmp global_
 
 $execute unless data storage fb:tmp check[{name:"@a"}] run data modify storage fb:tmp config_setup set value {key: "$(player)", target: "$(player)", is_global: 0b, global_type: "none"}
 
-# Copy formatting parameters to config_setup
+# Copy formatting parameters to config_setup (Setting type to 0 for stopwatch)
+data modify storage fb:tmp config_setup.type set value 0
 $data modify storage fb:tmp config_setup.sw set value "$(sw)"
 $data modify storage fb:tmp config_setup.format set value "$(format)"
 $data modify storage fb:tmp config_setup.color set value "$(color)"
