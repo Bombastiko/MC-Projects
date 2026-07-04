@@ -20,6 +20,3 @@ $data remove storage fb:main cd.db[{name:"$(name)"}]
 
 # Append to db (stores static configuration: command, animation)
 $data modify storage fb:main cd.db append value {name: "$(name)", on_complete: "$(on_complete)", animation: "$(animation)"}
-
-# Append to active list (start running immediately)
-$data modify storage fb:main cd.list append value {name: "$(name)"}

@@ -8,6 +8,9 @@ data modify storage fb:tmp global_check[0].val set from storage fb:tmp config_se
 # Tag individual player if not global (is_global == 0b)
 $execute if data storage fb:tmp global_check[{val:0b}] run tag $(target) add fb.ab.custom
 
+# Ensure players list exists in config
+execute unless data storage fb:config players run data modify storage fb:config players set value []
+
 # Update players list
 $data remove storage fb:config players[{key: "$(key)"}]
 $data modify storage fb:config players append value {player: "$(target)", key: "$(key)"}
