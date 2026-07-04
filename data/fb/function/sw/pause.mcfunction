@@ -1,2 +1,4 @@
-# Pause stopwatch without resetting their time
+# Pause stopwatch
+# Arguments: name
+
 $data remove storage fb:main sw.list[{name:"$(name)"}]

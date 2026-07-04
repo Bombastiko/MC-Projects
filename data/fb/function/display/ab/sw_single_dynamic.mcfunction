@@ -1,5 +1,4 @@
-# Debug
-$tellraw @a [{"text": "[FB DEBUG] sw_single_dynamic for ", "color": "gray"}, {"text": "$(player)", "color": "white"}]
+$execute if data storage fb:config {debug: 1b} run tellraw @a [{"text": "[FB DEBUG] sw_single_dynamic for ", "color": "gray"}, {"text": "$(player)", "color": "white"}]
 
 # Case 1: Days > 0
 $execute if score #$(sw) fb.sw.d matches 1.. run title $(player) actionbar ["", {"text": "$(prefix)", "color": "$(color)", "bold": $(bold)}, {"score": {"name": "#$(sw)", "objective": "fb.sw.d"}, "color": "$(color_num)", "bold": $(bold)}, {"text": "d ", "color": "$(color_sec)", "bold": $(bold)}, {"score": {"name": "#$(sw)", "objective": "fb.sw.h"}, "color": "$(color_num)", "bold": $(bold)}, {"text": "h ", "color": "$(color_sec)", "bold": $(bold)}, {"score": {"name": "#$(sw)", "objective": "fb.sw.m"}, "color": "$(color_num)", "bold": $(bold)}, {"text": "m ", "color": "$(color_sec)", "bold": $(bold)}, {"score": {"name": "#$(sw)", "objective": "fb.sw.s"}, "color": "$(color_num)", "bold": $(bold)}, {"text": "s", "color": "$(color_sec)", "bold": $(bold)}, {"text": "$(suffix)", "color": "$(color)", "bold": $(bold)}]

@@ -1,4 +1,5 @@
-# Stopwatch counter
+$execute if data storage fb:config {debug: 1b} run tellraw @a [{"text": "[FB DEBUG] sw/process_single for ", "color": "gray"}, {"text": "$(name)", "color": "white"}]
+
 $scoreboard players add #$(name) fb.sw.t 1
 $scoreboard players add #$(name) fb.sw.at 1
 
@@ -12,9 +13,7 @@ $execute if score #$(name) fb.sw.m matches 60.. run scoreboard players add #$(na
 $execute if score #$(name) fb.sw.m matches 60.. run scoreboard players set #$(name) fb.sw.m 0
 
 $execute if score #$(name) fb.sw.h matches 24.. run scoreboard players add #$(name) fb.sw.d 1
-$execute if score #$(name) fb.sw.h matches 24.. run scoreboard players set #$(name) fb.sw.h 0
-
-# Extra zeros for display
+$execute if score #$(name) fb.sw.h matches 24.. run scoreboard players set #$(name) fb.sw.d 0
 
 $execute if score #$(name) fb.sw.t matches ..9 run scoreboard players set #$(name)-e fb.sw.t 0
 $execute unless score #$(name) fb.sw.t matches ..9 run scoreboard players reset #$(name)-e fb.sw.t

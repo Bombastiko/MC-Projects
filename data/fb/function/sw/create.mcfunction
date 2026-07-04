@@ -1,4 +1,8 @@
-# Initialize and reset stopwatch for name data
+# Create stopwatch
+# Arguments: name
+
+execute unless data storage fb:main sw.list run data modify storage fb:main sw.list set value []
+
 $scoreboard players set #$(name) fb.sw.t 0
 $scoreboard players set #$(name) fb.sw.at 0
 $scoreboard players set #$(name) fb.sw.s 0
