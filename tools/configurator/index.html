@@ -429,6 +429,26 @@
         </section>
 
         <section class="card">
+          <h2>🔔 Event System API</h2>
+          <p>FuseBox includes an Event System that lets you hook custom macro functions to in-game events. When the event fires, the callbacks run as a macro receiving the player's username as <code>$(player)</code>.</p>
+          <p><strong>Supported Events:</strong></p>
+          <ul>
+            <li><code>onJoin</code>: Triggered when a player joins the world (or on first join/rejoin).</li>
+            <li><code>onDeath</code>: Triggered when a player dies.</li>
+          </ul>
+          <p><strong>Register a Callback:</strong></p>
+          <pre><code># Syntax: /function fb:event/register {event: "EVENT_NAME", fn: "CALLBACK_FUNCTION"}
+/function fb:event/register {event: "onJoin", fn: "my_pack:say_hello"}</code></pre>
+          <p><strong>Unregister a Callback:</strong></p>
+          <pre><code># Syntax: /function fb:event/unregister {event: "EVENT_NAME", fn: "CALLBACK_FUNCTION"}
+/function fb:event/unregister {event: "onJoin", fn: "my_pack:say_hello"}</code></pre>
+          <p><strong>Example Callback Function:</strong></p>
+          <p>Your function (e.g. <code>my_pack:say_hello</code>) must be defined as a macro. It can access the player's username via <code>$(player)</code>:</p>
+          <pre><code># Inside data/my_pack/function/say_hello.mcfunction
+$say Welcome to the game, $(player)!</code></pre>
+        </section>
+
+        <section class="card">
           <h2>🛠 Troubleshooting & Debugging</h2>
           <p>FuseBox has a robust built-in logging system to inspect scores and NBT storage values.</p>
           <p><strong>Toggle Debug Mode:</strong> Enable or disable debug chat messages.</p>
