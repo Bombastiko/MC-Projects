@@ -1,0 +1,1 @@
+$tellraw $(player) "Hello $(player)"

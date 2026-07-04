@@ -60,28 +60,17 @@ body {
 
 .logo-container {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 30px;
-  padding: 0 10px;
+  justify-content: center;
+  margin-bottom: 25px;
+  padding: 0;
 }
 
-.logo-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
+.logo-img-large {
+  width: 85%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
   border: 1px solid var(--border-color);
 }
-
-.logo-text {
-  font-family: 'VT323', monospace;
-  font-size: 2.2rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.fb-yellow { color: var(--mc-yellow); }
-.fb-red { color: var(--mc-red); }
 
 .menu {
   display: flex;
@@ -194,6 +183,17 @@ h2 {
   margin-bottom: 14px;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.icon-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--yellow);
+  vertical-align: middle;
+  margin-right: 8px;
 }
 
 /* CONFIGURATOR LAYOUT */

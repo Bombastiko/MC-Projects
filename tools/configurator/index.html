@@ -14,10 +14,7 @@
   <!-- SIDEBAR NAVIGATION -->
   <aside class="sidebar">
     <div class="logo-container">
-      <img src="logo.png" alt="FuseBox Logo" class="logo-img">
-      <div class="logo-text">
-        <span class="fb-yellow">Fuse</span><span class="fb-red">Box</span>
-      </div>
+      <img src="logo.png" alt="FuseBox Logo" class="logo-img-large">
     </div>
     <nav class="menu">
       <button class="menu-item active" data-page="configurator-page">
@@ -361,7 +358,7 @@
     <div id="docs-page" class="page">
       <div class="page-header">
         <h1>Documentation</h1>
-        <p>Quick reference guide for FuseBox functions.</p>
+        <p>FuseBox system references and API documentation.</p>
       </div>
 
       <div class="docs-split-layout">
@@ -379,30 +376,47 @@
           <!-- DOC: QUICK START -->
           <div id="doc-quickstart" class="doc-section active">
             <div class="card">
-              <h2>🚀 Quick Start (Stopwatch)</h2>
-              <p>Initialize and display a stopwatch running in the actionbar:</p>
-              <pre><code>/reload
-/function fb:sw/create {name:"demo"}</code></pre>
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </span>
+                Quick Start: Stopwatches (sw)
+              </h2>
+              <p>Stopwatches are created and immediately active. Use them to track elapsed time.</p>
+              <p><strong>1. Reload Minecraft datapacks:</strong></p>
+              <pre><code>/reload</code></pre>
+              <p><strong>2. Create and run a stopwatch:</strong></p>
+              <pre><code>/function fb:sw/create {name:"demo"}</code></pre>
+              <p><strong>3. Register player display layout:</strong></p>
+              <pre><code>/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Time: ",suffix:"",bold:"false",global_type:"soft"}</code></pre>
             </div>
             <div class="card">
-              <h2>⏳ Quick Start (Countdown Timer)</h2>
-              <p>Create, start, and register actionbar layouts for countdowns:</p>
-              <pre><code># 1. Create a timer for 1m 30s
-/function fb:cd/create {name:"my_timer",h:0,m:1,s:30,on_complete:"say Time is up!",animation:"flash"}
-
-# 2. Start ticking
-/function fb:cd/start {name:"my_timer"}
-
-# 3. Zuweisung Actionbar
-/function fb:cd/display_ab_custom {player:"@a",cd:"my_timer",format:"digital_short",color:"red",color_sec:"yellow",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></pre>
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2h14M5 22h14M19 2v4c0 3-3 5-7 7-4-2-7-4-7-7V2M5 22v-4c0-3 3-5 7-7 4 2 7 4 7 7v4"></path></svg>
+                </span>
+                Quick Start: Countdown Timers (cd)
+              </h2>
+              <p>Countdowns initialize in a paused state. You must explicitly start them to begin ticking down.</p>
+              <p><strong>1. Initialize a countdown (1 minute, 30 seconds):</strong></p>
+              <pre><code>/function fb:cd/create {name:"my_timer",h:0,m:1,s:30,on_complete:"say Done!",animation:"flash"}</code></pre>
+              <p><strong>2. Assign display config to players:</strong></p>
+              <pre><code>/function fb:cd/display_ab_custom {player:"@a",cd:"my_timer",format:"digital_short",color:"red",color_sec:"yellow",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></pre>
+              <p><strong>3. Start the timer:</strong></p>
+              <pre><code>/function fb:cd/start {name:"my_timer"}</code></pre>
             </div>
           </div>
 
           <!-- DOC: CONTROLS -->
           <div id="doc-controls" class="doc-section">
             <div class="card">
-              <h2>⏱ Controlling Timers</h2>
-              <p>Execute pauses, resumes, and deletions easily using the countdown or stopwatch name.</p>
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </span>
+                Controlling Active Timers
+              </h2>
+              <p>Manage stopwatch and countdown states dynamically using player-executable commands.</p>
               <div class="control-table-wrapper">
                 <table class="control-table">
                   <thead>
@@ -410,50 +424,65 @@
                       <th>Action</th>
                       <th>Stopwatch Command</th>
                       <th>Countdown Command</th>
+                      <th>Effect</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td><strong>Start</strong></td>
-                      <td>(Starts automatically)</td>
-                      <td><code>/function fb:cd/start {name:"demo"}</code></td>
+                      <td>(Automatic)</td>
+                      <td><code>/function fb:cd/start {name:"x"}</code></td>
+                      <td>Registers timer to the active ticking loops.</td>
                     </tr>
                     <tr>
                       <td><strong>Pause</strong></td>
-                      <td><code>/function fb:sw/pause {name:"demo"}</code></td>
-                      <td><code>/function fb:cd/pause {name:"demo"}</code></td>
+                      <td><code>/function fb:sw/pause {name:"x"}</code></td>
+                      <td><code>/function fb:cd/pause {name:"x"}</code></td>
+                      <td>Suspends tick decrementing. Renders ausgegraut & italic.</td>
                     </tr>
                     <tr>
                       <td><strong>Resume</strong></td>
-                      <td><code>/function fb:sw/resume {name:"demo"}</code></td>
-                      <td><code>/function fb:cd/resume {name:"demo"}</code></td>
+                      <td><code>/function fb:sw/resume {name:"x"}</code></td>
+                      <td><code>/function fb:cd/resume {name:"x"}</code></td>
+                      <td>Restores active ticking state and default colors.</td>
                     </tr>
                     <tr>
                       <td><strong>Delete</strong></td>
-                      <td><code>/function fb:sw/delete {name:"demo"}</code></td>
-                      <td><code>/function fb:cd/delete {name:"demo"}</code></td>
+                      <td><code>/function fb:sw/delete {name:"x"}</code></td>
+                      <td><code>/function fb:cd/delete {name:"x"}</code></td>
+                      <td>Wipes NBT config, registers, and resets objectives.</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+              <p><strong>Timer Database Storage Paths (for NBT manipulation):</strong></p>
+              <ul>
+                <li>Stopwatches: <code>fb:main sw.list</code> (Running names)</li>
+                <li>Countdowns Running List: <code>fb:main cd.list</code> (Ticking timers)</li>
+                <li>Countdowns Static Registry: <code>fb:main cd.db</code> (Configuration & Commands)</li>
+              </ul>
             </div>
           </div>
 
           <!-- DOC: DISPLAY -->
           <div id="doc-display" class="doc-section">
             <div class="card">
-              <h2>⚙ Display Priorities</h2>
-              <p>You can choose to register a custom display configuration for any player or group of players:</p>
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </span>
+                Display Priority Rules
+              </h2>
+              <p>Display configurations determine what is printed to the actionbar. Priorities resolve conflicts when multiple layouts are configured.</p>
+              <p><strong>1. Global configuration (targetting <code>@a</code>):</strong></p>
               <ul>
-                <li><strong>Global (using <code>@a</code>):</strong> Sets the base timer visible to players.
-                  <ul>
-                    <li><code>soft</code>: Displays to everyone except players who have individual layouts.</li>
-                    <li><code>hard</code>: Forcefully displays to everyone, overriding individual layouts.</li>
-                  </ul>
-                </li>
-                <li><strong>Individual:</strong> Specific usernames (e.g. <code>oneBombastiko</code>) override soft global registers.</li>
+                <li><code>soft</code>: Default global display. Overridden automatically if a player receives an individual layout.</li>
+                <li><code>hard</code>: Enforces global layouts. Bypasses individual configurations for all players.</li>
               </ul>
-              <p><strong>Clear Actionbar Layout:</strong> To stop displaying any timer to a player:</p>
+              <p><strong>2. Individual configuration (targetting specific usernames):</strong></p>
+              <p>Bypasses soft global displays for that specific player. Useful for map cutscenes or player-specific race timers.</p>
+              <p><strong>3. Clear actionbar display settings:</strong></p>
+              <p>Removes a player's registry and resets their custom settings, defaulting them back to global configuration:</p>
               <pre><code>/function fb:display/ab/clear {player:"oneBombastiko"}</code></pre>
             </div>
           </div>
@@ -461,39 +490,68 @@
           <!-- DOC: EVENTS -->
           <div id="doc-events" class="doc-section">
             <div class="card">
-              <h2>🔔 Event System API</h2>
-              <p>FuseBox includes an Event System that lets you hook custom macro functions to in-game events. When the event fires, the callbacks run as a macro receiving the player's username as <code>$(player)</code>.</p>
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                </span>
+                Event System API
+              </h2>
+              <p>Register callback functions that trigger automatically upon gameplay events. Calbacks are invoked <code>as</code> the player who triggered the event, with macro parameters containing the player username in <code>$(player)</code>.</p>
+              
               <p><strong>Supported Events:</strong></p>
               <ul>
-                <li><code>onJoin</code>: Triggered when a player joins the world (or on first join/rejoin).</li>
-                <li><code>onDeath</code>: Triggered when a player dies.</li>
-                <li><code>onKillPlayer</code>: Triggered as the killer when a player kills another player.</li>
-                <li><code>onKilledByPlayer</code>: Triggered as the victim when killed specifically by another player.</li>
+                <li><code>onJoin</code>: Fires when a player logs in or joins the world.</li>
+                <li><code>onDeath</code>: Fires immediately when a player dies.</li>
+                <li><code>onKillPlayer</code>: Fires <code>as</code> the killer when they kill another player.</li>
+                <li><code>onKilledByPlayer</code>: Fires <code>as</code> the victim when killed by another player.</li>
               </ul>
-              <p><strong>Register a Callback:</strong></p>
-              <pre><code>/function fb:event/register {event: "onJoin", fn: "my_pack:say_hello"}</code></pre>
-              <p><strong>Unregister a Callback:</strong></p>
-              <pre><code>/function fb:event/unregister {event: "onJoin", fn: "my_pack:say_hello"}</code></pre>
-              <p><strong>Example Callback Function:</strong></p>
-              <p>Your callback function (e.g. <code>my_pack:say_hello</code>) must be a macro. Use <code>$(player)</code> directly:</p>
-              <pre><code># Inside data/my_pack/function/say_hello.mcfunction
-$say Welcome to the game, $(player)!</code></pre>
+
+              <p><strong>API Usage:</strong></p>
+              <p>Register callback function:</p>
+              <pre><code>/function fb:event/register {event:"onJoin", fn:"my_pack:welcome_msg"}</code></pre>
+              <p>Remove callback registration:</p>
+              <pre><code>/function fb:event/unregister {event:"onJoin", fn:"my_pack:welcome_msg"}</code></pre>
+              
+              <p><strong>Writing event callback functions:</strong></p>
+              <p>Call back functions receive <code>$(player)</code>. They must be macros (lines prefixed with <code>$</code>):</p>
+              <pre><code># Inside data/my_pack/function/welcome_msg.mcfunction
+$say Hello $(player), welcome to our world!</code></pre>
             </div>
           </div>
 
           <!-- DOC: TROUBLESHOOTING -->
           <div id="doc-troubleshooting" class="doc-section">
             <div class="card">
-              <h2>🛠 Debugging & Logging</h2>
-              <p>Use logs to dump active databases and scoreboards directly into chat.</p>
-              <p><strong>Toggle Debug Mode:</strong> Logs active updates in chat.</p>
-              <pre><code>/data modify storage fb:config debug set value 1b
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                </span>
+                Debugging & Administration
+              </h2>
+              <p>FuseBox features built-in tools to inspect NBT storages, check active objectives, and safely clear data.</p>
+              
+              <p><strong>1. Toggle Debug Mode:</strong></p>
+              <p>Prints internal processing status and ticking updates directly in the chat.</p>
+              <pre><code># Turn debug ON
+/data modify storage fb:config debug set value 1b
+
+# Turn debug OFF
 /data modify storage fb:config debug set value 0b</code></pre>
-              <p><strong>Dump Registers:</strong> Outputs lists and objective values.</p>
-              <pre><code>/function fb:sw/debug_info
+              
+              <p><strong>2. Print Scoreboard and Registry Dumps:</strong></p>
+              <p>Outputs formatted listings of all running timers and objective values to chat.</p>
+              <pre><code># Inspect stopwatches
+/function fb:sw/debug_info
+
+# Inspect countdowns
 /function fb:cd/debug_info</code></pre>
-              <p><strong>Clean Databases:</strong> Wipes storage clean.</p>
-              <pre><code>/function fb:sw/reset-db
+
+              <p><strong>3. Wipe Storages:</strong></p>
+              <p>Safely resets databases to clean up or troubleshoot errors.</p>
+              <pre><code># Reset Stopwatch data
+/function fb:sw/reset-db
+
+# Reset Countdown data
 /function fb:cd/reset-db</code></pre>
             </div>
           </div>

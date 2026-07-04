@@ -1,7 +1,10 @@
 # Register an event callback
 # Arguments: event, fn
 
-# Ensure the event list exists in storage
+# Ensure the root events storage exists
+execute unless data storage fb:events run data modify storage fb:events set value {}
+
+# Ensure the specific event list exists in storage
 $execute unless data storage fb:events $(event) run data modify storage fb:events $(event) set value []
 
 # Prevent duplicate registration
