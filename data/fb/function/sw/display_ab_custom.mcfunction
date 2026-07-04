@@ -2,13 +2,14 @@
 $data modify storage fb:tmp check set value [{name: "$(player)"}]
 
 # Setup config values in temporary storage
-data modify storage fb:tmp config_setup set value {key: "global", target: "@a[tag=!fb.ab.custom]", is_global: 1b}
+data modify storage fb:tmp config_setup set value {key: "global", target: "@a[tag=!fb.ab.custom]", player: "@a[tag=!fb.ab.custom]", is_global: 1b}
 $data modify storage fb:tmp global_check set value [{type: "$(global_type)"}]
 
 # If player is @a and global_type is hard, change target to @a
 execute if data storage fb:tmp check[{name:"@a"}] if data storage fb:tmp global_check[{type:"hard"}] run data modify storage fb:tmp config_setup.target set value "@a"
+execute if data storage fb:tmp check[{name:"@a"}] if data storage fb:tmp global_check[{type:"hard"}] run data modify storage fb:tmp config_setup.player set value "@a"
 
-$execute unless data storage fb:tmp check[{name:"@a"}] run data modify storage fb:tmp config_setup set value {key: "$(player)", target: "$(player)", is_global: 0b, global_type: "none"}
+$execute unless data storage fb:tmp check[{name:"@a"}] run data modify storage fb:tmp config_setup set value {key: "$(player)", target: "$(player)", player: "$(player)", is_global: 0b, global_type: "none"}
 
 # Copy formatting parameters to config_setup (Setting type to 0 for stopwatch)
 data modify storage fb:tmp config_setup.type set value 0
