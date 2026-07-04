@@ -9,8 +9,14 @@ $execute if score #$(name) fb.cd.state matches 0 run scoreboard players operatio
 $execute if score #$(name) fb.cd.state matches 0 run scoreboard players operation #$(name) fb.cd.ms *= #5 fb.cd.ms
 
 # 2. Expired/Animating state
-$execute if score #$(name) fb.cd.state matches 1 run scoreboard players add #$(name) fb.cd.anim 1
-$execute if score #$(name) fb.cd.state matches 1 if score #$(name) fb.cd.anim matches 60.. run scoreboard players set #$(name) fb.cd.state 2
+$execute if score #$(name) fb.cd.state matches 1 if score #$(name) fb.cd.anim matches ..60 run scoreboard players add #$(name) fb.cd.anim 1
+
+# Check if animation is 'stay'
+data modify storage fb:tmp check_stay set value [{val: "none"}]
+$data modify storage fb:tmp check_stay[0].val set from storage fb:main cd.db[{name:"$(name)"}].animation
+
+# Set state to 2 (finish animating) only if NOT 'stay'
+$execute if score #$(name) fb.cd.state matches 1 if score #$(name) fb.cd.anim matches 60.. unless data storage fb:tmp check_stay[{val:"stay"}] run scoreboard players set #$(name) fb.cd.state 2
 $execute if score #$(name) fb.cd.state matches 2 run data remove storage fb:main cd.list[{name:"$(name)"}]
 
 # 3. Setup zero-padding indicator players

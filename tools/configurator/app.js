@@ -292,6 +292,8 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (animType === 'blackout') {
         animHtml = buildSpan('00:00.00', colorMap.dark_gray, bold, false);
       } else if (animType === 'none') {
+        animHtml = ''; // None (Fade Out) - renders nothing
+      } else if (animType === 'stay') {
         const format = cdFormatInput.value;
         const color = cdColorInput.value;
         const colorSec = cdColorSecInput.value;
