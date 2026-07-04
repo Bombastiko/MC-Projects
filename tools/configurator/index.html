@@ -322,9 +322,18 @@
             </div>
           </div>
 
+          <!-- GENERATED START COMMAND -->
+          <div class="card output-card small-margin">
+            <h2>Command 2: Start Countdown</h2>
+            <div class="command-box">
+              <code id="cd-commandOutputStart">/function fb:cd/start {name:"demo"}</code>
+              <button id="cd-copyBtnStart" class="btn-copy">Copy</button>
+            </div>
+          </div>
+
           <!-- GENERATED DISPLAY CONFIG COMMAND -->
           <div class="card output-card">
-            <h2>Command 2: Display Configuration</h2>
+            <h2>Command 3: Display Configuration</h2>
             <div class="command-box">
               <code id="cd-commandOutputDisplay">/function fb:cd/display_ab_custom {player:"@a",cd:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code>
               <button id="cd-copyBtnDisplay" class="btn-copy">Copy</button>
@@ -356,7 +365,10 @@
           <pre><code># 1. Create a timer named 'my_timer' for 1 minute and 30 seconds
 /function fb:cd/create {name:"my_timer",h:0,m:1,s:30,on_complete:"say Time is up!",animation:"flash"}
 
-# 2. Register actionbar display layout for all players (@a)
+# 2. Start the timer ticking
+/function fb:cd/start {name:"my_timer"}
+
+# 3. Register actionbar display layout for all players (@a)
 /function fb:cd/display_ab_custom {player:"@a",cd:"my_timer",format:"digital_short",color:"red",color_sec:"yellow",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></pre>
         </section>
 
@@ -374,6 +386,11 @@
               </thead>
               <tbody>
                 <tr>
+                  <td><strong>Start</strong></td>
+                  <td>(Starts automatically upon creation)</td>
+                  <td><code>/function fb:cd/start {name:"demo"}</code></td>
+                </tr>
+                <tr>
                   <td><strong>Pause</strong></td>
                   <td><code>/function fb:sw/pause {name:"demo"}</code></td>
                   <td><code>/function fb:cd/pause {name:"demo"}</code></td>
@@ -385,7 +402,7 @@
                 </tr>
                 <tr>
                   <td><strong>Delete</strong></td>
-                  <td><code>/function fb:sw/delete {name:"demo"}</code> (reset scores)</td>
+                  <td><code>/function fb:sw/delete {name:"demo"}</code></td>
                   <td><code>/function fb:cd/delete {name:"demo"}</code></td>
                 </tr>
               </tbody>

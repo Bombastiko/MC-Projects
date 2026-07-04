@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
     i.addEventListener('change', updateSw);
   });
 
-  // Setup Clipboard Copy for SW
   copyBtn.addEventListener('click', () => copyToClipboard(commandOutput.textContent, copyBtn));
 
   // ==========================================
@@ -161,15 +160,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const cdBtnAnimPrev = document.getElementById('cd-btn-anim-prev');
   
   const cdCommandOutputCreate = document.getElementById('cd-commandOutputCreate');
+  const cdCommandOutputStart = document.getElementById('cd-commandOutputStart');
   const cdCommandOutputDisplay = document.getElementById('cd-commandOutputDisplay');
   const cdCopyBtnCreate = document.getElementById('cd-copyBtnCreate');
+  const cdCopyBtnStart = document.getElementById('cd-copyBtnStart');
   const cdCopyBtnDisplay = document.getElementById('cd-copyBtnDisplay');
 
   let isCdAnimRunning = false;
   let cdAnimInterval = null;
 
   function updateCd() {
-    // If animation test is currently running, don't overwrite the preview HTML
     if (isCdAnimRunning) return;
 
     const player = cdPlayerInput.value.trim() || '@a';
@@ -197,13 +197,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const createCmd = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},on_complete:"${cmd}",animation:"${anim}"}`;
     cdCommandOutputCreate.textContent = createCmd;
 
-    // 2. Generate Command 2: Display Configuration
+    // 2. Generate Command 2: Start
+    const startCmd = `/function fb:cd/start {name:"${cdName}"}`;
+    cdCommandOutputStart.textContent = startCmd;
+
+    // 3. Generate Command 3: Display Configuration
     const escapedPrefix = prefix.replace(/"/g, '\\"');
     const escapedSuffix = suffix.replace(/"/g, '\\"');
     const displayCmd = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
     cdCommandOutputDisplay.textContent = displayCmd;
 
-    // 3. Render HUD Preview
+    // 4. Render HUD Preview
     let previewHtml = '';
     const colMain = isPaused ? colorMap.gray : colorMap[color];
     const colSec = isPaused ? colorMap.gray : colorMap[colorSec];
@@ -259,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cdActionbarPreview.innerHTML = previewHtml;
   }
 
-  // Live Expiration Animation Test inside browser preview
   function testCdAnimation() {
     if (isCdAnimRunning) return;
     
@@ -292,15 +295,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       cdActionbarPreview.innerHTML = animHtml;
 
-      // Finish after 60 frames (3 seconds at 20fps)
       if (frames >= 60) {
         clearInterval(cdAnimInterval);
         isCdAnimRunning = false;
         cdBtnAnimPrev.disabled = false;
         cdBtnAnimPrev.textContent = 'Test Animation';
-        updateCd(); // Restore original time layout
+        updateCd();
       }
-    }, 50); // 50ms interval matches Minecraft tick rate (20 ticks per second)
+    }, 50);
   }
 
   const cdInputs = [
@@ -315,8 +317,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   cdBtnAnimPrev.addEventListener('click', testCdAnimation);
 
-  // Setup Clipboard Copy for CD
   cdCopyBtnCreate.addEventListener('click', () => copyToClipboard(cdCommandOutputCreate.textContent, cdCopyBtnCreate));
+  cdCopyBtnStart.addEventListener('click', () => copyToClipboard(cdCommandOutputStart.textContent, cdCopyBtnStart));
   cdCopyBtnDisplay.addEventListener('click', () => copyToClipboard(cdCommandOutputDisplay.textContent, cdCopyBtnDisplay));
 
   // ==========================================
