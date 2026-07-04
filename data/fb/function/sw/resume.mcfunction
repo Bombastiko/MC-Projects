@@ -1,6 +1,7 @@
 # Resume stopwatch
 # Arguments: name
 
+execute unless data storage fb:main sw run data modify storage fb:main sw set value {list:[]}
 execute unless data storage fb:main sw.list run data modify storage fb:main sw.list set value []
 
 $data remove storage fb:main sw.list[{name:"$(name)"}]
