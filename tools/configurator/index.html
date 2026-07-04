@@ -467,6 +467,8 @@
               <ul>
                 <li><code>onJoin</code>: Triggered when a player joins the world (or on first join/rejoin).</li>
                 <li><code>onDeath</code>: Triggered when a player dies.</li>
+                <li><code>onKillPlayer</code>: Triggered as the killer when a player kills another player.</li>
+                <li><code>onKilledByPlayer</code>: Triggered as the victim when killed specifically by another player.</li>
               </ul>
               <p><strong>Register a Callback:</strong></p>
               <pre><code>/function fb:event/register {event: "onJoin", fn: "my_pack:say_hello"}</code></pre>
