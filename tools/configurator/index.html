@@ -3,181 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FuseBox Configurator & Documentation</title>
-  <meta name="description" content="Configure stopwatches, timers, and actionbar layouts for the Minecraft FuseBox datapack. Includes full documentation.">
+  <title>FuseBox Toolset</title>
+  <meta name="description" content="Configure actionbar layouts and view documentation for the Minecraft FuseBox datapack.">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="glow-bg"></div>
-  <header>
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar">
     <div class="logo">
       <span class="fb-yellow">Fuse</span><span class="fb-red">Box</span>
     </div>
-    <p class="subtitle">Configurator & Datapack Documentation</p>
-  </header>
+    <nav class="menu">
+      <button class="menu-item active" data-page="configurator-page">
+        <span class="icon">🛠</span> Configurator
+      </button>
+      <button class="menu-item" data-page="docs-page">
+        <span class="icon">📖</span> Documentation
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      Datapack Toolset
+    </div>
+  </aside>
 
-  <main class="container">
-    <!-- LEFT COLUMN: CONFIGURATOR -->
-    <section class="card configurator">
-      <h2>Stopwatch Configurator</h2>
-      <p class="section-desc">Customize your stopwatch actionbar display and generate the function command.</p>
+  <!-- MAIN CONTENT AREA -->
+  <main class="content">
+    
+    <!-- PAGE 1: CONFIGURATOR -->
+    <div id="configurator-page" class="page active">
+      <div class="page-header">
+        <h1>Stopwatch Configurator</h1>
+        <p>Customize your stopwatch actionbar display and generate the function command.</p>
+      </div>
 
-      <form id="configForm" onsubmit="event.preventDefault();">
-        <div class="form-grid">
-          <div class="input-group">
-            <label for="player">Player / Target Selector</label>
-            <input type="text" id="player" value="@a" placeholder="e.g. @a or oneBombastiko" required>
+      <div class="config-layout">
+        <!-- FORM INPUTS -->
+        <section class="card form-section">
+          <form id="configForm" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="player">Player / Target Selector</label>
+                <input type="text" id="player" value="@a" placeholder="e.g. @a or oneBombastiko" required>
+              </div>
+
+              <div class="input-group">
+                <label for="sw">Stopwatch Name</label>
+                <input type="text" id="sw" value="demo" placeholder="e.g. demo" required>
+              </div>
+
+              <div class="input-group">
+                <label for="format">Display Format</label>
+                <select id="format">
+                  <option value="digital">Digital (HH:MM:SS)</option>
+                  <option value="digital_short" selected>Digital Short (MM:SS.ms)</option>
+                  <option value="letters">Letters (Xd Xh Xm Xs)</option>
+                  <option value="dynamic">Dynamic (auto-truncate)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="color">Primary Color (Prefix/Suffix)</label>
+                <select id="color">
+                  <option value="gold" selected>Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="color_sec">Secondary Color (Separators)</label>
+                <select id="color_sec">
+                  <option value="yellow" selected>Yellow</option>
+                  <option value="gold">Gold</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="color_num">Number Color</label>
+                <select id="color_num">
+                  <option value="white" selected>White</option>
+                  <option value="gold">Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group full-width">
+                <label for="prefix">Prefix Text</label>
+                <input type="text" id="prefix" value="Timer: " placeholder="e.g. Timer: ">
+              </div>
+
+              <div class="input-group full-width">
+                <label for="suffix">Suffix Text</label>
+                <input type="text" id="suffix" value="" placeholder="e.g.  elapsed">
+              </div>
+
+              <div class="input-group toggle-group full-width">
+                <label for="bold">Apply Bold Formatting</label>
+                <label class="switch">
+                  <input type="checkbox" id="bold">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- PREVIEW & OUTPUT -->
+        <section class="preview-section">
+          <!-- LIVE MINECRAFT ACTIONBAR PREVIEW -->
+          <div class="card preview-card">
+            <div class="preview-header">
+              <h2>Actionbar Live Preview</h2>
+              <div class="preview-toggle">
+                <label for="preview-paused">Show Paused State</label>
+                <input type="checkbox" id="preview-paused">
+              </div>
+            </div>
+            <div class="minecraft-screen">
+              <div class="actionbar-container">
+                <div id="actionbarPreview" class="actionbar-text">Timer: 00:00.00</div>
+              </div>
+              <div class="hotbar-mock"></div>
+            </div>
           </div>
 
-          <div class="input-group">
-            <label for="sw">Stopwatch Name</label>
-            <input type="text" id="sw" value="demo" placeholder="e.g. demo" required>
+          <!-- GENERATED COMMAND -->
+          <div class="card output-card">
+            <h2>Generated Command</h2>
+            <div class="command-box">
+              <code id="commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false"}</code>
+              <button id="copyBtn" class="btn-copy">Copy</button>
+            </div>
           </div>
+        </section>
+      </div>
+    </div>
 
-          <div class="input-group">
-            <label for="format">Display Format</label>
-            <select id="format">
-              <option value="digital">Digital (HH:MM:SS)</option>
-              <option value="digital_short" selected>Digital Short (MM:SS.ms)</option>
-              <option value="letters">Letters (Xd Xh Xm Xs)</option>
-              <option value="dynamic">Dynamic (auto-truncate)</option>
-            </select>
-          </div>
+    <!-- PAGE 2: DOCUMENTATION -->
+    <div id="docs-page" class="page">
+      <div class="page-header">
+        <h1>FuseBox Datapack Documentation</h1>
+        <p>Learn how to control stopwatches, manage player registries, and debug NBT storages.</p>
+      </div>
 
-          <div class="input-group">
-            <label for="color">Primary Color (Prefix/Suffix)</label>
-            <select id="color">
-              <option value="gold" selected>Gold</option>
-              <option value="yellow">Yellow</option>
-              <option value="white">White</option>
-              <option value="gray">Gray</option>
-              <option value="red">Red</option>
-              <option value="green">Green</option>
-              <option value="blue">Blue</option>
-            </select>
-          </div>
-
-          <div class="input-group">
-            <label for="color_sec">Secondary Color (Separators)</label>
-            <select id="color_sec">
-              <option value="yellow" selected>Yellow</option>
-              <option value="gold">Gold</option>
-              <option value="white">White</option>
-              <option value="gray">Gray</option>
-              <option value="red">Red</option>
-              <option value="green">Green</option>
-              <option value="blue">Blue</option>
-            </select>
-          </div>
-
-          <div class="input-group">
-            <label for="color_num">Number Color</label>
-            <select id="color_num">
-              <option value="white" selected>White</option>
-              <option value="gold">Gold</option>
-              <option value="yellow">Yellow</option>
-              <option value="gray">Gray</option>
-              <option value="red">Red</option>
-              <option value="green">Green</option>
-              <option value="blue">Blue</option>
-            </select>
-          </div>
-
-          <div class="input-group full-width">
-            <label for="prefix">Prefix Text</label>
-            <input type="text" id="prefix" value="Timer: " placeholder="e.g. Timer: ">
-          </div>
-
-          <div class="input-group full-width">
-            <label for="suffix">Suffix Text</label>
-            <input type="text" id="suffix" value="" placeholder="e.g.  elapsed">
-          </div>
-
-          <div class="input-group toggle-group full-width">
-            <label for="bold">Apply Bold Formatting</label>
-            <label class="switch">
-              <input type="checkbox" id="bold">
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="output-container">
-          <h3>Generated Command</h3>
-          <div class="command-box">
-            <code id="commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false"}</code>
-            <button id="copyBtn" class="btn-copy">Copy</button>
-          </div>
-        </div>
-      </form>
-    </section>
-
-    <!-- RIGHT COLUMN: DOCUMENTATION -->
-    <section class="card docs">
-      <h2>FuseBox Documentation</h2>
-      
-      <div class="accordion">
-        <details open>
-          <summary>🚀 Quick Start Guide</summary>
-          <div class="details-content">
-            <p>To start using FuseBox stopwatches in Minecraft, reload the datapacks and run the following commands:</p>
-            <pre><code>/reload
+      <div class="docs-grid">
+        <section class="card">
+          <h2>🚀 Quick Start Guide</h2>
+          <p>To start using FuseBox stopwatches in Minecraft, reload the datapacks and run the following commands:</p>
+          <pre><code>/reload
 /function fb:sw/create {name:"demo"}</code></pre>
-            <p>This creates a stopwatch named <strong>demo</strong> and registers it in the active list.</p>
-          </div>
-        </details>
+          <p>This creates a stopwatch named <strong>demo</strong> and registers it in the active list.</p>
+        </section>
 
-        <details>
-          <summary>⏱ Controlling Stopwatches</summary>
-          <div class="details-content">
-            <p>Stopwatches can be paused and resumed dynamically without losing their elapsed time.</p>
-            <p><strong>Pause Stopwatch:</strong> Stops the stopwatch from counting up.</p>
-            <pre><code>/function fb:sw/pause {name:"demo"}</code></pre>
-            <p><strong>Resume Stopwatch:</strong> Continues counting from where it was paused.</p>
-            <pre><code>/function fb:sw/resume {name:"demo"}</code></pre>
-          </div>
-        </details>
+        <section class="card">
+          <h2>⏱ Controlling Stopwatches</h2>
+          <p>Stopwatches can be paused and resumed dynamically without losing their elapsed time.</p>
+          <p><strong>Pause Stopwatch:</strong> Stops the stopwatch from counting up.</p>
+          <pre><code>/function fb:sw/pause {name:"demo"}</code></pre>
+          <p><strong>Resume Stopwatch:</strong> Continues counting from where it was paused.</p>
+          <pre><code>/function fb:sw/resume {name:"demo"}</code></pre>
+        </section>
 
-        <details>
-          <summary>⚙ Actionbar Display System</summary>
-          <div class="details-content">
-            <p>You can choose to register a custom display configuration for any player or group of players:</p>
-            <ul>
-              <li><strong>Global Configuration:</strong> Use <code>@a</code> as the player. This displays the stopwatch to everyone who doesn't have an individual config.</li>
-              <li><strong>Individual Priority:</strong> Setting a config for a specific player (e.g. <code>oneBombastiko</code>) overrides the global configuration for them automatically.</li>
-            </ul>
-            <p><strong>Reset Display:</strong> To clear a player's actionbar layout, run:</p>
-            <pre><code>/function fb:display/ab/clear {player:"oneBombastiko"}</code></pre>
-          </div>
-        </details>
+        <section class="card">
+          <h2>⚙ Actionbar Display System</h2>
+          <p>You can choose to register a custom display configuration for any player or group of players:</p>
+          <ul>
+            <li><strong>Global Configuration:</strong> Use <code>@a</code> as the player. This displays the stopwatch to everyone who doesn't have an individual config.</li>
+            <li><strong>Individual Priority:</strong> Setting a config for a specific player (e.g. <code>oneBombastiko</code>) overrides the global configuration for them automatically.</li>
+          </ul>
+          <p><strong>Reset Display:</strong> To clear a player's actionbar layout, run:</p>
+          <pre><code>/function fb:display/ab/clear {player:"oneBombastiko"}</code></pre>
+        </section>
 
-        <details>
-          <summary>🛠 Troubleshooting & Debugging</summary>
-          <div class="details-content">
-            <p>FuseBox has a robust built-in logging system to inspect scores and NBT storage values.</p>
-            <p><strong>Toggle Debug Mode:</strong> Enable or disable debug chat messages.</p>
-            <pre><code># Turn Debug Mode ON
+        <section class="card">
+          <h2>🛠 Troubleshooting & Debugging</h2>
+          <p>FuseBox has a robust built-in logging system to inspect scores and NBT storage values.</p>
+          <p><strong>Toggle Debug Mode:</strong> Enable or disable debug chat messages.</p>
+          <pre><code># Turn Debug Mode ON
 /data modify storage fb:config debug set value 1b
 
 # Turn Debug Mode OFF
 /data modify storage fb:config debug set value 0b</code></pre>
-            <p><strong>Dump System Info:</strong> Output a formatted summary of all active stopwatches, active player registers, and scoreboard data for <code>#demo</code>:</p>
-            <pre><code>/function fb:sw/debug_info</code></pre>
-            <p><strong>Full Storage Reset:</strong> Completely clear all stopwatch lists and database entries to resolve NBT issues:</p>
-            <pre><code>/function fb:sw/reset-db</code></pre>
-          </div>
-        </details>
+          <p><strong>Dump System Info:</strong> Output a formatted summary of all active stopwatches, active player registers, and scoreboard data for <code>#demo</code>:</p>
+          <pre><code>/function fb:sw/debug_info</code></pre>
+          <p><strong>Full Storage Reset:</strong> Completely clear all stopwatch lists and database entries to resolve NBT issues:</p>
+          <pre><code>/function fb:sw/reset-db</code></pre>
+        </section>
       </div>
-    </section>
+    </div>
+
   </main>
-
-  <footer>
-    <p>FuseBox Datapack Web Tools &copy; 2026. Made for Minecraft Java.</p>
-  </footer>
-
   <script src="app.js"></script>
 </body>
 </html>
