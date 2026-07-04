@@ -1,0 +1,5 @@
+# Formats and displays the stopwatch in the actionbar with letters (e.g. [Prefix] 1d 5h 30m 15s [Suffix])
+# Context: fb:config display.$(player)
+# Macro parameters: $(player), $(ab.sw), $(ab.color), $(ab.color_sec), $(ab.color_num), $(ab.prefix), $(ab.suffix), $(ab.bold)
+
+$title $(player) actionbar ["", {"text": "$(ab.prefix)", "color": "$(ab.color)", "bold": "$(ab.bold)"}, {"score": {"name": "#$(ab.sw)", "objective": "fb.sw.d"}, "color": "$(ab.color_num)", "bold": "$(ab.bold)"}, {"text": "d ", "color": "$(ab.color_sec)", "bold": "$(ab.bold)"}, {"score": {"name": "#$(ab.sw)", "objective": "fb.sw.h"}, "color": "$(ab.color_num)", "bold": "$(ab.bold)"}, {"text": "h ", "color": "$(ab.color_sec)", "bold": "$(ab.bold)"}, {"score": {"name": "#$(ab.sw)", "objective": "fb.sw.m"}, "color": "$(ab.color_num)", "bold": "$(ab.bold)"}, {"text": "m ", "color": "$(ab.color_sec)", "bold": "$(ab.bold)"}, {"score": {"name": "#$(ab.sw)", "objective": "fb.sw.s"}, "color": "$(ab.color_num)", "bold": "$(ab.bold)"}, {"text": "s", "color": "$(ab.color_sec)", "bold": "$(ab.bold)"}, {"text": "$(ab.suffix)", "color": "$(ab.color)", "bold": "$(ab.bold)"}]

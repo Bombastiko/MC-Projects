@@ -1,1 +1,2 @@
-$execute if data storage fb:config display.$(player).ab{type: 0} run function fb:display/ab/sw_single {}
+# Route player to stopwatch display function if type is 0 (ab)
+$execute if data storage fb:config display.$(player).ab{type: 0} run function fb:display/ab/sw_single with storage fb:config display.$(player)

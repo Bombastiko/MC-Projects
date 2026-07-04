@@ -1,3 +1,4 @@
+# Initialize scoreboard objectives for stopwatch system
 scoreboard objectives add fb.sw.t dummy
 scoreboard objectives add fb.sw.at dummy
 scoreboard objectives add fb.sw.s dummy

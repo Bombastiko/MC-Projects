@@ -1,3 +1,4 @@
+# Loop through all players to process their actionbars (ab)
 function fb:display/ab/distribute_single with storage fb:tmp display.players[0]
 
 data remove storage fb:tmp display.players[0]
