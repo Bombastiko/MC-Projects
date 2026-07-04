@@ -18,7 +18,10 @@
     </div>
     <nav class="menu">
       <button class="menu-item active" data-page="configurator-page">
-        <span class="icon">🛠</span> Configurator
+        <span class="icon">🛠</span> SW Configurator
+      </button>
+      <button class="menu-item" data-page="cd-configurator-page">
+        <span class="icon">⏳</span> CD Configurator
       </button>
       <button class="menu-item" data-page="docs-page">
         <span class="icon">📖</span> Documentation
@@ -32,7 +35,7 @@
   <!-- MAIN CONTENT AREA -->
   <main class="content">
     
-    <!-- PAGE 1: CONFIGURATOR -->
+    <!-- PAGE 1: STOPWATCH CONFIGURATOR -->
     <div id="configurator-page" class="page active">
       <div class="page-header">
         <h1>Stopwatch Configurator</h1>
@@ -134,7 +137,6 @@
 
         <!-- PREVIEW & OUTPUT -->
         <section class="preview-section">
-          <!-- LIVE MINECRAFT ACTIONBAR PREVIEW -->
           <div class="card preview-card">
             <div class="preview-header">
               <h2>Actionbar Live Preview</h2>
@@ -151,7 +153,6 @@
             </div>
           </div>
 
-          <!-- GENERATED COMMAND -->
           <div class="card output-card">
             <h2>Generated Command</h2>
             <div class="command-box">
@@ -163,33 +164,237 @@
       </div>
     </div>
 
-    <!-- PAGE 2: DOCUMENTATION -->
+    <!-- PAGE 2: COUNTDOWN CONFIGURATOR -->
+    <div id="cd-configurator-page" class="page">
+      <div class="page-header">
+        <h1>Countdown Configurator</h1>
+        <p>Configure countdown times, display layouts, animations, and commands.</p>
+      </div>
+
+      <div class="config-layout">
+        <!-- FORM INPUTS -->
+        <section class="card form-section">
+          <form id="cdConfigForm" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="cd-player">Player / Target Selector</label>
+                <input type="text" id="cd-player" value="@a" placeholder="e.g. @a or oneBombastiko" required>
+              </div>
+
+              <div class="input-group" id="cd-global-type-group">
+                <label for="cd-global_type">Global Type</label>
+                <select id="cd-global_type">
+                  <option value="soft" selected>Soft (Custom Override)</option>
+                  <option value="hard">Hard (Force All)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="cd-name">Countdown Name</label>
+                <input type="text" id="cd-name" value="demo" placeholder="e.g. demo" required>
+              </div>
+
+              <div class="input-group full-width time-inputs-container">
+                <label>Initial Time Settings</label>
+                <div class="time-inputs">
+                  <input type="number" id="cd-h" value="0" min="0" placeholder="H">
+                  <span>h</span>
+                  <input type="number" id="cd-m" value="5" min="0" max="59" placeholder="M">
+                  <span>m</span>
+                  <input type="number" id="cd-s" value="0" min="0" max="59" placeholder="S">
+                  <span>s</span>
+                </div>
+              </div>
+
+              <div class="input-group full-width">
+                <label for="cd-cmd">On Complete Command</label>
+                <input type="text" id="cd-cmd" value="say Timer finished!" placeholder="e.g. say BOOM!">
+              </div>
+
+              <div class="input-group">
+                <label for="cd-anim">Expiration Animation</label>
+                <select id="cd-anim">
+                  <option value="flash" selected>Flash (Red/Yellow)</option>
+                  <option value="alert">Alert (Red Bold)</option>
+                  <option value="pulse">Pulse (Expanding)</option>
+                  <option value="none">None (Dark Gray)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="cd-format">Display Format</label>
+                <select id="cd-format">
+                  <option value="digital">Digital (HH:MM:SS)</option>
+                  <option value="digital_short" selected>Digital Short (MM:SS.ms)</option>
+                  <option value="letters">Letters (Xd Xh Xm Xs)</option>
+                  <option value="dynamic">Dynamic (auto-truncate)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="cd-color">Primary Color (Prefix/Suffix)</label>
+                <select id="cd-color">
+                  <option value="gold" selected>Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="cd-color_sec">Secondary Color (Separators)</label>
+                <select id="cd-color_sec">
+                  <option value="yellow" selected>Yellow</option>
+                  <option value="gold">Gold</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="cd-color_num">Number Color</label>
+                <select id="cd-color_num">
+                  <option value="white" selected>White</option>
+                  <option value="gold">Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group full-width">
+                <label for="cd-prefix">Prefix Text</label>
+                <input type="text" id="cd-prefix" value="Timer: " placeholder="e.g. Timer: ">
+              </div>
+
+              <div class="input-group full-width">
+                <label for="cd-suffix">Suffix Text</label>
+                <input type="text" id="cd-suffix" value="" placeholder="e.g.  left">
+              </div>
+
+              <div class="input-group toggle-group full-width">
+                <label for="cd-bold">Apply Bold Formatting</label>
+                <label class="switch">
+                  <input type="checkbox" id="cd-bold">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- PREVIEW & OUTPUT -->
+        <section class="preview-section">
+          <!-- LIVE MINECRAFT ACTIONBAR PREVIEW -->
+          <div class="card preview-card">
+            <div class="preview-header">
+              <h2>Actionbar Live Preview</h2>
+              <div class="preview-actions">
+                <button id="cd-btn-anim-prev" class="btn-secondary">Test Animation</button>
+                <div class="preview-toggle">
+                  <label for="cd-preview-paused">Show Paused State</label>
+                  <input type="checkbox" id="cd-preview-paused">
+                </div>
+              </div>
+            </div>
+            <div class="minecraft-screen">
+              <div class="actionbar-container">
+                <div id="cd-actionbarPreview" class="actionbar-text">Timer: 05:00.00</div>
+              </div>
+              <div class="hotbar-mock"></div>
+            </div>
+          </div>
+
+          <!-- GENERATED CREATE COMMAND -->
+          <div class="card output-card small-margin">
+            <h2>Command 1: Create Countdown</h2>
+            <div class="command-box">
+              <code id="cd-commandOutputCreate">/function fb:cd/create {name:"demo",h:0,m:5,s:0,on_complete:"say Timer finished!",animation:"flash"}</code>
+              <button id="cd-copyBtnCreate" class="btn-copy">Copy</button>
+            </div>
+          </div>
+
+          <!-- GENERATED DISPLAY CONFIG COMMAND -->
+          <div class="card output-card">
+            <h2>Command 2: Display Configuration</h2>
+            <div class="command-box">
+              <code id="cd-commandOutputDisplay">/function fb:cd/display_ab_custom {player:"@a",cd:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code>
+              <button id="cd-copyBtnDisplay" class="btn-copy">Copy</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PAGE 3: DOCUMENTATION -->
     <div id="docs-page" class="page">
       <div class="page-header">
         <h1>FuseBox Datapack Documentation</h1>
-        <p>Learn how to control stopwatches, manage player registries, and debug NBT storages.</p>
+        <p>Learn how to control stopwatches, countdowns, manage display registers, and debug NBT storages.</p>
       </div>
 
       <div class="docs-grid">
         <section class="card">
-          <h2>🚀 Quick Start Guide</h2>
-          <p>To start using FuseBox stopwatches in Minecraft, reload the datapacks and run the following commands:</p>
+          <h2>🚀 Quick Start (Stopwatch)</h2>
+          <p>To start using FuseBox stopwatches, reload the datapacks and run the following commands:</p>
           <pre><code>/reload
 /function fb:sw/create {name:"demo"}</code></pre>
           <p>This creates a stopwatch named <strong>demo</strong> and registers it in the active list.</p>
         </section>
 
         <section class="card">
-          <h2>⏱ Controlling Stopwatches</h2>
-          <p>Stopwatches can be paused and resumed dynamically without losing their elapsed time.</p>
-          <p><strong>Pause Stopwatch:</strong> Stops the stopwatch from counting up.</p>
-          <pre><code>/function fb:sw/pause {name:"demo"}</code></pre>
-          <p><strong>Resume Stopwatch:</strong> Continues counting from where it was paused.</p>
-          <pre><code>/function fb:sw/resume {name:"demo"}</code></pre>
+          <h2>⏳ Quick Start (Countdown Timer)</h2>
+          <p>To create, run and display a countdown timer, execute the following commands:</p>
+          <pre><code># 1. Create a timer named 'my_timer' for 1 minute and 30 seconds
+/function fb:cd/create {name:"my_timer",h:0,m:1,s:30,on_complete:"say Time is up!",animation:"flash"}
+
+# 2. Register actionbar display layout for all players (@a)
+/function fb:cd/display_ab_custom {player:"@a",cd:"my_timer",format:"digital_short",color:"red",color_sec:"yellow",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></pre>
         </section>
 
         <section class="card">
-          <h2>⚙ Actionbar Display System</h2>
+          <h2>⏱ Controlling Timers & Countdowns</h2>
+          <p>Timers and countdowns can be paused, resumed, and deleted dynamically using their names.</p>
+          <div class="control-table-wrapper">
+            <table class="control-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Stopwatch Command</th>
+                  <th>Countdown Command</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pause</strong></td>
+                  <td><code>/function fb:sw/pause {name:"demo"}</code></td>
+                  <td><code>/function fb:cd/pause {name:"demo"}</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Resume</strong></td>
+                  <td><code>/function fb:sw/resume {name:"demo"}</code></td>
+                  <td><code>/function fb:cd/resume {name:"demo"}</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Delete</strong></td>
+                  <td><code>/function fb:sw/delete {name:"demo"}</code> (reset scores)</td>
+                  <td><code>/function fb:cd/delete {name:"demo"}</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>⚙ Display Priorities</h2>
           <p>You can choose to register a custom display configuration for any player or group of players:</p>
           <ul>
             <li><strong>Global Configuration:</strong> Use <code>@a</code> as the player. You can choose between:
@@ -213,10 +418,18 @@
 
 # Turn Debug Mode OFF
 /data modify storage fb:config debug set value 0b</code></pre>
-          <p><strong>Dump System Info:</strong> Output a formatted summary of all active stopwatches, active player registers, and scoreboard data for <code>#demo</code>:</p>
-          <pre><code>/function fb:sw/debug_info</code></pre>
-          <p><strong>Full Storage Reset:</strong> Completely clear all stopwatch lists and database entries to resolve NBT issues:</p>
-          <pre><code>/function fb:sw/reset-db</code></pre>
+          <p><strong>Dump System Info:</strong> Output scoreboard data and registers:</p>
+          <pre><code># Stopwatch Debug
+/function fb:sw/debug_info
+
+# Countdown Debug
+/function fb:cd/debug_info</code></pre>
+          <p><strong>Full Storage Reset:</strong> Completely clear all databases:</p>
+          <pre><code># Reset Stopwatches
+/function fb:sw/reset-db
+
+# Reset Countdowns
+/function fb:cd/reset-db</code></pre>
         </section>
       </div>
     </div>

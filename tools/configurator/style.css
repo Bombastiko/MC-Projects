@@ -155,6 +155,10 @@ body {
   margin-bottom: 25px;
 }
 
+.card.small-margin {
+  margin-bottom: 15px;
+}
+
 h2 {
   font-size: 1.3rem;
   font-weight: 600;
@@ -200,7 +204,7 @@ label {
   color: var(--text-muted);
 }
 
-input[type="text"], select {
+input[type="text"], input[type="number"], select {
   background-color: var(--bg-sidebar);
   border: 1px solid var(--border-color);
   color: var(--text-main);
@@ -212,8 +216,26 @@ input[type="text"], select {
   transition: var(--transition);
 }
 
-input[type="text"]:focus, select:focus {
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
   border-color: var(--yellow);
+}
+
+/* Time inputs row */
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-inputs input {
+  width: 70px;
+  text-align: center;
+}
+
+.time-inputs span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 /* Toggle Switch */
@@ -287,12 +309,36 @@ input:checked + .slider:before {
   padding: 0;
 }
 
+.preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .preview-toggle {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 0.85rem;
   color: var(--text-muted);
+}
+
+.btn-secondary {
+  background-color: var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--text-muted);
 }
 
 .minecraft-screen {
@@ -408,4 +454,39 @@ code {
 .docs-grid p {
   line-height: 1.6;
   margin-bottom: 12px;
+}
+
+/* Documentation control table styling */
+.control-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+.control-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.control-table th, .control-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.control-table th {
+  background-color: var(--bg-sidebar);
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.control-table td code {
+  padding: 2px 6px;
+  font-size: 0.85rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--yellow);
 }

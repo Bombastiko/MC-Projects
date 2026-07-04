@@ -1,5 +1,5 @@
 # Setup display config helper
-$data modify storage fb:config display."$(key)".ab set value {type: 0, player: "$(target)", key: "$(key)", sw: "$(sw)", format: "$(format)", color: "$(color)", color_sec: "$(color_sec)", color_num: "$(color_num)", prefix: "$(prefix)", suffix: "$(suffix)", bold: "$(bold)", global_type: "$(global_type)"}
+$data modify storage fb:config display."$(key)".ab set from storage fb:tmp config_setup
 
 # Copy is_global to a temporary check list
 data modify storage fb:tmp global_check set value [{val: 0b}]
