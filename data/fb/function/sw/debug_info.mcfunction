@@ -5,6 +5,7 @@ tellraw @a ["", {"text": "Active Players (players): ", "color": "gold"}, {"nbt":
 tellraw @a ["", {"text": "Display Configs (display): ", "color": "gold"}, {"nbt": "display", "storage": "fb:config", "color": "white"}]
 tellraw @a ["", {"text": "Scores for '#demo': ", "color": "gold"}]
 tellraw @a ["", {"text": "  fb.sw.t (ticks): ", "color": "gray"}, {"score": {"name": "#demo", "objective": "fb.sw.t"}, "color": "white"}]
+tellraw @a ["", {"text": "  fb.sw.ms (millis): ", "color": "gray"}, {"score": {"name": "#demo", "objective": "fb.sw.ms"}, "color": "white"}]
 tellraw @a ["", {"text": "  fb.sw.s (seconds): ", "color": "gray"}, {"score": {"name": "#demo", "objective": "fb.sw.s"}, "color": "white"}]
 tellraw @a ["", {"text": "  fb.sw.m (minutes): ", "color": "gray"}, {"score": {"name": "#demo", "objective": "fb.sw.m"}, "color": "white"}]
 tellraw @a ["", {"text": "  fb.sw.h (hours): ", "color": "gray"}, {"score": {"name": "#demo", "objective": "fb.sw.h"}, "color": "white"}]
