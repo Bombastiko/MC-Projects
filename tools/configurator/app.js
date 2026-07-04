@@ -20,6 +20,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Documentation Tab switching logic
+  const docsNavItems = document.querySelectorAll('.docs-nav-item');
+  const docSections = document.querySelectorAll('.doc-section');
+
+  docsNavItems.forEach(item => {
+    item.addEventListener('click', () => {
+      docsNavItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+
+      const targetDoc = item.getAttribute('data-doc');
+      docSections.forEach(section => {
+        if (section.id === targetDoc) {
+          section.classList.add('active');
+        } else {
+          section.classList.remove('active');
+        }
+      });
+    });
+  });
+
   // Minecraft Hex Colors mapping
   const colorMap = {
     gold: '#ffaa00',
