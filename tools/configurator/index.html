@@ -497,26 +497,41 @@
                 </span>
                 Event System API
               </h2>
-              <p>Register callback functions that trigger automatically upon gameplay events. Calbacks are invoked <code>as</code> the player who triggered the event, with macro parameters containing the player username in <code>$(player)</code>.</p>
+              <p>Register callback functions or direct commands that trigger automatically upon gameplay events. Callbacks are invoked <code>as</code> the player who triggered the event, with macro parameters containing the player username in <code>$(player)</code>.</p>
               
+              <h3>Standard Events</h3>
               <ul>
                 <li><code>onJoin</code>: Fires when a player logs in or joins the world.</li>
                 <li><code>onDeath</code>: Fires immediately when a player dies.</li>
-                <li><code>onLeave</code>: Fires immediately when a player disconnects or leaves the world.</li>
+                <li><code>onLeave</code>: Fires immediately when a player disconnects or leaves.</li>
                 <li><code>onKillPlayer</code>: Fires <code>as</code> the killer when they kill another player.</li>
                 <li><code>onKilledByPlayer</code>: Fires <code>as</code> the victim when killed by another player.</li>
               </ul>
 
-              <p><strong>API Usage:</strong></p>
-              <p>Register callback function:</p>
-              <pre><code>/function fb:event/register {event:"onJoin", fn:"my_pack:welcome_msg"}</code></pre>
-              <p>Remove callback registration:</p>
-              <pre><code>/function fb:event/unregister {event:"onJoin", fn:"my_pack:welcome_msg"}</code></pre>
+              <h3>Item-Specific Events</h3>
+              <ul>
+                <li><code>onRightClick</code>: Fires when a player right-clicks holding a Carrot on a Stick or Warped Fungus on a Stick.</li>
+                <li><code>onHoldItem</code>: Fires every tick while a player is holding a specific item.</li>
+              </ul>
+
+              <h3 style="margin-top: 15px;">API Registration Commands</h3>
+              <p><strong>1. Function Callbacks (Standard Events):</strong></p>
+              <pre><code>/function fb:event/register {event:"onJoin", fn:"my_pack:welcome"}</code></pre>
               
-              <p><strong>Writing event callback functions:</strong></p>
-              <p>Call back functions receive <code>$(player)</code>. They must be macros (lines prefixed with <code>$</code>):</p>
-              <pre><code># Inside data/my_pack/function/welcome_msg.mcfunction
-$say Hello $(player), welcome to our world!</code></pre>
+              <p><strong>2. Direct Command Callbacks (Standard Events):</strong></p>
+              <p>Executes a direct command immediately. Use <code>@s</code> to target the event player.</p>
+              <pre><code>/function fb:event/register_cmd {event:"onJoin", cmd:"say Welcome back, @s!"}</code></pre>
+
+              <p><strong>3. Function Callbacks (Item Events):</strong></p>
+              <p>Only fires if the held item matches the specified ID and custom NBT data compound.</p>
+              <pre><code>/function fb:event/register_item {event:"onRightClick", fn:"my_pack:cast_spell", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"fire"}}</code></pre>
+              
+              <p><strong>4. Direct Command Callbacks (Item Events):</strong></p>
+              <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"speed"}}</code></pre>
+
+              <h3 style="margin-top: 15px;">Custom Items & Custom Data (1.20.5+)</h3>
+              <p>In modern Minecraft, custom items are uniquely identified by tags in their <code>minecraft:custom_data</code> component. For example, a custom fire staff item can be generated with:</p>
+              <pre><code>/give @s carrot_on_a_stick[custom_data={wand_type:"fire"}]</code></pre>
             </div>
           </div>
 

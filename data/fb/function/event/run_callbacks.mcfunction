@@ -5,6 +5,10 @@
 # Resolve player's username string
 function fb:event/resolve_name
 
+# Setup event context with player name and currently held item NBT
+data modify storage fb:tmp event_context.item set value {}
+data modify storage fb:tmp event_context.item set from entity @s SelectedItem
+
 # If this is onJoin, add player to online list
 data modify storage fb:tmp event_check set value {name: ""}
 $data modify storage fb:tmp event_check.name set value "$(event)"

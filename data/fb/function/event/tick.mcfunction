@@ -17,4 +17,12 @@ execute as @a if score @s fb.killed_by_p matches 1.. run function fb:event/trigg
 # 5. Leave Detection
 function fb:event/check_leaves
 
+# 6. Right Click Item Detection
+execute as @a if score @s fb.rc_stick matches 1.. run function fb:event/trigger_right_click
+execute as @a if score @s fb.rc_fungus matches 1.. run function fb:event/trigger_right_click
+
+# 7. Hold Item Detection
+execute as @a if data storage fb:events onHoldItem run function fb:event/run_callbacks {event: "onHoldItem"}
+
+
 

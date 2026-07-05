@@ -13,3 +13,8 @@ scoreboard objectives add fb.kill_p minecraft.custom:minecraft.player_kills
 # Killed by player detection (for onKilledByPlayer)
 scoreboard objectives add fb.killed_by_p minecraft.killed_by:minecraft.player
 
+# Right-click item detection
+scoreboard objectives add fb.rc_stick minecraft.used:minecraft.carrot_on_a_stick
+scoreboard objectives add fb.rc_fungus minecraft.used:minecraft.warped_fungus_on_a_stick
+
+

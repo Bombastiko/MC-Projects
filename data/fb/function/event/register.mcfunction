@@ -1,11 +1,11 @@
-# Register an event callback
+# Register a function callback for standard events
 # Arguments: event, fn
 
-# Ensure the specific event list exists in storage (this automatically creates fb:events if missing)
+# Ensure the specific event list exists in storage
 $execute unless data storage fb:events $(event) run data modify storage fb:events $(event) set value []
 
 # Prevent duplicate registration
 $data remove storage fb:events $(event)[{fn: "$(fn)"}]
 
 # Append callback to the list
-$data modify storage fb:events $(event) append value {fn: "$(fn)"}
+$data modify storage fb:events $(event) append value {fn: "$(fn)", type: "function"}

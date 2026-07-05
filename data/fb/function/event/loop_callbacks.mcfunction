@@ -1,16 +1,18 @@
-# Iterative callback loop
+# Iterative callback loop with item matching
 # Arguments: player, list
 
-# Debug log
-execute if data storage fb:config {debug:{event:1b}} run tellraw @a [{"text": "[FB DEBUG] loop_callbacks: current callback is ", "color": "gray"}, {"nbt": "event_context.list[0]", "storage": "fb:tmp"}]
-
-# Prepare single callback parameter compound (setting fn and player username)
-data modify storage fb:tmp current_callback set value {player: ""}
+# Prepare current_callback NBT
+data modify storage fb:tmp current_callback set from storage fb:tmp event_context.list[0]
 data modify storage fb:tmp current_callback.player set from storage fb:tmp event_context.player
-data modify storage fb:tmp current_callback.fn set from storage fb:tmp event_context.list[0].fn
 
-# Run the single callback function as a macro
-function fb:event/run_single_callback with storage fb:tmp current_callback
+# By default, assume match is true
+data modify storage fb:tmp event_match set value {val: 1b}
+
+# If the callback has an item_id filter, we run the macro matcher
+execute if data storage fb:tmp current_callback.item_id run function fb:event/match_item with storage fb:tmp current_callback
+
+# If matched, run the callback
+execute if data storage fb:tmp event_match{val: 1b} run function fb:event/run_single_callback with storage fb:tmp current_callback
 
 # Remove the processed callback
 data remove storage fb:tmp event_context.list[0]
