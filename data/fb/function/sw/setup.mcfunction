@@ -15,3 +15,6 @@ scoreboard objectives add fb.debug.tg trigger
 
 # Register version tracking objective for third-party packs dependency checks
 scoreboard objectives add fb.version dummy
+
+# Register actionbar overwrite timer objective
+scoreboard objectives add fb.ab_over dummy

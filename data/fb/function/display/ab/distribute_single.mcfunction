@@ -1,5 +1,9 @@
 $execute if data storage fb:config {debug:{global:1b}} run tellraw @a [{"text": "[FB DEBUG] distribute_single for ", "color": "gray"}, {"text": "$(player)", "color": "white"}]
 
+# If the player has a hard overwrite active, render it and skip normal routing
+$execute as $(player) if score @s fb.ab_over matches 1.. run function fb:display/ab/find_and_render_overwrite
+$execute as $(player) if score @s fb.ab_over matches 1.. run return 0
+
 # Initialize check list
 data modify storage fb:tmp check set value [{key: "none"}]
 $data modify storage fb:tmp check[0].key set value "$(key)"

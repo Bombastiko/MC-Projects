@@ -537,6 +537,26 @@
               <p>Removes a player's registry and resets their custom settings, defaulting them back to global configuration:</p>
               <pre><code>/function fb:display/ab/clear {player:"oneBombastiko"}</code></pre>
             </div>
+
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </span>
+                Hard Actionbar Overwrite
+              </h2>
+              <p>Sometimes you need to show temporary system messages or warnings on a player's actionbar (e.g., "Entering Boss Arena" or "Round 1"). You can hard-overwrite the actionbar for a specific duration, temporarily hiding all stopwatches and countdowns.</p>
+              
+              <p><strong>API Usage:</strong></p>
+              <p>Run the overwrite function by passing the target selector/player, formatted JSON text, and duration in ticks (20 ticks = 1 second):</p>
+              <pre><code>/function fb:display/ab/overwrite {player:"@a", text:[{"text":"WARNING: ", "color":"red", "bold":true}, {"text":"Boss is spawning!", "color":"yellow"}], duration:60}</code></pre>
+              
+              <p style="margin-top: 10px;"><strong>Key Behaviors:</strong></p>
+              <ul>
+                <li><strong>Absolute Priority</strong>: Overwrites both global and individual layouts during the duration.</li>
+                <li><strong>Seamless Restore</strong>: Once the duration expires, players automatically resume seeing their active ticking stopwatches and countdowns exactly where they left off.</li>
+              </ul>
+            </div>
           </div>
 
           <!-- DOC: EVENTS -->
