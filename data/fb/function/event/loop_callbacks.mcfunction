@@ -14,9 +14,6 @@ execute if data storage fb:tmp current_callback.item_id run function fb:event/ma
 # If matched, run the callback
 execute if data storage fb:tmp event_match{val: 1b} run function fb:event/run_single_callback with storage fb:tmp current_callback
 
-# If matched and cooldown is specified, apply it
-execute if data storage fb:tmp event_match{val: 1b} if data storage fb:tmp current_callback.cooldown run function fb:event/apply_cooldown with storage fb:tmp current_callback
-
 # Remove the processed callback
 data remove storage fb:tmp event_context.list[0]
 
