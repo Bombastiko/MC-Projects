@@ -529,13 +529,14 @@
               <p><strong>4. Direct Command Callbacks (Item Events):</strong></p>
               <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"speed"}, cooldown:100}</code></pre>
 
-              <h3 style="margin-top: 15px;">API Unregistration Commands</h3>
-              <p>To unregister, use the corresponding unregister commands. Pass the exact function name (<code>fn</code>) or command string (<code>cmd</code>) that you used during registration:</p>
+              <h3 style="margin-top: 15px;">API Unregistration & Cleaning</h3>
+              <p>To unregister, use the corresponding unregister commands. Pass the exact filters (<code>item_id</code>, <code>custom_data</code>) used during registration to target specific items:</p>
               <ul>
                 <li>Unregister Standard Function: <pre><code>/function fb:event/unregister {event:"onJoin", fn:"my_pack:welcome"}</code></pre></li>
                 <li>Unregister Standard Command: <pre><code>/function fb:event/unregister_cmd {event:"onJoin", cmd:"say Welcome back, @s!"}</code></pre></li>
-                <li>Unregister Item Function: <pre><code>/function fb:event/unregister_item {event:"onRightClick", fn:"my_pack:cast_spell"}</code></pre></li>
-                <li>Unregister Item Command: <pre><code>/function fb:event/unregister_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1"}</code></pre></li>
+                <li>Unregister Item Function: <pre><code>/function fb:event/unregister_item {event:"onRightClick", fn:"my_pack:cast_spell", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"fire"}}</code></pre></li>
+                <li>Unregister Item Command: <pre><code>/function fb:event/unregister_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"speed"}}</code></pre></li>
+                <li>Clear All Callbacks for Event: <pre><code>/function fb:event/clear {event:"onJoin"}</code></pre></li>
               </ul>
 
               <h3 style="margin-top: 15px;">Custom Items & Custom Data (1.20.5+)</h3>
