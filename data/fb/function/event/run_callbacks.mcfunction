@@ -5,6 +5,11 @@
 # Resolve player's username string
 function fb:event/resolve_name
 
+# If this is onJoin, add player to online list
+data modify storage fb:tmp event_check set value {name: ""}
+$data modify storage fb:tmp event_check.name set value "$(event)"
+execute if data storage fb:tmp event_check{name:"onJoin"} run function fb:event/add_online_player
+
 # Copy the list of callbacks for this event
 $data modify storage fb:tmp event_context.list set from storage fb:events $(event)
 

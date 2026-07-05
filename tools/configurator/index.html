@@ -498,10 +498,10 @@
               </h2>
               <p>Register callback functions that trigger automatically upon gameplay events. Calbacks are invoked <code>as</code> the player who triggered the event, with macro parameters containing the player username in <code>$(player)</code>.</p>
               
-              <p><strong>Supported Events:</strong></p>
               <ul>
                 <li><code>onJoin</code>: Fires when a player logs in or joins the world.</li>
                 <li><code>onDeath</code>: Fires immediately when a player dies.</li>
+                <li><code>onLeave</code>: Fires immediately when a player disconnects or leaves the world.</li>
                 <li><code>onKillPlayer</code>: Fires <code>as</code> the killer when they kill another player.</li>
                 <li><code>onKilledByPlayer</code>: Fires <code>as</code> the victim when killed by another player.</li>
               </ul>

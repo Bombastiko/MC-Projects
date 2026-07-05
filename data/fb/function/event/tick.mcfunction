@@ -14,3 +14,7 @@ execute as @a if score @s fb.kill_p matches 1.. run function fb:event/trigger_ki
 # 4. Killed by Player Detection
 execute as @a if score @s fb.killed_by_p matches 1.. run function fb:event/trigger_killed_by_player
 
+# 5. Leave Detection
+function fb:event/check_leaves
+
+
