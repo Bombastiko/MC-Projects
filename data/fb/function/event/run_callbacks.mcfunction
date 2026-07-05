@@ -2,9 +2,8 @@
 # Arguments: event
 # Executed as the event player
 
-# Setup event context with player name (falling back to "player" if Profile.Name is missing)
-data modify storage fb:tmp event_context set value {player: "player"}
-data modify storage fb:tmp event_context.player set from entity @s Profile.Name
+# Setup event context with player selector "@s"
+data modify storage fb:tmp event_context set value {player: "@s"}
 
 # Copy the list of callbacks for this event
 $data modify storage fb:tmp event_context.list set from storage fb:events $(event)
