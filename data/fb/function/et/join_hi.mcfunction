@@ -1,1 +1,1 @@
-$tellraw @a "Hello $(player)"
+$tellraw $(player) "Hello $(player)"
