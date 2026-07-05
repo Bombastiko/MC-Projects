@@ -1,4 +1,4 @@
-$execute if data storage fb:config {debug: 1b} run tellraw @a [{"text": "[FB DEBUG] sw/process_single for ", "color": "gray"}, {"text": "$(name)", "color": "white"}]
+$execute if data storage fb:config {debug:{sw:1b}} run tellraw @a [{"text": "[FB DEBUG] sw/process_single for ", "color": "gray"}, {"text": "$(name)", "color": "white"}]
 
 $scoreboard players add #$(name) fb.sw.t 1
 $scoreboard players add #$(name) fb.sw.at 1

@@ -1,4 +1,4 @@
-$execute if data storage fb:config {debug: 1b} run tellraw @a [{"text": "[FB DEBUG] distribute_single for ", "color": "gray"}, {"text": "$(player)", "color": "white"}]
+$execute if data storage fb:config {debug:{global:1b}} run tellraw @a [{"text": "[FB DEBUG] distribute_single for ", "color": "gray"}, {"text": "$(player)", "color": "white"}]
 
 # Initialize check list
 data modify storage fb:tmp check set value [{key: "none"}]

@@ -1,4 +1,4 @@
-$execute if data storage fb:config {debug: 1b} run tellraw @a [{"text": "[FB DEBUG] cd/process_single for ", "color": "gray"}, {"text": "$(name)", "color": "white"}]
+$execute if data storage fb:config {debug:{cd:1b}} run tellraw @a [{"text": "[FB DEBUG] cd/process_single for ", "color": "gray"}, {"text": "$(name)", "color": "white"}]
 
 # 1. Active ticking state
 $execute if score #$(name) fb.cd.state matches 0 run scoreboard players remove #$(name) fb.cd.t 1
