@@ -368,6 +368,7 @@
           <button class="docs-nav-item" data-doc="doc-controls">Controlling Timers</button>
           <button class="docs-nav-item" data-doc="doc-display">Priorities & Displays</button>
           <button class="docs-nav-item" data-doc="doc-events">Event System API</button>
+          <button class="docs-nav-item" data-doc="doc-dependency">Dependency Check</button>
           <button class="docs-nav-item" data-doc="doc-troubleshooting">Debugging & Logging</button>
         </aside>
 
@@ -516,6 +517,36 @@
               <p>Call back functions receive <code>$(player)</code>. They must be macros (lines prefixed with <code>$</code>):</p>
               <pre><code># Inside data/my_pack/function/welcome_msg.mcfunction
 $say Hello $(player), welcome to our world!</code></pre>
+            </div>
+          </div>
+
+          <!-- DOC: DEPENDENCY CHECK -->
+          <div id="doc-dependency" class="doc-section">
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </span>
+                Datapack Dependency Check
+              </h2>
+              <p>If you are developing a custom datapack that requires FuseBox, you can include a simple check in your pack's <code>load</code> function to verify if FuseBox is installed and up-to-date.</p>
+              
+              <p><strong>Copy-Paste Integration:</strong></p>
+              <p>Add these commands to the end of your datapack's <code>load.mcfunction</code> (replace <code>my_pack</code> with your pack's namespace):</p>
+              <pre><code># 1. Initialize temporary check objective
+scoreboard objectives add fb.version dummy
+scoreboard players set #fb_installed fb.version 0
+
+# 2. Call FuseBox version check function
+# (If FuseBox is installed, this function sets #fb_installed fb.version to the version number)
+function fb:api/check_version
+
+# 3. Check results and display errors/warnings
+# (If score is still 0, FuseBox is NOT installed or has been removed)
+execute if score #fb_installed fb.version matches 0 run tellraw @a [{"text": "[my_pack] ", "color": "gold", "bold": true}, {"text": "Error: FuseBox is NOT installed! This pack requires FuseBox v0.1 Alpha or newer.", "color": "red"}]
+
+# (If score is less than the required version (e.g., 1 for v0.1), warn the user)
+execute if score #fb_installed fb.version matches 1.. if score #fb_installed fb.version matches ..0 run tellraw @a [{"text": "[my_pack] ", "color": "gold", "bold": true}, {"text": "Warning: FuseBox is out of date! Please update FuseBox to at least v0.1 Alpha.", "color": "red"}]</code></pre>
             </div>
           </div>
 

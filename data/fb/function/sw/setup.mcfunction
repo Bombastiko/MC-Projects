@@ -12,3 +12,6 @@ scoreboard players set #5 fb.sw.ms 5
 
 # Register trigger for debug menu click events
 scoreboard objectives add fb.debug.tg trigger
+
+# Register version tracking objective for third-party packs dependency checks
+scoreboard objectives add fb.version dummy
