@@ -24,5 +24,12 @@ execute as @a if score @s fb.rc_fungus matches 1.. run function fb:event/trigger
 # 7. Hold Item Detection
 execute as @a if data storage fb:events onHoldItem run function fb:event/run_callbacks {event: "onHoldItem"}
 
+# 8. While Online Loop (runs every tick for all online players if callbacks are registered)
+execute if data storage fb:events whileOnline run function fb:event/tick_while_online
+
+# 9. While Offline Loop (runs every tick for all offline players if callbacks are registered)
+execute if data storage fb:events whileOffline run function fb:event/tick_while_offline
+
+
 
 
