@@ -463,6 +463,57 @@
                 <li>Countdowns Static Registry: <code>fb:main cd.db</code> (Configuration & Commands)</li>
               </ul>
             </div>
+
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </span>
+                Scoreboard Objectives & Reading Values
+              </h2>
+              <p>For advanced scripting and condition checking, FuseBox exposes all stopwatch and countdown values directly to scoreboard objectives. Each active timer writes its tick, second, minute, hour, day, and state values to a dummy player named after the timer (prefixed with <code>#</code>, e.g., <code>#demo</code>).</p>
+              
+              <h3>Available Scoreboard Objectives</h3>
+              
+              <p><strong>1. Stopwatch Objectives (sw):</strong></p>
+              <ul>
+                <li><code>fb.sw.at</code>: Accumulated ticks (total ticks elapsed since start).</li>
+                <li><code>fb.sw.t</code>: Current tick within the second (0 to 19).</li>
+                <li><code>fb.sw.ms</code>: Current millisecond approximation within the second (0 to 99).</li>
+                <li><code>fb.sw.s</code>: Current seconds within the minute (0 to 59).</li>
+                <li><code>fb.sw.m</code>: Current minutes within the hour (0 to 59).</li>
+                <li><code>fb.sw.h</code>: Current hours within the day (0 to 23).</li>
+                <li><code>fb.sw.d</code>: Current days elapsed.</li>
+              </ul>
+
+              <p><strong>2. Countdown Objectives (cd):</strong></p>
+              <ul>
+                <li><code>fb.cd.t</code>: Remaining ticks within the second (19 down to 0).</li>
+                <li><code>fb.cd.ms</code>: Remaining milliseconds within the second (99 down to 0).</li>
+                <li><code>fb.cd.s</code>: Remaining seconds within the minute (0 to 59).</li>
+                <li><code>fb.cd.m</code>: Remaining minutes within the hour (0 to 59).</li>
+                <li><code>fb.cd.h</code>: Remaining hours within the day (0 to 23).</li>
+                <li><code>fb.cd.d</code>: Remaining days.</li>
+                <li><code>fb.cd.state</code>: Active state of the countdown:
+                  <ul>
+                    <li><code>0</code>: Ticking (Active).</li>
+                    <li><code>1</code>: Expired / Animating (Time is up, flashing actionbar).</li>
+                    <li><code>2</code>: Finished / Inactive.</li>
+                  </ul>
+                </li>
+              </ul>
+
+              <h3 style="margin-top: 15px;">Reading and Querying Scores</h3>
+              <p><strong>Checking conditions in functions:</strong></p>
+              <p>Check if a countdown named <code>game_timer</code> has expired (state is 1):</p>
+              <pre><code>execute if score #game_timer fb.cd.state matches 1 run say Time is up!</code></pre>
+              <p>Check if a stopwatch named <code>lap_time</code> is at exactly 1 minute and 30 seconds:</p>
+              <pre><code>execute if score #lap_time fb.sw.m matches 1 if score #lap_time fb.sw.s matches 30 run say 1:30 reached!</code></pre>
+              
+              <p style="margin-top: 10px;"><strong>Displaying scores in chat / Tellraw:</strong></p>
+              <p>You can print the scoreboard values directly in chat or titles using standard JSON text components:</p>
+              <pre><code>/tellraw @a ["", {"text": "Lap time: "}, {"score": {"name": "#lap_time", "objective": "fb.sw.m"}}, {"text": ":"}, {"score": {"name": "#lap_time", "objective": "fb.sw.s"}}]</code></pre>
+            </div>
           </div>
 
           <!-- DOC: DISPLAY -->
