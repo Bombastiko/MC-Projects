@@ -2,8 +2,8 @@
 # Arguments: event
 # Executed as the event player
 
-# Setup event context with player selector "@s"
-data modify storage fb:tmp event_context set value {player: "@s"}
+# Resolve player's username string
+function fb:event/resolve_name
 
 # Copy the list of callbacks for this event
 $data modify storage fb:tmp event_context.list set from storage fb:events $(event)
