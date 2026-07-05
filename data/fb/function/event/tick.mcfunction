@@ -30,6 +30,12 @@ execute if data storage fb:events whileOnline run function fb:event/tick_while_o
 # 9. While Offline Loop (runs every tick for all offline players if callbacks are registered)
 execute if data storage fb:events whileOffline run function fb:event/tick_while_offline
 
+# 10. Damage Taken Detection
+execute as @a if score @s fb.dmg_taken matches 1.. run function fb:event/trigger_damage
+
+# 11. Entity Kill Detection
+execute as @a if score @s fb.mob_kills matches 1.. run function fb:event/trigger_entity_kill
+
 
 
 

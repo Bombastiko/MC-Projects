@@ -18,3 +18,9 @@ scoreboard objectives add fb.version dummy
 
 # Register actionbar overwrite timer objective
 scoreboard objectives add fb.ab_over dummy
+
+# Register onDamage statistic objective
+scoreboard objectives add fb.dmg_taken minecraft.custom:minecraft.damage_taken
+
+# Register onEntityKill statistic objective
+scoreboard objectives add fb.mob_kills minecraft.custom:minecraft.mob_kills
