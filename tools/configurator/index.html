@@ -539,12 +539,15 @@ $say Hello $(player), welcome to our world!</code></pre>
 /data modify storage fb:config debug set value 0b</code></pre>
               
               <p><strong>2. Print Scoreboard and Registry Dumps:</strong></p>
-              <p>Outputs formatted listings of all running timers and objective values to chat.</p>
+              <p>Outputs formatted listings of all running timers, event registrations, and objective values to chat.</p>
               <pre><code># Inspect stopwatches
 /function fb:sw/debug_info
 
 # Inspect countdowns
-/function fb:cd/debug_info</code></pre>
+/function fb:cd/debug_info
+
+# Inspect event registrations
+/function fb:event/debug_info</code></pre>
 
               <p><strong>3. Wipe Storages:</strong></p>
               <p>Safely resets databases to clean up or troubleshoot errors.</p>

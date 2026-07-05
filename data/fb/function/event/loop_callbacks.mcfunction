@@ -1,6 +1,9 @@
 # Iterative callback loop
 # Arguments: player, list
 
+# Debug log
+execute if data storage fb:config {debug: 1b} run tellraw @a [{"text": "[FB DEBUG] loop_callbacks: current callback is ", "color": "gray"}, {"nbt": "event_context.list[0]", "storage": "fb:tmp"}]
+
 # Prepare single callback parameter compound (setting fn and player username)
 data modify storage fb:tmp current_callback set value {player: ""}
 data modify storage fb:tmp current_callback.player set from storage fb:tmp event_context.player
