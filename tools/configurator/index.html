@@ -523,11 +523,11 @@
               <pre><code>/function fb:event/register_cmd {event:"onJoin", cmd:"say Welcome back, @s!"}</code></pre>
 
               <p><strong>3. Function Callbacks (Item Events):</strong></p>
-              <p>Only fires if the held item matches the specified ID and custom NBT data compound.</p>
-              <pre><code>/function fb:event/register_item {event:"onRightClick", fn:"my_pack:cast_spell", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"fire"}}</code></pre>
+              <p>Only fires if the held item matches the specified ID and custom NBT data compound. Supports an optional <code>cooldown</code> parameter in ticks (e.g., 40 ticks = 2 seconds).</p>
+              <pre><code>/function fb:event/register_item {event:"onRightClick", fn:"my_pack:cast_spell", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"fire"}, cooldown:40}</code></pre>
               
               <p><strong>4. Direct Command Callbacks (Item Events):</strong></p>
-              <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"speed"}}</code></pre>
+              <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"speed"}, cooldown:100}</code></pre>
 
               <h3 style="margin-top: 15px;">Custom Items & Custom Data (1.20.5+)</h3>
               <p>In modern Minecraft, custom items are uniquely identified by tags in their <code>minecraft:custom_data</code> component. For example, a custom fire staff item can be generated with:</p>
