@@ -376,12 +376,15 @@ input:checked + .slider:before {
   background-size: 10px 10px;
   border: 3px solid #000;
   border-radius: 6px;
+  max-width: 440px; /* Make it smaller and compact */
+  width: 100%;
   aspect-ratio: 16 / 9;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
   padding-bottom: 20px;
+  margin: 0 auto; /* Centered */
   position: relative;
   overflow: hidden;
 }
@@ -395,13 +398,15 @@ input:checked + .slider:before {
 }
 
 .actionbar-text {
-  font-family: 'VT323', monospace;
-  font-size: 2rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.68rem; /* Smaller pixel font size to fit correctly */
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.75);
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.4);
-  padding: 3px 8px;
+  background-color: rgba(0, 0, 0, 0.45);
+  padding: 5px 10px;
   border-radius: 2px;
-  line-height: 1;
+  line-height: 1.4;
+  letter-spacing: 0.2px;
 }
 
 /* Hotbar Placeholder */
@@ -535,9 +540,10 @@ code {
 .docs-content pre {
   background-color: var(--bg-sidebar);
   border: 1px solid var(--border-color);
-  padding: 10px 14px;
+  border-left: 3px solid var(--yellow);
+  padding: 12px 16px;
   border-radius: 6px;
-  margin: 8px 0 16px;
+  margin: 12px 0 20px;
   overflow-x: auto;
 }
 

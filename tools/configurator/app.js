@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropShadowColor = textColor === '#ffffff' ? '#3f3f3f' : 'rgba(0,0,0,0.85)';
     const boldStyle = isBold ? 'font-weight: bold;' : 'font-weight: normal;';
     const italicStyle = isItalic ? 'font-style: italic;' : 'font-style: normal;';
-    const style = `color: ${textColor}; text-shadow: 2px 2px 0px ${dropShadowColor}; ${boldStyle} ${italicStyle}`;
+    const style = `color: ${textColor}; text-shadow: 1.5px 1.5px 0px ${dropShadowColor}; ${boldStyle} ${italicStyle}`;
     return `<span style="${style}">${text}</span>`;
   }
 
@@ -421,4 +421,79 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize SW and CD once
   updateSw();
   updateCd();
+
+  // ==========================================
+  // ⚡ EVENT GENERATOR
+  // ==========================================
+  const egEvent = document.getElementById('eg-event');
+  const egType = document.getElementById('eg-type');
+  const egCommand = document.getElementById('eg-command');
+  const egFunction = document.getElementById('eg-function');
+  const egItemId = document.getElementById('eg-item-id');
+  const egCustomData = document.getElementById('eg-custom-data');
+
+  const egCommandGroup = document.getElementById('eg-command-group');
+  const egFunctionGroup = document.getElementById('eg-function-group');
+  const egItemIdGroup = document.getElementById('eg-item-id-group');
+  const egCustomDataGroup = document.getElementById('eg-custom-data-group');
+
+  const egRegisterOutput = document.getElementById('eg-register-output');
+  const egUnregisterOutput = document.getElementById('eg-unregister-output');
+  
+  const egCopyRegBtn = document.getElementById('eg-copy-reg-btn');
+  const egCopyUnregBtn = document.getElementById('eg-copy-unreg-btn');
+
+  function updateEventGen() {
+    const eventVal = egEvent.value;
+    const typeVal = egType.value;
+    const isItemEvent = eventVal === 'onRightClick' || eventVal === 'onHoldItem';
+
+    // Show/Hide inputs
+    egCommandGroup.style.display = typeVal === 'command' ? 'flex' : 'none';
+    egFunctionGroup.style.display = typeVal === 'function' ? 'flex' : 'none';
+    egItemIdGroup.style.display = isItemEvent ? 'flex' : 'none';
+    egCustomDataGroup.style.display = isItemEvent ? 'flex' : 'none';
+
+    // Get input values
+    const commandVal = egCommand.value.trim() || 'say Hello, @s!';
+    const functionVal = egFunction.value.trim() || 'my_pack:welcome';
+    const itemIdVal = egItemId.value.trim() || 'minecraft:carrot_on_a_stick';
+    const customDataVal = egCustomData.value.trim() || '{}';
+
+    let regCmd = '';
+    let unregCmd = '';
+
+    if (isItemEvent) {
+      if (typeVal === 'command') {
+        regCmd = `/function fb:event/register_item_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}",item_id:"${itemIdVal}",custom_data:${customDataVal}}`;
+        unregCmd = `/function fb:event/unregister_item_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}",item_id:"${itemIdVal}",custom_data:${customDataVal}}`;
+      } else {
+        regCmd = `/function fb:event/register_item {event:"${eventVal}",fn:"${functionVal}",item_id:"${itemIdVal}",custom_data:${customDataVal}}`;
+        unregCmd = `/function fb:event/unregister_item {event:"${eventVal}",fn:"${functionVal}",item_id:"${itemIdVal}",custom_data:${customDataVal}}`;
+      }
+    } else {
+      if (typeVal === 'command') {
+        regCmd = `/function fb:event/register_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}"}`;
+        unregCmd = `/function fb:event/unregister_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}"}`;
+      } else {
+        regCmd = `/function fb:event/register {event:"${eventVal}",fn:"${functionVal}"}`;
+        unregCmd = `/function fb:event/unregister {event:"${eventVal}",fn:"${functionVal}"}`;
+      }
+    }
+
+    egRegisterOutput.textContent = regCmd;
+    egUnregisterOutput.textContent = unregCmd;
+  }
+
+  const egInputs = [egEvent, egType, egCommand, egFunction, egItemId, egCustomData];
+  egInputs.forEach(input => {
+    input.addEventListener('input', updateEventGen);
+    input.addEventListener('change', updateEventGen);
+  });
+
+  egCopyRegBtn.addEventListener('click', () => copyToClipboard(egRegisterOutput.textContent, egCopyRegBtn));
+  egCopyUnregBtn.addEventListener('click', () => copyToClipboard(egUnregisterOutput.textContent, egCopyUnregBtn));
+
+  // Initialize event generator
+  updateEventGen();
 });
