@@ -4,7 +4,9 @@
 $scoreboard players set #$(name) fb.cd.state 1
 $scoreboard players set #$(name) fb.cd.t 0
 $scoreboard players set #$(name) fb.cd.ms 0
-$scoreboard players set #$(name) fb.cd.anim 0
+
+# Remove from active list immediately
+$data remove storage fb:main cd.list[{name:"$(name)"}]
 
 # Copy configuration from cd.db to tmp
 $data modify storage fb:tmp cd_config set from storage fb:main cd.db[{name:"$(name)"}]

@@ -166,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const cdMInput = document.getElementById('cd-m');
   const cdSInput = document.getElementById('cd-s');
   const cdCmdInput = document.getElementById('cd-cmd');
-  const cdAnimInput = document.getElementById('cd-anim');
   const cdFormatInput = document.getElementById('cd-format');
   const cdColorInput = document.getElementById('cd-color');
   const cdColorSecInput = document.getElementById('cd-color_sec');
@@ -177,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const cdPreviewPaused = document.getElementById('cd-preview-paused');
   const cdActionbarPreview = document.getElementById('cd-actionbarPreview');
-  const cdBtnAnimPrev = document.getElementById('cd-btn-anim-prev');
   
   const cdCommandOutputCreate = document.getElementById('cd-commandOutputCreate');
   const cdCommandOutputStart = document.getElementById('cd-commandOutputStart');
@@ -186,12 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cdCopyBtnStart = document.getElementById('cd-copyBtnStart');
   const cdCopyBtnDisplay = document.getElementById('cd-copyBtnDisplay');
 
-  let isCdAnimRunning = false;
-  let cdAnimInterval = null;
-
   function updateCd() {
-    if (isCdAnimRunning) return;
-
     const player = cdPlayerInput.value.trim() || '@a';
     const isGlobalTarget = player === '@a';
     
@@ -203,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const m = parseInt(cdMInput.value) || 0;
     const s = parseInt(cdSInput.value) || 0;
     const cmd = cdCmdInput.value.replace(/"/g, '\\"');
-    const anim = cdAnimInput.value;
     const format = cdFormatInput.value;
     const color = cdColorInput.value;
     const colorSec = cdColorSecInput.value;
@@ -214,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isPaused = cdPreviewPaused.checked;
 
     // 1. Generate Command 1: Create
-    const createCmd = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},on_complete:"${cmd}",animation:"${anim}"}`;
+    const createCmd = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},on_complete:"${cmd}"}`;
     cdCommandOutputCreate.textContent = createCmd;
 
     // 2. Generate Command 2: Start
@@ -283,97 +275,9 @@ document.addEventListener('DOMContentLoaded', () => {
     cdActionbarPreview.innerHTML = previewHtml;
   }
 
-  function testCdAnimation() {
-    if (isCdAnimRunning) return;
-    
-    isCdAnimRunning = true;
-    cdBtnAnimPrev.disabled = true;
-    cdBtnAnimPrev.textContent = 'Animating...';
-    
-    const animType = cdAnimInput.value;
-    const bold = cdBoldInput.checked;
-    let frames = 0;
-    
-    cdAnimInterval = setInterval(() => {
-      frames++;
-      let animHtml = '';
-
-      if (animType === 'flash') {
-        const isYellowFrame = Math.floor(frames / 5) % 2 === 0;
-        const color = isYellowFrame ? colorMap.yellow : colorMap.red;
-        animHtml = buildSpan('[!] TIME EXPIRED [!]', color, bold, false);
-      } else if (animType === 'alert') {
-        animHtml = buildSpan('[!] TIME EXPIRED [!]', colorMap.red, bold, false);
-      } else if (animType === 'pulse') {
-        const isGoldFrame = Math.floor(frames / 5) % 2 === 0;
-        const text = isGoldFrame ? '>> TIME EXPIRED <<' : '> TIME EXPIRED <';
-        const color = isGoldFrame ? colorMap.gold : colorMap.yellow;
-        animHtml = buildSpan(text, color, bold, false);
-      } else if (animType === 'blackout') {
-        animHtml = buildSpan('00:00.00', colorMap.dark_gray, bold, false);
-      } else if (animType === 'none') {
-        animHtml = ''; // None (Fade Out) - renders nothing
-      } else if (animType === 'stay') {
-        const format = cdFormatInput.value;
-        const color = cdColorInput.value;
-        const colorSec = cdColorSecInput.value;
-        const colorNum = cdColorNumInput.value;
-        const prefix = cdPrefixInput.value;
-        const suffix = cdSuffixInput.value;
-        
-        let previewHtml = '';
-        const colMain = colorMap[color];
-        const colSec = colorMap[colorSec];
-        const colNum = colorMap[colorNum];
-
-        if (prefix) previewHtml += buildSpan(prefix, colMain, bold, false);
-
-        if (format === 'digital') {
-          previewHtml += buildSpan('00', colNum, bold, false);
-          previewHtml += buildSpan(':', colSec, bold, false);
-          previewHtml += buildSpan('00', colNum, bold, false);
-          previewHtml += buildSpan(':', colSec, bold, false);
-          previewHtml += buildSpan('00', colNum, bold, false);
-        } else if (format === 'digital_short') {
-          previewHtml += buildSpan('00', colNum, bold, false);
-          previewHtml += buildSpan(':', colSec, bold, false);
-          previewHtml += buildSpan('00', colNum, bold, false);
-          previewHtml += buildSpan('.', colSec, bold, false);
-          previewHtml += buildSpan('00', colNum, bold, false);
-        } else if (format === 'letters') {
-          const h = parseInt(cdHInput.value) || 0;
-          if (h > 0) {
-            previewHtml += buildSpan('0', colNum, bold, false);
-            previewHtml += buildSpan('h ', colSec, bold, false);
-          }
-          previewHtml += buildSpan('0', colNum, bold, false);
-          previewHtml += buildSpan('m ', colSec, bold, false);
-          previewHtml += buildSpan('0', colNum, bold, false);
-          previewHtml += buildSpan('s', colSec, bold, false);
-        } else if (format === 'dynamic') {
-          previewHtml += buildSpan('0', colNum, bold, false);
-          previewHtml += buildSpan('s', colSec, bold, false);
-        }
-
-        if (suffix) previewHtml += buildSpan(suffix, colMain, bold, false);
-        animHtml = previewHtml;
-      }
-
-      cdActionbarPreview.innerHTML = animHtml;
-
-      if (frames >= 60) {
-        clearInterval(cdAnimInterval);
-        isCdAnimRunning = false;
-        cdBtnAnimPrev.disabled = false;
-        cdBtnAnimPrev.textContent = 'Test Animation';
-        updateCd();
-      }
-    }, 50);
-  }
-
   const cdInputs = [
     cdPlayerInput, cdGlobalTypeInput, cdNameInput, cdHInput, cdMInput, cdSInput,
-    cdCmdInput, cdAnimInput, cdFormatInput, cdColorInput, cdColorSecInput,
+    cdCmdInput, cdFormatInput, cdColorInput, cdColorSecInput,
     cdColorNumInput, cdPrefixInput, cdSuffixInput, cdBoldInput, cdPreviewPaused
   ];
   cdInputs.forEach(i => {

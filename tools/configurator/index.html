@@ -227,18 +227,6 @@
               </div>
 
               <div class="input-group">
-                <label for="cd-anim">Expiration Animation</label>
-                <select id="cd-anim">
-                  <option value="flash" selected>Flash (Red/Yellow)</option>
-                  <option value="alert">Alert (Red Bold)</option>
-                  <option value="pulse">Pulse (Expanding)</option>
-                  <option value="stay">Stay (Keep Colors)</option>
-                  <option value="none">None (Fade Out)</option>
-                  <option value="blackout">Blackout (Dark Gray)</option>
-                </select>
-              </div>
-
-              <div class="input-group">
                 <label for="cd-format">Display Format</label>
                 <select id="cd-format">
                   <option value="digital">Digital (HH:MM:SS)</option>
@@ -334,7 +322,7 @@
           <div class="card output-card small-margin">
             <h2>Command 1: Create Countdown</h2>
             <div class="command-box">
-              <code id="cd-commandOutputCreate">/function fb:cd/create {name:"demo",h:0,m:5,s:0,on_complete:"say Timer finished!",animation:"flash"}</code>
+              <code id="cd-commandOutputCreate">/function fb:cd/create {name:"demo",h:0,m:5,s:0,on_complete:"say Timer finished!"}</code>
               <button id="cd-copyBtnCreate" class="btn-copy">Copy</button>
             </div>
           </div>
@@ -498,7 +486,7 @@
               </h2>
               <p>Countdowns initialize in a paused state. You must explicitly start them to begin ticking down.</p>
               <p><strong>1. Initialize a countdown (1 minute, 30 seconds):</strong></p>
-              <pre><code>/function fb:cd/create {name:"my_timer",h:0,m:1,s:30,on_complete:"say Done!",animation:"flash"}</code></pre>
+              <pre><code>/function fb:cd/create {name:"my_timer",h:0,m:1,s:30,on_complete:"say Done!"}</code></pre>
               <p><strong>2. Assign display config to players:</strong></p>
               <pre><code>/function fb:cd/display_ab_custom {player:"@a",cd:"my_timer",format:"digital_short",color:"red",color_sec:"yellow",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></pre>
               <p><strong>3. Start the timer:</strong></p>
@@ -595,8 +583,7 @@
                 <li><code>fb.cd.state</code>: Active state of the countdown:
                   <ul>
                     <li><code>0</code>: Ticking (Active).</li>
-                    <li><code>1</code>: Expired / Animating (Time is up, flashing actionbar).</li>
-                    <li><code>2</code>: Finished / Inactive.</li>
+                    <li><code>1</code>: Finished / Expired.</li>
                   </ul>
                 </li>
               </ul>
