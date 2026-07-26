@@ -15,5 +15,8 @@ data modify storage fb:tmp event_context.player set from entity @e[tag=fb.temp_n
 # Copy resolved name from legacy SkullOwner tag (1.20 and below)
 execute unless data storage fb:tmp event_context.player run data modify storage fb:tmp event_context.player set from entity @e[tag=fb.temp_name_holder,limit=1] Items[0].tag.SkullOwner.Name
 
-# Clean up minecart
+# Clear inventory first so the head item NEVER drops into the world when killed
+data remove entity @e[tag=fb.temp_name_holder] Items
+
+# Clean up minecart entity
 kill @e[tag=fb.temp_name_holder]
