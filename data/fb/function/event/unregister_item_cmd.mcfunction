@@ -1,5 +1,6 @@
 # FuseBox Event System - Unregister Item Command Callback
-# Arguments: event, cmd, item_id, custom_data
+# Macro Arguments: event, cmd
+# Executed as server / caller
 
 $data remove storage fb:events $(event)[{fn: "$(cmd)"}]
 

@@ -20,7 +20,6 @@ data remove storage fb:tmp item_cd
 data remove storage fb:tmp item_components
 data remove storage fb:tmp event_match
 data remove storage fb:tmp check_cd
-data remove storage fb:tmp player_items
 
 # Reset event scoreboards for all players
 scoreboard players set @a fb.rc_stick 0

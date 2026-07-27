@@ -1,24 +1,20 @@
 # FuseBox Event System - Loop Callbacks Iteration
-# Arguments: player, list
 # Executed as player (@s)
 
 # 1. Copy head callback from list into current_callback
 data modify storage fb:tmp current_callback set from storage fb:tmp event_context.list[0]
 
-# 2. Step 3 Diagnostic Output for RightClick ONLY
-execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_context{name:"onRightClick"} run tellraw @a ["", {"text": "[FB RightClick Step 3] ", "color": "gold", "bold": true}, {"text": "Evaluating callback -> Target: '", "color": "yellow"}, {"nbt": "current_callback.fn", "storage": "fb:tmp", "color": "white"}, {"text": "' | Required Item: '", "color": "yellow"}, {"nbt": "current_callback.item_id", "storage": "fb:tmp", "color": "aqua"}, {"text": "' | Required Custom Data: ", "color": "yellow"}, {"nbt": "current_callback.custom_data", "storage": "fb:tmp", "color": "light_purple"}]
+# 2. Perform item & custom_data matching for this callback
+function fb:event/match_callback with storage fb:tmp current_callback
 
-# 3. Default match flag to 1b (true) for standard events
-data modify storage fb:tmp event_match set value {val: 1b}
+# 3. Diagnostic output for matcher breakdown (if enabled in debug config)
+execute if data storage fb:config {debug:{event:1b, event_show_matcher:1b}} run tellraw @a ["", {"text": "[FuseBox Matcher] ", "color": "yellow"}, {"text": "Target: ", "color": "gray"}, {"nbt": "current_callback.fn", "storage": "fb:tmp", "color": "white"}, {"text": " | Match Result: ", "color": "gray"}, {"nbt": "match_result.val", "storage": "fb:tmp", "color": "aqua"}, {"text": " | Hand: ", "color": "gray"}, {"nbt": "match_result.hand", "storage": "fb:tmp", "color": "light_purple"}]
 
-# 4. Perform item & custom_data matching for this callback
-function fb:event/match_item with storage fb:tmp current_callback
+# 4. If match is TRUE (1b), run callback dispatcher
+execute if data storage fb:tmp match_result{val: 1b} run function fb:event/run_single_callback with storage fb:tmp current_callback
 
-# 5. If match is TRUE, run callback dispatcher
-execute if data storage fb:tmp event_match{val: 1b} run function fb:event/run_single_callback with storage fb:tmp current_callback
-
-# 6. Shift processed callback out of list
+# 5. Shift processed callback out of list
 data remove storage fb:tmp event_context.list[0]
 
-# 7. Recurse if remaining callbacks exist in list
-execute if data storage fb:tmp event_context.list[0] run function fb:event/loop_callbacks with storage fb:tmp event_context
+# 6. Recurse if remaining callbacks exist in list
+execute if data storage fb:tmp event_context.list[0] run function fb:event/loop_callbacks

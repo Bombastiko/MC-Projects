@@ -1,7 +1,7 @@
-# Event detection tick loop
+# FuseBox Event System - Tick Loop
 # Executed as server every tick
 
-# 1. Join Detection (runs if player leave score is uninitialized, or player has rejoined)
+# 1. Join Detection
 execute as @a unless score @s fb.leave matches 0.. run function fb:event/trigger_join
 execute as @a if score @s fb.leave matches 1.. run function fb:event/trigger_join
 
@@ -21,14 +21,13 @@ function fb:event/check_leaves
 execute as @a if score @s fb.rc_stick matches 1.. run function fb:event/trigger_right_click
 execute as @a if score @s fb.rc_fungus matches 1.. run function fb:event/trigger_right_click
 
-# 7. Hold Item Detection (runs ONLY if at least 1 onHoldItem callback exists in registry)
-execute if data storage fb:events onHoldItem[0] run data modify storage fb:tmp event_context set value {name: "onHoldItem"}
-execute if data storage fb:events onHoldItem[0] as @a run function fb:event/run_callbacks
+# 7. Hold Item Detection (runs ONLY if callbacks exist in registry)
+execute if data storage fb:events onHoldItem[0] as @a run function fb:event/trigger_hold
 
-# 8. While Online Loop (runs every tick for all online players if callbacks are registered)
+# 8. While Online Loop
 execute if data storage fb:events whileOnline[0] run function fb:event/tick_while_online
 
-# 9. While Offline Loop (runs every tick for all offline players if callbacks are registered)
+# 9. While Offline Loop
 execute if data storage fb:events whileOffline[0] run function fb:event/tick_while_offline
 
 # 10. Damage Taken Detection
