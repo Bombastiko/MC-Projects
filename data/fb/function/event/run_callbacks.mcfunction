@@ -10,8 +10,10 @@ execute unless data storage fb:tmp event_context.item.id run data modify storage
 
 # 2. Extract live custom_data component compound into fb:tmp item_cd & fb:tmp event_context.item_cd
 data remove storage fb:tmp item_cd
-data modify storage fb:tmp item_cd set from storage fb:tmp event_context.item.components."minecraft:custom_data"
-execute unless data storage fb:tmp item_cd run data modify storage fb:tmp item_cd set from storage fb:tmp event_context.item.components.custom_data
+data remove storage fb:tmp item_components
+data modify storage fb:tmp item_components set from storage fb:tmp event_context.item.components
+data modify storage fb:tmp item_cd set from storage fb:tmp item_components."minecraft:custom_data"
+execute unless data storage fb:tmp item_cd run data modify storage fb:tmp item_cd set from storage fb:tmp item_components.custom_data
 execute unless data storage fb:tmp item_cd run data modify storage fb:tmp item_cd set from storage fb:tmp event_context.item.tag
 execute unless data storage fb:tmp item_cd run data modify storage fb:tmp item_cd set value {}
 data modify storage fb:tmp event_context.item_cd set from storage fb:tmp item_cd
