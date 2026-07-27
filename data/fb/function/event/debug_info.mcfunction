@@ -34,4 +34,5 @@ execute unless data storage fb:events whileOnline[0] run tellraw @a ["", {"text"
 execute if data storage fb:events whileOffline[0] run tellraw @a ["", {"text": "  whileOffline: ", "color": "gold"}, {"nbt": "whileOffline", "storage": "fb:events", "color": "white"}]
 execute unless data storage fb:events whileOffline[0] run tellraw @a ["", {"text": "  whileOffline: ", "color": "gray"}, {"text": "(None registered)", "color": "dark_gray"}]
 
+tellraw @a ["", {"text": "\n▶ Live In-World Hologram Display: ", "color": "yellow", "bold": true}, {"text": "[SPAWN HOLOGRAM BOARD]", "color": "green", "bold": true, "clickEvent": {"action": "run_command", "value": "/function fb:debug/spawn_board"}, "hoverEvent": {"action": "show_text", "contents": ["Spawn live text display hologram in front of you"]}}, {"text": " ", "color": "gray"}, {"text": "[DESPAWN BOARD]", "color": "red", "bold": true, "clickEvent": {"action": "run_command", "value": "/function fb:debug/remove_board"}, "hoverEvent": {"action": "show_text", "contents": ["Despawn text display hologram"]}}, "\n"]
 tellraw @a ["", {"text": "===============================================", "color": "yellow", "bold": true}]
