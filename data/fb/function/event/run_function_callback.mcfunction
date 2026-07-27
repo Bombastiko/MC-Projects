@@ -2,8 +2,8 @@
 # Arguments: fn
 # Executed as player (@s)
 
-# 1. Live debug log when callback actually fires
-$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp dbg_allow{val:1b} run tellraw @a ["", {"text": "[FB Event Fired] ", "color": "green", "bold": true}, {"text": "Executing function '", "color": "gray"}, {"text": "$(fn)", "color": "gold"}, {"text": "' for player ", "color": "gray"}, {"selector": "@s", "color": "white"}]
+# Step 6 Diagnostic Output for RightClick Execution
+$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_check{name:"onRightClick"} run tellraw @a ["", {"text": "[FB RightClick Step 6] ", "color": "gold", "bold": true}, {"text": "ALL FILTERS MATCHED! EXECUTING FUNCTION '", "color": "green", "bold": true}, {"text": "$(fn)", "color": "white", "bold": true}, {"text": "' FOR PLAYER ", "color": "green"}, {"selector": "@s", "color": "white"}]
 
-# 2. Call target function as player (@s)
+# Run macro function
 $function $(fn)

@@ -5,8 +5,8 @@
 scoreboard players set @s fb.rc_stick 0
 scoreboard players set @s fb.rc_fungus 0
 
-# Debug log
-execute if data storage fb:config {debug:{event:1b}} run tellraw @a [{"text": "[FB DEBUG] trigger_right_click for ", "color": "gray"}, {"selector": "@s", "color": "white"}]
+# Step 1 Diagnostic Output for RightClick
+execute if data storage fb:config {debug:{event:1b}} run tellraw @a ["", {"text": "[FB RightClick Step 1] ", "color": "gold", "bold": true}, {"text": "Right-click detected for player ", "color": "yellow"}, {"selector": "@s", "color": "white"}, {"text": ". Resetted click scoreboards.", "color": "gray"}]
 
-# Execute callbacks
+# Execute callbacks for onRightClick
 function fb:event/run_callbacks {event: "onRightClick"}

@@ -13,9 +13,9 @@ $execute if data entity @s SelectedItem{id:"minecraft:$(item_id)"} run data modi
 $execute if data entity @s Inventory[{Slot:-106b,id:"$(item_id)"}] run data modify storage fb:tmp event_match.val set value 1b
 $execute if data entity @s Inventory[{Slot:-106b,id:"minecraft:$(item_id)"}] run data modify storage fb:tmp event_match.val set value 1b
 
-# 3. Live debug matcher report (if verbose matcher debugging is enabled)
-$execute if data storage fb:config {debug:{event:1b, event_show_matcher:1b}} if data storage fb:tmp dbg_allow{val:1b} unless data storage fb:config {debug:{event_only_success:1b}} if data storage fb:tmp event_match{val:1b} run tellraw @a ["", {"text": "  [FB Matcher] ", "color": "dark_gray"}, {"text": "Item ID Matched: ", "color": "green"}, {"text": "$(item_id)", "color": "aqua"}]
-$execute if data storage fb:config {debug:{event:1b, event_show_matcher:1b}} if data storage fb:tmp dbg_allow{val:1b} unless data storage fb:config {debug:{event_only_success:1b}} if data storage fb:tmp event_match{val:0b} run tellraw @a ["", {"text": "  [FB Matcher] ", "color": "dark_gray"}, {"text": "Item ID Mismatch! ", "color": "red"}, {"text": "Required: ", "color": "gray"}, {"text": "$(item_id)", "color": "yellow"}, {"text": ", Held: ", "color": "gray"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "white"}]
+# 3. Step 4 Diagnostic Output for RightClick Item ID Match
+$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_check{name:"onRightClick"} if data storage fb:tmp event_match{val:1b} run tellraw @a ["", {"text": "  [FB RightClick Step 4] ", "color": "gold"}, {"text": "Item ID Check: ", "color": "yellow"}, {"text": "MATCH! ", "color": "green", "bold": true}, {"text": "(Required '$(item_id)' == Held '", "color": "gray"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "aqua"}, {"text": "')", "color": "gray"}]
+$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_check{name:"onRightClick"} if data storage fb:tmp event_match{val:0b} run tellraw @a ["", {"text": "  [FB RightClick Step 4] ", "color": "gold"}, {"text": "Item ID Check: ", "color": "yellow"}, {"text": "MISMATCH! ", "color": "red", "bold": true}, {"text": "(Required '$(item_id)' != Held '", "color": "gray"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "white"}, {"text": "')", "color": "gray"}]
 
 # 4. Check custom_data if provided and not empty compound {}
 $data modify storage fb:tmp check_cd set value $(custom_data)
