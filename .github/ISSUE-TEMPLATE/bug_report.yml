@@ -1,7 +1,7 @@
 name: "Bug report/Feature request"
 description: "Report a bug or create a feature request for one of my projects uploaded to modrinth."
 title: "[Project name]: Short description of the problem"
-labels: ["Pending"] # Diese Labels werden automatisch vergeben
+labels: ["Pending"]
 body:
   - type: dropdown
     id: project
