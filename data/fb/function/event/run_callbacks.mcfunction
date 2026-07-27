@@ -23,11 +23,15 @@ data modify storage fb:tmp event_check set value {name: ""}
 $data modify storage fb:tmp event_check.name set value "$(event)"
 execute if data storage fb:tmp event_check{name:"onJoin"} run function fb:event/add_online_player
 
-# 4. Step 2 Diagnostic Output for RightClick
-$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_check{name:"onRightClick"} run tellraw @a ["", {"text": "[FB RightClick Step 2] ", "color": "gold", "bold": true}, {"text": "Extracted held item -> ID: ", "color": "yellow"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "aqua"}, {"text": " | Custom Data: ", "color": "yellow"}, {"nbt": "item_cd", "storage": "fb:tmp", "color": "light_purple"}]
-
-# 5. Copy registered callbacks array for this event
+# 4. Copy registered callbacks array for this event into event_context.list
+data remove storage fb:tmp event_context.list
 $data modify storage fb:tmp event_context.list set from storage fb:events $(event)
 
-# 6. Start iteration if callbacks exist in list
+# 5. Diagnostic Step 2 Output
+$execute if data storage fb:config {debug:{event:1b}} run tellraw @a ["", {"text": "[FB Event Step 2: $(event)] ", "color": "gold", "bold": true}, {"text": "Held Item ID: ", "color": "yellow"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "aqua"}, {"text": " | Custom Data: ", "color": "yellow"}, {"nbt": "item_cd", "storage": "fb:tmp", "color": "light_purple"}]
+
+# 6. Diagnostic Warning if no callbacks exist in storage
+$execute unless data storage fb:tmp event_context.list[0] if data storage fb:config {debug:{event:1b}} run tellraw @a ["", {"text": "  [FB Event Warning] ", "color": "red", "bold": true}, {"text": "No callbacks registered for event '", "color": "yellow"}, {"text": "$(event)", "color": "white"}, {"text": "' in fb:events! Use /function fb:event/register_item_cmd to register one.", "color": "yellow"}]
+
+# 7. Start iteration if callbacks exist in list
 execute if data storage fb:tmp event_context.list[0] run function fb:event/loop_callbacks with storage fb:tmp event_context
