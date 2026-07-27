@@ -25,3 +25,9 @@ execute as @a[scores={fb.debug.tg=6}] run scoreboard players set @s fb.debug.tg 
 
 execute as @a[scores={fb.debug.tg=7}] run function fb:debug/toggle_event_show_register
 execute as @a[scores={fb.debug.tg=7}] run scoreboard players set @s fb.debug.tg 0
+
+execute as @a[scores={fb.debug.tg=8}] run function fb:debug/toggle_event_hold
+execute as @a[scores={fb.debug.tg=8}] run scoreboard players set @s fb.debug.tg 0
+
+execute as @a[scores={fb.debug.tg=9}] run function fb:debug/toggle_event_rc
+execute as @a[scores={fb.debug.tg=9}] run scoreboard players set @s fb.debug.tg 0

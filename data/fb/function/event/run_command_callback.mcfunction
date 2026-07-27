@@ -1,8 +1,8 @@
 # Run direct command callback macro
 # Arguments: fn
 
-# Debug log
-$execute if data storage fb:config {debug:{event:1b}} run tellraw @a ["", {"text": "[FB Callback Execute] ", "color": "green", "bold": true}, {"text": "Executing command: ", "color": "gray"}, {"text": "$(fn)", "color": "gold"}]
+# Debug log (ONLY IF master debug is ON and dbg_allow is 1)
+$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp dbg_allow{val:1b} run tellraw @a ["", {"text": "[FB Event Fired] ", "color": "green", "bold": true}, {"text": "Executing command '", "color": "gray"}, {"text": "$(fn)", "color": "gold"}, {"text": "' for player ", "color": "gray"}, {"selector": "@s", "color": "white"}]
 
 # Run direct command string as a macro line
 $$(fn)
