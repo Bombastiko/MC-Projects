@@ -16,5 +16,5 @@ $data modify storage fb:tmp cb_entry.custom_data set value $(custom_data)
 # Append callback to the list
 data modify storage fb:events $(event) append from storage fb:tmp cb_entry
 
-# Feedback broadcast (Debug toggle check)
-$execute if data storage fb:config {debug:{event:1b}} run tellraw @a ["", {"text": "[FuseBox] ", "color": "yellow", "bold": true}, {"text": "Registered item command for event '", "color": "green"}, {"text": "$(event)", "color": "white"}, {"text": "' (Item: $(item_id))", "color": "green"}]
+# Detailed Feedback broadcast (Debug toggle check)
+$execute if data storage fb:config {debug:{event:1b}} run tellraw @a ["", {"text": "[FuseBox Debug] ", "color": "yellow", "bold": true}, {"text": "Registered command '", "color": "gold"}, {"text": "$(cmd)", "color": "white"}, {"text": "' for event '", "color": "gold"}, {"text": "$(event)", "color": "white"}, {"text": "' [Item: ", "color": "gray"}, {"text": "$(item_id)", "color": "aqua"}, {"text": ", Custom Data: ", "color": "gray"}, {"nbt": "custom_data", "storage": "fb:tmp cb_entry", "color": "light_purple"}, {"text": "]", "color": "gray"}]

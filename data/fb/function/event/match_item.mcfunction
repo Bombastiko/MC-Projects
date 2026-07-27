@@ -10,6 +10,10 @@ $execute if data storage fb:tmp event_context{item: {id: "minecraft:$(item_id)"}
 $execute if data entity @s SelectedItem{id:"$(item_id)"} run data modify storage fb:tmp event_match.val set value 1b
 $execute if data entity @s SelectedItem{id:"minecraft:$(item_id)"} run data modify storage fb:tmp event_match.val set value 1b
 
+# Live debug matcher report
+$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_match{val:1b} run tellraw @a ["", {"text": "  [FB Matcher] ", "color": "dark_gray"}, {"text": "Item ID Matched: ", "color": "green"}, {"text": "$(item_id)", "color": "aqua"}]
+$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_match{val:0b} run tellraw @a ["", {"text": "  [FB Matcher] ", "color": "dark_gray"}, {"text": "Item ID Mismatch! ", "color": "red"}, {"text": "Required: ", "color": "gray"}, {"text": "$(item_id)", "color": "yellow"}, {"text": ", Held: ", "color": "gray"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "white"}]
+
 # 2. Check custom_data if it is not empty
 $data modify storage fb:tmp check_cd set value $(custom_data)
 
