@@ -5,8 +5,8 @@
 # 1. Copy head callback from list into current_callback
 data modify storage fb:tmp current_callback set from storage fb:tmp event_context.list[0]
 
-# 2. Step 3 Diagnostic Output
-execute if data storage fb:config {debug:{event:1b}} run tellraw @a ["", {"text": "[FB Event Step 3] ", "color": "gold", "bold": true}, {"text": "Evaluating callback -> Target: '", "color": "yellow"}, {"nbt": "current_callback.fn", "storage": "fb:tmp", "color": "white"}, {"text": "' | Required Item: '", "color": "yellow"}, {"nbt": "current_callback.item_id", "storage": "fb:tmp", "color": "aqua"}, {"text": "' | Required Custom Data: ", "color": "yellow"}, {"nbt": "current_callback.custom_data", "storage": "fb:tmp", "color": "light_purple"}]
+# 2. Step 3 Diagnostic Output for RightClick ONLY
+execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_check{name:"onRightClick"} run tellraw @a ["", {"text": "[FB RightClick Step 3] ", "color": "gold", "bold": true}, {"text": "Evaluating callback -> Target: '", "color": "yellow"}, {"nbt": "current_callback.fn", "storage": "fb:tmp", "color": "white"}, {"text": "' | Required Item: '", "color": "yellow"}, {"nbt": "current_callback.item_id", "storage": "fb:tmp", "color": "aqua"}, {"text": "' | Required Custom Data: ", "color": "yellow"}, {"nbt": "current_callback.custom_data", "storage": "fb:tmp", "color": "light_purple"}]
 
 # 3. Default match flag to 1b (true) for standard events
 data modify storage fb:tmp event_match set value {val: 1b}
