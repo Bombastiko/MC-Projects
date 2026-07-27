@@ -9,17 +9,15 @@ $execute unless data storage fb:events $(event) run data modify storage fb:event
 $data remove storage fb:events $(event)[{fn: "$(fn)"}]
 
 # 3. Construct clean callback compound
-data modify storage fb:tmp cb_entry set value {fn: "", type: "function", item_id: "", custom_data: {}, has_item_filter: 1b, has_cd_filter: 1b}
+data modify storage fb:tmp cb_entry set value {fn: "", type: "function", item_id: "", custom_data: {}, has_item_filter: 1b}
 $data modify storage fb:tmp cb_entry.fn set value "$(fn)"
 $data modify storage fb:tmp cb_entry.item_id set value "$(item_id)"
 $data modify storage fb:tmp cb_entry.custom_data set value $(custom_data)
 
-# 4. Calculate filter flags (Using valid root NBT compound check syntax)
+# 4. Calculate item_id filter flag (0b if blank or wildcard)
 execute if data storage fb:tmp {cb_entry: {item_id: ""}} run data modify storage fb:tmp cb_entry.has_item_filter set value 0b
 execute if data storage fb:tmp {cb_entry: {item_id: "*"}} run data modify storage fb:tmp cb_entry.has_item_filter set value 0b
 execute if data storage fb:tmp {cb_entry: {item_id: "minecraft:*"}} run data modify storage fb:tmp cb_entry.has_item_filter set value 0b
-
-execute if data storage fb:tmp {cb_entry: {custom_data: {}}} run data modify storage fb:tmp cb_entry.has_cd_filter set value 0b
 
 # 5. Append to event callback registry
 $data modify storage fb:events $(event) append from storage fb:tmp cb_entry
