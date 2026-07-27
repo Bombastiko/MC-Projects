@@ -2,7 +2,7 @@
 # Executed as player (@s)
 
 # 1. Purge previous database
-function fb:event/reset-db
+function fb:event/reset_db
 
 # 2. Setup scoreboards for tracking test trigger assertions
 scoreboard objectives add fb.t_fire dummy
@@ -12,13 +12,13 @@ scoreboard players set @s fb.t_fire 0
 scoreboard players set @s fb.t_ice 0
 scoreboard players set @s fb.t_hold 0
 
-# 3. Configure Debug Toggles for Clean Test Environment (Mute tick spam & registration messages)
-data modify storage fb:config debug.event set value 1b
+# 3. Configure Debug Toggles for Completely Silent Test Execution
+data modify storage fb:config debug.event set value 0b
 data modify storage fb:config debug.event_only_success set value 1b
 data modify storage fb:config debug.event_show_matcher set value 0b
 data modify storage fb:config debug.event_show_register set value 0b
-data modify storage fb:config debug.event_hold set value 1b
-data modify storage fb:config debug.event_rc set value 1b
+data modify storage fb:config debug.event_hold set value 0b
+data modify storage fb:config debug.event_rc set value 0b
 
 # 4. Register test callbacks with scoreboard increment commands
 function fb:event/register_item_cmd {event:"onRightClick", cmd:"scoreboard players add @s fb.t_fire 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"fire"}}
