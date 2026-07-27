@@ -13,11 +13,10 @@ $execute if items entity @s weapon.offhand *[custom_data=$(custom_data)] run dat
 $execute if data storage fb:tmp {item_cd: $(custom_data)} run data modify storage fb:tmp event_match.val set value 1b
 $execute if data storage fb:tmp {event_context: {item_cd: $(custom_data)}} run data modify storage fb:tmp event_match.val set value 1b
 
-# 4. Direct entity fallback checks on player entity @s SelectedItem (or Offhand Slot -106b)
-$execute if data entity @s SelectedItem{components:{"minecraft:custom_data":$(custom_data)}} run data modify storage fb:tmp event_match.val set value 1b
+# 4. Direct entity fallback checks on player entity @s SelectedItem
 $execute if data entity @s SelectedItem{components:{custom_data:$(custom_data)}} run data modify storage fb:tmp event_match.val set value 1b
 $execute if data entity @s SelectedItem{tag:$(custom_data)} run data modify storage fb:tmp event_match.val set value 1b
-$execute if data entity @s Inventory[{Slot:-106b,components:{"minecraft:custom_data":$(custom_data)}}] run data modify storage fb:tmp event_match.val set value 1b
+$execute if data entity @s Inventory[{Slot:-106b,components:{custom_data:$(custom_data)}}] run data modify storage fb:tmp event_match.val set value 1b
 
 # 5. Step 5 Diagnostic Output for RightClick ONLY
 $execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_check{name:"onRightClick"} if data storage fb:tmp event_match{val:1b} run tellraw @a ["", {"text": "  [FB RightClick Step 5] ", "color": "gold"}, {"text": "Custom Data Check: ", "color": "yellow"}, {"text": "MATCH! ", "color": "green", "bold": true}, {"text": "(Required: ", "color": "gray"}, {"nbt": "custom_data", "storage": "fb:tmp current_callback", "color": "light_purple"}, {"text": " == Held: ", "color": "gray"}, {"nbt": "item_cd", "storage": "fb:tmp", "color": "light_purple"}, {"text": ")", "color": "gray"}]
