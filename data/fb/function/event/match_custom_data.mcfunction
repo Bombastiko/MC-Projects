@@ -1,12 +1,19 @@
 # Match custom data component macro
 # Arguments: custom_data
 
-# Extract custom_data component from player's held item
-data remove storage fb:tmp player_cd
-data modify storage fb:tmp player_cd set from storage fb:tmp event_context.item.components."minecraft:custom_data"
+# Assume custom_data match fails by default
+data modify storage fb:tmp event_match set value {val: 0b}
 
-# Fallback for legacy tag structure if present
-execute unless data storage fb:tmp player_cd run data modify storage fb:tmp player_cd set from storage fb:tmp event_context.item.tag
+# Copy item custom data to tmp for direct compound matching
+data remove storage fb:tmp cd_check
+data modify storage fb:tmp cd_check set from storage fb:tmp event_context.item.components."minecraft:custom_data"
+execute unless data storage fb:tmp cd_check run data modify storage fb:tmp cd_check set from storage fb:tmp event_context.item.components.custom_data
+execute unless data storage fb:tmp cd_check run data modify storage fb:tmp cd_check set from storage fb:tmp event_context.item.tag
 
-# If the player's held item custom data does not match the required compound, set match flag to 0
-$execute unless data storage fb:tmp player_cd$(custom_data) run data modify storage fb:tmp event_match.val set value 0b
+# Test if cd_check matches the required custom_data compound
+$execute if data storage fb:tmp cd_check$(custom_data) run data modify storage fb:tmp event_match.val set value 1b
+
+# Fallback: Test directly on event_context if cd_check direct match was negative
+$execute if data storage fb:tmp event_context{item: {components: {"minecraft:custom_data": $(custom_data)}}} run data modify storage fb:tmp event_match.val set value 1b
+$execute if data storage fb:tmp event_context{item: {components: {custom_data: $(custom_data)}}} run data modify storage fb:tmp event_match.val set value 1b
+$execute if data storage fb:tmp event_context{item: {tag: $(custom_data)}} run data modify storage fb:tmp event_match.val set value 1b
