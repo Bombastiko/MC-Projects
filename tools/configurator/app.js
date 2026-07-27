@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
       pages.forEach(page => {
         if (page.id === targetPage) {
           page.classList.add('active');
+          if (targetPage === 'event-generator-page' && typeof updateEventGen === 'function') {
+            updateEventGen();
+          }
         } else {
           page.classList.remove('active');
         }
@@ -347,22 +350,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const egCopyRegBtn = document.getElementById('eg-copy-reg-btn');
   const egCopyUnregBtn = document.getElementById('eg-copy-unreg-btn');
 
-  function updateEventGen() {
+  window.updateEventGen = function() {
+    if (!egEvent || !egType) return;
+
     const eventVal = egEvent.value;
     const typeVal = egType.value;
     const isItemEvent = eventVal === 'onRightClick' || eventVal === 'onHoldItem';
 
     // Show/Hide inputs
-    egCommandGroup.style.display = typeVal === 'command' ? 'flex' : 'none';
-    egFunctionGroup.style.display = typeVal === 'function' ? 'flex' : 'none';
-    egItemIdGroup.style.display = isItemEvent ? 'flex' : 'none';
-    egCustomDataGroup.style.display = isItemEvent ? 'flex' : 'none';
+    if (egCommandGroup) egCommandGroup.style.display = typeVal === 'command' ? 'flex' : 'none';
+    if (egFunctionGroup) egFunctionGroup.style.display = typeVal === 'function' ? 'flex' : 'none';
+    if (egItemIdGroup) egItemIdGroup.style.display = isItemEvent ? 'flex' : 'none';
+    if (egCustomDataGroup) egCustomDataGroup.style.display = isItemEvent ? 'flex' : 'none';
 
     // Get input values
-    const commandVal = egCommand.value.trim() || 'say Hello, @s!';
-    const functionVal = egFunction.value.trim() || 'my_pack:welcome';
-    const itemIdVal = egItemId.value.trim() || 'minecraft:carrot_on_a_stick';
-    const customDataVal = egCustomData.value.trim() || '{}';
+    const commandVal = (egCommand ? egCommand.value.trim() : '') || 'say Hello, @s!';
+    const functionVal = (egFunction ? egFunction.value.trim() : '') || 'my_pack:welcome';
+    const itemIdVal = (egItemId ? egItemId.value.trim() : '') || 'minecraft:carrot_on_a_stick';
+    const customDataVal = (egCustomData ? egCustomData.value.trim() : '') || '{}';
 
     let regCmd = '';
     let unregCmd = '';
@@ -385,19 +390,27 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    egRegisterOutput.textContent = regCmd;
-    egUnregisterOutput.textContent = unregCmd;
+    if (egRegisterOutput) egRegisterOutput.textContent = regCmd;
+    if (egUnregisterOutput) egUnregisterOutput.textContent = unregCmd;
+  };
+
+  const eventGenForm = document.getElementById('eventGenForm');
+  if (eventGenForm) {
+    eventGenForm.addEventListener('input', window.updateEventGen);
+    eventGenForm.addEventListener('change', window.updateEventGen);
   }
 
   const egInputs = [egEvent, egType, egCommand, egFunction, egItemId, egCustomData];
   egInputs.forEach(input => {
-    input.addEventListener('input', updateEventGen);
-    input.addEventListener('change', updateEventGen);
+    if (input) {
+      input.addEventListener('input', window.updateEventGen);
+      input.addEventListener('change', window.updateEventGen);
+    }
   });
 
-  egCopyRegBtn.addEventListener('click', () => copyToClipboard(egRegisterOutput.textContent, egCopyRegBtn));
-  egCopyUnregBtn.addEventListener('click', () => copyToClipboard(egUnregisterOutput.textContent, egCopyUnregBtn));
+  if (egCopyRegBtn) egCopyRegBtn.addEventListener('click', () => copyToClipboard(egRegisterOutput.textContent, egCopyRegBtn));
+  if (egCopyUnregBtn) egCopyUnregBtn.addEventListener('click', () => copyToClipboard(egUnregisterOutput.textContent, egCopyUnregBtn));
 
   // Initialize event generator
-  updateEventGen();
+  window.updateEventGen();
 });
