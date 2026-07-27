@@ -11,8 +11,8 @@ execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp even
 # 3. Default match flag to 1b (true) for standard events
 data modify storage fb:tmp event_match set value {val: 1b}
 
-# 4. If this callback has an item_id filter (not empty ""), perform item matching
-execute unless data storage fb:tmp current_callback{item_id:""} run function fb:event/match_item with storage fb:tmp current_callback
+# 4. Perform item & custom_data matching for this callback
+function fb:event/match_item with storage fb:tmp current_callback
 
 # 5. If match is TRUE, run callback dispatcher
 execute if data storage fb:tmp event_match{val: 1b} run function fb:event/run_single_callback with storage fb:tmp current_callback
