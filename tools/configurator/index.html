@@ -363,7 +363,7 @@
               
               <div class="input-group">
                 <label for="eg-event">Event Type</label>
-                <select id="eg-event">
+                <select id="eg-event" onchange="updateEventGen()" oninput="updateEventGen()">
                   <optgroup label="Standard Events">
                     <option value="onJoin" selected>onJoin (Join Server)</option>
                     <option value="onDeath">onDeath (Player Death)</option>
@@ -384,7 +384,7 @@
 
               <div class="input-group">
                 <label for="eg-type">Callback Type</label>
-                <select id="eg-type">
+                <select id="eg-type" onchange="updateEventGen()" oninput="updateEventGen()">
                   <option value="command" selected>Direct Command</option>
                   <option value="function">Function Callback</option>
                 </select>
@@ -393,24 +393,24 @@
               <!-- Conditional fields for Command -->
               <div class="input-group full-width" id="eg-command-group">
                 <label for="eg-command">Command to Execute</label>
-                <input type="text" id="eg-command" value="say Hello, @s!" placeholder="e.g. effect give @s speed 5 1">
+                <input type="text" id="eg-command" value="say Hello, @s!" placeholder="e.g. effect give @s speed 5 1" oninput="updateEventGen()" onchange="updateEventGen()">
               </div>
 
               <!-- Conditional fields for Function -->
               <div class="input-group full-width" id="eg-function-group" style="display: none;">
                 <label for="eg-function">Function Namespace/Path</label>
-                <input type="text" id="eg-function" value="my_pack:welcome" placeholder="e.g. namespace:folder/my_function">
+                <input type="text" id="eg-function" value="my_pack:welcome" placeholder="e.g. namespace:folder/my_function" oninput="updateEventGen()" onchange="updateEventGen()">
               </div>
 
               <!-- Item-Specific Fields -->
               <div class="input-group" id="eg-item-id-group" style="display: none;">
                 <label for="eg-item-id">Item ID</label>
-                <input type="text" id="eg-item-id" value="minecraft:carrot_on_a_stick" placeholder="e.g. minecraft:carrot_on_a_stick">
+                <input type="text" id="eg-item-id" value="minecraft:carrot_on_a_stick" placeholder="e.g. minecraft:carrot_on_a_stick" oninput="updateEventGen()" onchange="updateEventGen()">
               </div>
 
               <div class="input-group" id="eg-custom-data-group" style="display: none;">
                 <label for="eg-custom-data">Custom Data Filter (NBT JSON)</label>
-                <input type="text" id="eg-custom-data" value="{wand_type:&quot;speed&quot;}" placeholder="e.g. {wand_type:&quot;speed&quot;}">
+                <input type="text" id="eg-custom-data" value="{wand_type:&quot;speed&quot;}" placeholder="e.g. {wand_type:&quot;speed&quot;}" oninput="updateEventGen()" onchange="updateEventGen()">
               </div>
 
             </div>

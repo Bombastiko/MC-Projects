@@ -412,5 +412,67 @@ document.addEventListener('DOMContentLoaded', () => {
   if (egCopyUnregBtn) egCopyUnregBtn.addEventListener('click', () => copyToClipboard(egUnregisterOutput.textContent, egCopyUnregBtn));
 
   // Initialize event generator
-  window.updateEventGen();
+  if (typeof window.updateEventGen === 'function') {
+    window.updateEventGen();
+  }
 });
+
+// Global Event Generator update function
+window.updateEventGen = function() {
+  const egEvent = document.getElementById('eg-event');
+  const egType = document.getElementById('eg-type');
+  const egCommand = document.getElementById('eg-command');
+  const egFunction = document.getElementById('eg-function');
+  const egItemId = document.getElementById('eg-item-id');
+  const egCustomData = document.getElementById('eg-custom-data');
+
+  if (!egEvent || !egType) return;
+
+  const eventVal = egEvent.value;
+  const typeVal = egType.value;
+  const isItemEvent = eventVal === 'onRightClick' || eventVal === 'onHoldItem';
+
+  const egCommandGroup = document.getElementById('eg-command-group');
+  const egFunctionGroup = document.getElementById('eg-function-group');
+  const egItemIdGroup = document.getElementById('eg-item-id-group');
+  const egCustomDataGroup = document.getElementById('eg-custom-data-group');
+
+  const egRegisterOutput = document.getElementById('eg-register-output');
+  const egUnregisterOutput = document.getElementById('eg-unregister-output');
+
+  // Show/Hide inputs
+  if (egCommandGroup) egCommandGroup.style.display = typeVal === 'command' ? 'flex' : 'none';
+  if (egFunctionGroup) egFunctionGroup.style.display = typeVal === 'function' ? 'flex' : 'none';
+  if (egItemIdGroup) egItemIdGroup.style.display = isItemEvent ? 'flex' : 'none';
+  if (egCustomDataGroup) egCustomDataGroup.style.display = isItemEvent ? 'flex' : 'none';
+
+  // Get input values
+  const commandVal = (egCommand && egCommand.value) ? egCommand.value.trim() : 'say Hello, @s!';
+  const functionVal = (egFunction && egFunction.value) ? egFunction.value.trim() : 'my_pack:welcome';
+  const itemIdVal = (egItemId && egItemId.value) ? egItemId.value.trim() : 'minecraft:carrot_on_a_stick';
+  const customDataVal = (egCustomData && egCustomData.value) ? egCustomData.value.trim() : '{}';
+
+  let regCmd = '';
+  let unregCmd = '';
+
+  if (isItemEvent) {
+    if (typeVal === 'command') {
+      regCmd = `/function fb:event/register_item_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}",item_id:"${itemIdVal}",custom_data:${customDataVal || '{}'}}`;
+      unregCmd = `/function fb:event/unregister_item_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}",item_id:"${itemIdVal}",custom_data:${customDataVal || '{}'}}`;
+    } else {
+      regCmd = `/function fb:event/register_item {event:"${eventVal}",fn:"${functionVal}",item_id:"${itemIdVal}",custom_data:${customDataVal || '{}'}}`;
+      unregCmd = `/function fb:event/unregister_item {event:"${eventVal}",fn:"${functionVal}",item_id:"${itemIdVal}",custom_data:${customDataVal || '{}'}}`;
+    }
+  } else {
+    if (typeVal === 'command') {
+      regCmd = `/function fb:event/register_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}"}`;
+      unregCmd = `/function fb:event/unregister_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}"}`;
+    } else {
+      regCmd = `/function fb:event/register {event:"${eventVal}",fn:"${functionVal}"}`;
+      unregCmd = `/function fb:event/unregister {event:"${eventVal}",fn:"${functionVal}"}`;
+    }
+  }
+
+  if (egRegisterOutput) egRegisterOutput.textContent = regCmd;
+  if (egUnregisterOutput) egUnregisterOutput.textContent = unregCmd;
+};
