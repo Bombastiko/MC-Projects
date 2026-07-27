@@ -1,1 +1,36 @@
+name: "Bug report/Feature request"
+description: "Report a bug or create a feature request for one of my projects uploaded to modrinth."
+title: "[Project name]: Short description of the problem"
+labels: ["Pending"] # Diese Labels werden automatisch vergeben
+body:
+  - type: dropdown
+    id: project
+    attributes:
+      label: "Please select the relevant project"
+      options:
+        - "Announcer"
+        - "EZ Timer"
+        - "FuseBox"
+        - "Join Play Time"
+        - "One Way Glider"
+        - "Player Size Changer"
+    validations:
+      required: true
 
+  - type: dropdown
+    id: type
+    attributes:
+      label: "Do you want to report a bug or do you want to request a feature?"
+      options:
+        - "Bug report"
+        - "Feature request"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      placeholder: "Please explain your report or request in as much detail as possible."
+    validations:
+      required: true
