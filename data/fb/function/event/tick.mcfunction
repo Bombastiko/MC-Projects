@@ -22,7 +22,8 @@ execute as @a if score @s fb.rc_stick matches 1.. run function fb:event/trigger_
 execute as @a if score @s fb.rc_fungus matches 1.. run function fb:event/trigger_right_click
 
 # 7. Hold Item Detection (runs ONLY if at least 1 onHoldItem callback exists in registry)
-execute if data storage fb:events onHoldItem[0] as @a run function fb:event/run_callbacks {event: "onHoldItem"}
+execute if data storage fb:events onHoldItem[0] run data modify storage fb:tmp event_context set value {name: "onHoldItem"}
+execute if data storage fb:events onHoldItem[0] as @a run function fb:event/run_callbacks
 
 # 8. While Online Loop (runs every tick for all online players if callbacks are registered)
 execute if data storage fb:events whileOnline[0] run function fb:event/tick_while_online
