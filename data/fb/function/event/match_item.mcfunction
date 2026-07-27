@@ -14,10 +14,6 @@ $execute if items entity @s weapon.offhand minecraft:$(item_id) run data modify 
 # 3. Storage & Entity SelectedItem Fallbacks
 $execute if data storage fb:tmp {event_context: {item: {id: "$(item_id)"}}} run data modify storage fb:tmp event_match.val set value 1b
 $execute if data storage fb:tmp {event_context: {item: {id: "minecraft:$(item_id)"}}} run data modify storage fb:tmp event_match.val set value 1b
-$execute if data entity @s SelectedItem{id:"$(item_id)"} run data modify storage fb:tmp event_match.val set value 1b
-$execute if data entity @s SelectedItem{id:"minecraft:$(item_id)"} run data modify storage fb:tmp event_match.val set value 1b
-$execute if data entity @s Inventory[{Slot:-106b,id:"$(item_id)"}] run data modify storage fb:tmp event_match.val set value 1b
-$execute if data entity @s Inventory[{Slot:-106b,id:"minecraft:$(item_id)"}] run data modify storage fb:tmp event_match.val set value 1b
 
 # 4. Step 4 Diagnostic Output for RightClick ONLY
 $execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp event_context{name:"onRightClick"} if data storage fb:tmp event_match{val:1b} run tellraw @a ["", {"text": "  [FB RightClick Step 4] ", "color": "gold"}, {"text": "Item ID Check: ", "color": "yellow"}, {"text": "MATCH! ", "color": "green", "bold": true}, {"text": "(Required '$(item_id)' == Held '", "color": "gray"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "aqua"}, {"text": "')", "color": "gray"}]
