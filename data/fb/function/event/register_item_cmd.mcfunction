@@ -14,12 +14,12 @@ $data modify storage fb:tmp cb_entry.fn set value "$(cmd)"
 $data modify storage fb:tmp cb_entry.item_id set value "$(item_id)"
 $data modify storage fb:tmp cb_entry.custom_data set value $(custom_data)
 
-# 4. Calculate filter flags & normalize item ID
-$execute if data storage fb:tmp cb_entry{item_id: ""} run data modify storage fb:tmp cb_entry.has_item_filter set value 0b
-$execute if data storage fb:tmp cb_entry{item_id: "*"} run data modify storage fb:tmp cb_entry.has_item_filter set value 0b
-$execute if data storage fb:tmp cb_entry{item_id: "minecraft:*"} run data modify storage fb:tmp cb_entry.has_item_filter set value 0b
+# 4. Calculate filter flags (Using valid root NBT compound check syntax)
+execute if data storage fb:tmp {cb_entry: {item_id: ""}} run data modify storage fb:tmp cb_entry.has_item_filter set value 0b
+execute if data storage fb:tmp {cb_entry: {item_id: "*"}} run data modify storage fb:tmp cb_entry.has_item_filter set value 0b
+execute if data storage fb:tmp {cb_entry: {item_id: "minecraft:*"}} run data modify storage fb:tmp cb_entry.has_item_filter set value 0b
 
-$execute if data storage fb:tmp cb_entry{custom_data: {}} run data modify storage fb:tmp cb_entry.has_cd_filter set value 0b
+execute if data storage fb:tmp {cb_entry: {custom_data: {}}} run data modify storage fb:tmp cb_entry.has_cd_filter set value 0b
 
 # 5. Append to event callback registry
 $data modify storage fb:events $(event) append from storage fb:tmp cb_entry

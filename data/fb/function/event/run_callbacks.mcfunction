@@ -8,16 +8,22 @@ data remove storage fb:tmp player_items
 data modify storage fb:tmp player_items.mainhand.id set from entity @s SelectedItem.id
 execute unless data storage fb:tmp player_items.mainhand.id run data modify storage fb:tmp player_items.mainhand.id set value "minecraft:air"
 
+data remove storage fb:tmp player_items.mainhand.custom_data
 data modify storage fb:tmp player_items.mainhand.custom_data set from entity @s SelectedItem.components."minecraft:custom_data"
 execute unless data storage fb:tmp player_items.mainhand.custom_data run data modify storage fb:tmp player_items.mainhand.custom_data set from entity @s SelectedItem.components.custom_data
+execute unless data storage fb:tmp player_items.mainhand.custom_data run data modify storage fb:tmp player_items.mainhand.custom_data set from entity @s SelectedItem.tag.custom_data
+execute unless data storage fb:tmp player_items.mainhand.custom_data run data modify storage fb:tmp player_items.mainhand.custom_data set from entity @s SelectedItem.tag
 execute unless data storage fb:tmp player_items.mainhand.custom_data run data modify storage fb:tmp player_items.mainhand.custom_data set value {}
 
 # 1b. Offhand Extraction
 data modify storage fb:tmp player_items.offhand.id set from entity @s Inventory[{Slot:-106b}].id
 execute unless data storage fb:tmp player_items.offhand.id run data modify storage fb:tmp player_items.offhand.id set value "minecraft:air"
 
+data remove storage fb:tmp player_items.offhand.custom_data
 data modify storage fb:tmp player_items.offhand.custom_data set from entity @s Inventory[{Slot:-106b}].components."minecraft:custom_data"
 execute unless data storage fb:tmp player_items.offhand.custom_data run data modify storage fb:tmp player_items.offhand.custom_data set from entity @s Inventory[{Slot:-106b}].components.custom_data
+execute unless data storage fb:tmp player_items.offhand.custom_data run data modify storage fb:tmp player_items.offhand.custom_data set from entity @s Inventory[{Slot:-106b}].tag.custom_data
+execute unless data storage fb:tmp player_items.offhand.custom_data run data modify storage fb:tmp player_items.offhand.custom_data set from entity @s Inventory[{Slot:-106b}].tag
 execute unless data storage fb:tmp player_items.offhand.custom_data run data modify storage fb:tmp player_items.offhand.custom_data set value {}
 
 # 2. Special handler: add player to online list on onJoin

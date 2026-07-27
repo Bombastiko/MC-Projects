@@ -12,11 +12,13 @@ scoreboard players set @s fb.t_fire 0
 scoreboard players set @s fb.t_ice 0
 scoreboard players set @s fb.t_hold 0
 
-# 3. Configure Debug Toggles for Silent Test Execution (Report will summarize results)
-data modify storage fb:config debug.event set value 0b
+# 3. Configure Debug Toggles (Show feedback when events trigger)
+data modify storage fb:config debug.event set value 1b
 data modify storage fb:config debug.event_only_success set value 1b
 data modify storage fb:config debug.event_show_matcher set value 0b
 data modify storage fb:config debug.event_show_register set value 0b
+data modify storage fb:config debug.event_rc set value 1b
+data modify storage fb:config debug.event_hold set value 1b
 
 # 4. Register test callbacks with scoreboard increment commands
 function fb:event/register_item_cmd {event:"onRightClick", cmd:"scoreboard players add @s fb.t_fire 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{id:"fire_wand"}}
