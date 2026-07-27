@@ -1,19 +1,6 @@
 # Reset all FuseBox Event Registrations & Storages
-data remove storage fb:events onJoin
-data remove storage fb:events onDeath
-data remove storage fb:events onLeave
-data remove storage fb:events onKillPlayer
-data remove storage fb:events onKilledByPlayer
-data remove storage fb:events onDamage
-data remove storage fb:events onEntityKill
-data remove storage fb:events onRightClick
-data remove storage fb:events onHoldItem
-data remove storage fb:events whileOnline
-data remove storage fb:events whileOffline
-data remove storage fb:events online_players
-
-data modify storage fb:events set value {}
-data modify storage fb:tmp set value {}
+data remove storage fb:events
+data remove storage fb:tmp
 
 # Reset event scoreboards for all players
 scoreboard players set @a fb.rc_stick 0

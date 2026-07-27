@@ -12,11 +12,11 @@ scoreboard players set @s fb.t_fire 0
 scoreboard players set @s fb.t_ice 0
 scoreboard players set @s fb.t_hold 0
 
-# 3. Enable Event Debugging & Verbose Mode
+# 3. Configure Debug Toggles for Clean Test Environment (Mute tick spam & registration messages)
 data modify storage fb:config debug.event set value 1b
-data modify storage fb:config debug.event_only_success set value 0b
-data modify storage fb:config debug.event_show_matcher set value 1b
-data modify storage fb:config debug.event_show_register set value 1b
+data modify storage fb:config debug.event_only_success set value 1b
+data modify storage fb:config debug.event_show_matcher set value 0b
+data modify storage fb:config debug.event_show_register set value 0b
 data modify storage fb:config debug.event_hold set value 1b
 data modify storage fb:config debug.event_rc set value 1b
 
@@ -30,14 +30,14 @@ give @s minecraft:carrot_on_a_stick[custom_data={wand_type:"fire"},item_name='"[
 give @s minecraft:carrot_on_a_stick[custom_data={wand_type:"ice"},item_name='"[TEST] Ice Wand"'] 1
 give @s minecraft:stick[custom_data={wand_type:"speed"},item_name='"[TEST] Speed Stick"'] 1
 
-# 6. Display Interactive Guide
-tellraw @s ["", {"text": "\n=== FuseBox Interactive Test Suite Started ===\n", "color": "yellow", "bold": true}]
-tellraw @s ["", {"text": "Test Items given to your inventory:\n", "color": "gold"}]
+# 6. Display Clean Interactive Guide
+tellraw @s ["", {"text": "\n=== FuseBox Test Suite Started ===\n", "color": "yellow", "bold": true}]
+tellraw @s ["", {"text": "3 Test Items given to your inventory:\n", "color": "gold"}]
 tellraw @s ["", {"text": " 1. [TEST] Fire Wand ", "color": "red", "bold": true}, {"text": "(carrot_on_a_stick with wand_type:fire)\n", "color": "gray"}]
 tellraw @s ["", {"text": "    -> Right-click with it in hand.\n", "color": "dark_gray"}]
 tellraw @s ["", {"text": " 2. [TEST] Ice Wand ", "color": "aqua", "bold": true}, {"text": "(carrot_on_a_stick with wand_type:ice)\n", "color": "gray"}]
 tellraw @s ["", {"text": "    -> Right-click with it in hand.\n", "color": "dark_gray"}]
 tellraw @s ["", {"text": " 3. [TEST] Speed Stick ", "color": "green", "bold": true}, {"text": "(stick with wand_type:speed)\n", "color": "gray"}]
 tellraw @s ["", {"text": "    -> Hold it in your hand for 2 seconds.\n\n", "color": "dark_gray"}]
-tellraw @s ["", {"text": "▶ WHEN FINISHED TESTING: ", "color": "yellow", "bold": true}, {"text": "[FINISH TEST & SHOW REPORT]", "color": "green", "bold": true, "clickEvent": {"action": "run_command", "value": "/function fb:event/test_finish"}, "hoverEvent": {"action": "show_text", "contents": ["Click to calculate test results"]}}, "\n"]
-tellraw @s ["", {"text": "==============================================", "color": "yellow", "bold": true}]
+tellraw @s ["", {"text": "▶ WHEN FINISHED TESTING: ", "color": "yellow", "bold": true}, {"text": "[CLICK HERE TO SEE REPORT]", "color": "green", "bold": true, "clickEvent": {"action": "run_command", "value": "/function fb:event/test_finish"}, "hoverEvent": {"action": "show_text", "contents": ["Click to display test results report card"]}}, "\n"]
+tellraw @s ["", {"text": "===================================", "color": "yellow", "bold": true}]
