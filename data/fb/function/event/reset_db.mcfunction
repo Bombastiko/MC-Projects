@@ -21,6 +21,11 @@ data remove storage fb:tmp item_components
 data remove storage fb:tmp event_match
 data remove storage fb:tmp check_cd
 
+# Disable event debug toggles
+data modify storage fb:config debug.event set value 0b
+data modify storage fb:config debug.event_show_register set value 0b
+data modify storage fb:config debug.event_show_matcher set value 0b
+
 # Reset event scoreboards for all players
 scoreboard players set @a fb.rc_stick 0
 scoreboard players set @a fb.rc_fungus 0

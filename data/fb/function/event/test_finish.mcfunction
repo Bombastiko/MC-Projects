@@ -15,4 +15,7 @@ execute unless score @s fb.t_ice matches 1.. run tellraw @s ["", {"text": " [FAI
 execute if score @s fb.t_hold matches 1.. run tellraw @s ["", {"text": " [PASSED] ", "color": "green", "bold": true}, {"text": "Speed Stick HoldItem (custom_data:{id:\"speed_stick\"}): ", "color": "gold"}, {"score": {"name": "@s", "objective": "fb.t_hold"}, "color": "white"}, {"text": " ticks recorded.", "color": "gray"}]
 execute unless score @s fb.t_hold matches 1.. run tellraw @s ["", {"text": " [FAILED] ", "color": "red", "bold": true}, {"text": "Speed Stick HoldItem (custom_data:{id:\"speed_stick\"}): ", "color": "gold"}, {"text": "0 ticks recorded.", "color": "red"}]
 
+# Automatically disable debug mode after test finishes to keep chat clean
+data modify storage fb:config debug.event set value 0b
+
 tellraw @s ["", {"text": "================================================", "color": "yellow", "bold": true}]
