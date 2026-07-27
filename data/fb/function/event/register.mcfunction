@@ -1,18 +1,18 @@
-# Register a function callback for standard events
+# FuseBox Event System - Register Standard Function Callback
 # Arguments: event, fn
 
-# Ensure the specific event list exists in storage
+# 1. Ensure target event array exists in fb:events
 $execute unless data storage fb:events $(event) run data modify storage fb:events $(event) set value []
 
-# Prevent duplicate registration
+# 2. Remove any previous callback matching the same function
 $data remove storage fb:events $(event)[{fn: "$(fn)"}]
 
-# Build callback compound with guaranteed structure
+# 3. Construct clean callback compound
 data modify storage fb:tmp cb_entry set value {fn: "", type: "function", item_id: "", custom_data: {}}
 $data modify storage fb:tmp cb_entry.fn set value "$(fn)"
 
-# Append callback to the list
+# 4. Append to event callback registry
 data modify storage fb:events $(event) append from storage fb:tmp cb_entry
 
-# Feedback broadcast (Debug toggle check)
-$execute if data storage fb:config {debug:{event:1b}} run tellraw @a ["", {"text": "[FuseBox] ", "color": "yellow", "bold": true}, {"text": "Registered function '", "color": "green"}, {"text": "$(fn)", "color": "white"}, {"text": "' for event '", "color": "green"}, {"text": "$(event)", "color": "white"}, {"text": "'", "color": "green"}]
+# 5. Visual debug feedback (controlled by debug toggles)
+$execute if data storage fb:config {debug:{event:1b, event_show_register:1b}} run tellraw @a ["", {"text": "[FuseBox Debug] ", "color": "yellow", "bold": true}, {"text": "Registered function '", "color": "gold"}, {"text": "$(fn)", "color": "white"}, {"text": "' for event '", "color": "gold"}, {"text": "$(event)", "color": "white"}, {"text": "'", "color": "gray"}]

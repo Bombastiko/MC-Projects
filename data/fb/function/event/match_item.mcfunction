@@ -1,21 +1,20 @@
-# Match item filter macro
+# FuseBox Event System - Match Item ID Filter
 # Arguments: item_id, custom_data
+# Executed as player (@s)
 
-# Set match flag to 0 first
+# 1. Reset match flag to 0b (false)
 data modify storage fb:tmp event_match set value {val: 0b}
 
-# 1. Match item ID against storage event_context.item or entity SelectedItem
+# 2. Check item ID on storage event_context or entity SelectedItem (with/without minecraft: prefix)
 $execute if data storage fb:tmp event_context{item: {id: "$(item_id)"}} run data modify storage fb:tmp event_match.val set value 1b
 $execute if data storage fb:tmp event_context{item: {id: "minecraft:$(item_id)"}} run data modify storage fb:tmp event_match.val set value 1b
 $execute if data entity @s SelectedItem{id:"$(item_id)"} run data modify storage fb:tmp event_match.val set value 1b
 $execute if data entity @s SelectedItem{id:"minecraft:$(item_id)"} run data modify storage fb:tmp event_match.val set value 1b
 
-# Live debug matcher report (ONLY IF event_show_matcher is ON, event_only_success is OFF, and dbg_allow is 1)
+# 3. Live debug matcher report (if verbose matcher debugging is enabled)
 $execute if data storage fb:config {debug:{event:1b, event_show_matcher:1b}} if data storage fb:tmp dbg_allow{val:1b} unless data storage fb:config {debug:{event_only_success:1b}} if data storage fb:tmp event_match{val:1b} run tellraw @a ["", {"text": "  [FB Matcher] ", "color": "dark_gray"}, {"text": "Item ID Matched: ", "color": "green"}, {"text": "$(item_id)", "color": "aqua"}]
 $execute if data storage fb:config {debug:{event:1b, event_show_matcher:1b}} if data storage fb:tmp dbg_allow{val:1b} unless data storage fb:config {debug:{event_only_success:1b}} if data storage fb:tmp event_match{val:0b} run tellraw @a ["", {"text": "  [FB Matcher] ", "color": "dark_gray"}, {"text": "Item ID Mismatch! ", "color": "red"}, {"text": "Required: ", "color": "gray"}, {"text": "$(item_id)", "color": "yellow"}, {"text": ", Held: ", "color": "gray"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "white"}]
 
-# 2. Check custom_data if it is not empty
+# 4. Check custom_data if provided and not empty compound {}
 $data modify storage fb:tmp check_cd set value $(custom_data)
-
-# If check_cd is not empty compound {}, we enforce custom_data match
 execute if data storage fb:tmp event_match{val: 1b} unless data storage fb:tmp check_cd{} run function fb:event/match_custom_data with storage fb:tmp current_callback
