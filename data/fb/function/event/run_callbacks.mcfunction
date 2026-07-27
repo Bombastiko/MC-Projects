@@ -7,10 +7,14 @@ data modify storage fb:tmp event_context.item set from entity @s SelectedItem
 execute unless data storage fb:tmp event_context.item.id run data modify storage fb:tmp event_context.item set from entity @s Inventory[{Slot:-106b}]
 execute unless data storage fb:tmp event_context.item.id run data modify storage fb:tmp event_context.item set value {id: "minecraft:air", count: 0b}
 
-# 2. Extract live custom_data component compound into fb:tmp item_cd & fb:tmp event_context.item_cd
-data modify storage fb:tmp item_cd set value {}
-data modify storage fb:tmp item_cd set from storage fb:tmp event_context.item.components.custom_data
-execute unless data storage fb:tmp item_cd{} run data modify storage fb:tmp item_cd set from storage fb:tmp event_context.item.tag
+# 2. Extract live custom_data component compound directly from player entity @s into fb:tmp item_cd & fb:tmp event_context.item_cd
+data remove storage fb:tmp item_cd
+data modify storage fb:tmp item_cd set from entity @s SelectedItem.components."minecraft:custom_data"
+execute unless data storage fb:tmp item_cd run data modify storage fb:tmp item_cd set from entity @s SelectedItem.components.custom_data
+execute unless data storage fb:tmp item_cd run data modify storage fb:tmp item_cd set from entity @s Inventory[{Slot:-106b}].components."minecraft:custom_data"
+execute unless data storage fb:tmp item_cd run data modify storage fb:tmp item_cd set from entity @s Inventory[{Slot:-106b}].components.custom_data
+execute unless data storage fb:tmp item_cd run data modify storage fb:tmp item_cd set from storage fb:tmp event_context.item.tag
+execute unless data storage fb:tmp item_cd run data modify storage fb:tmp item_cd set value {}
 data modify storage fb:tmp event_context.item_cd set from storage fb:tmp item_cd
 
 # 3. Special handling: add player to online list on onJoin
