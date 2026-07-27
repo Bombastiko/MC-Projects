@@ -5,10 +5,10 @@
 # 1. Copy head callback from list into current_callback
 data modify storage fb:tmp current_callback set from storage fb:tmp event_context.list[0]
 
-# 2. Assume match is TRUE by default
+# 2. Default match flag to 1b (true) for standard events
 data modify storage fb:tmp event_match set value {val: 1b}
 
-# 3. If item_id filter is NOT empty "", evaluate item matching
+# 3. If this callback has an item_id filter (not empty ""), perform item matching
 execute unless data storage fb:tmp current_callback{item_id:""} run function fb:event/match_item with storage fb:tmp current_callback
 
 # 4. If match is TRUE, run callback dispatcher

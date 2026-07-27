@@ -10,6 +10,12 @@ data remove storage fb:events onRightClick
 data remove storage fb:events onHoldItem
 data remove storage fb:events whileOnline
 data remove storage fb:events whileOffline
+data remove storage fb:tmp event_context
+data remove storage fb:tmp current_callback
+data remove storage fb:tmp cb_entry
+data remove storage fb:tmp live_cd
+data remove storage fb:tmp item_cd
+data remove storage fb:tmp event_match
 
 # Reset event scoreboards for all players
 scoreboard players set @a fb.rc_stick 0

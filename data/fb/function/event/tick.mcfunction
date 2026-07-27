@@ -21,21 +21,17 @@ function fb:event/check_leaves
 execute as @a if score @s fb.rc_stick matches 1.. run function fb:event/trigger_right_click
 execute as @a if score @s fb.rc_fungus matches 1.. run function fb:event/trigger_right_click
 
-# 7. Hold Item Detection
-execute as @a if data storage fb:events onHoldItem run function fb:event/run_callbacks {event: "onHoldItem"}
+# 7. Hold Item Detection (runs ONLY if at least 1 onHoldItem callback exists in registry)
+execute if data storage fb:events onHoldItem[0] as @a run function fb:event/run_callbacks {event: "onHoldItem"}
 
 # 8. While Online Loop (runs every tick for all online players if callbacks are registered)
-execute if data storage fb:events whileOnline run function fb:event/tick_while_online
+execute if data storage fb:events whileOnline[0] run function fb:event/tick_while_online
 
 # 9. While Offline Loop (runs every tick for all offline players if callbacks are registered)
-execute if data storage fb:events whileOffline run function fb:event/tick_while_offline
+execute if data storage fb:events whileOffline[0] run function fb:event/tick_while_offline
 
 # 10. Damage Taken Detection
 execute as @a if score @s fb.dmg_taken matches 1.. run function fb:event/trigger_damage
 
 # 11. Entity Kill Detection
 execute as @a if score @s fb.mob_kills matches 1.. run function fb:event/trigger_entity_kill
-
-
-
-

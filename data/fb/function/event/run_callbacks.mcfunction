@@ -6,12 +6,14 @@
 data modify storage fb:tmp event_context.item set value {}
 data modify storage fb:tmp event_context.item set from entity @s SelectedItem
 execute unless data storage fb:tmp event_context.item.id run data modify storage fb:tmp event_context.item set from entity @s Inventory[{Slot:-106b}]
+execute unless data storage fb:tmp event_context.item.id run data modify storage fb:tmp event_context.item set value {id: "minecraft:air", count: 0b}
 
-# 2. Extract live custom_data component compound for matching & debug
-data remove storage fb:tmp live_cd
-data modify storage fb:tmp live_cd set from storage fb:tmp event_context.item.components."minecraft:custom_data"
-execute unless data storage fb:tmp live_cd run data modify storage fb:tmp live_cd set from storage fb:tmp event_context.item.components.custom_data
-execute unless data storage fb:tmp live_cd run data modify storage fb:tmp live_cd set from storage fb:tmp event_context.item.tag
+# 2. Extract live custom_data component compound into fb:tmp event_context.item_cd
+data remove storage fb:tmp event_context.item_cd
+data modify storage fb:tmp event_context.item_cd set from storage fb:tmp event_context.item.components."minecraft:custom_data"
+execute unless data storage fb:tmp event_context.item_cd run data modify storage fb:tmp event_context.item_cd set from storage fb:tmp event_context.item.components.custom_data
+execute unless data storage fb:tmp event_context.item_cd run data modify storage fb:tmp event_context.item_cd set from storage fb:tmp event_context.item.tag
+execute unless data storage fb:tmp event_context.item_cd run data modify storage fb:tmp event_context.item_cd set value {}
 
 # 3. Special handling: add player to online list on onJoin
 data modify storage fb:tmp event_check set value {name: ""}
@@ -27,7 +29,7 @@ execute if data storage fb:tmp event_check{name:"onHoldItem"} if data storage fb
 execute if data storage fb:tmp event_check{name:"onRightClick"} if data storage fb:config {debug:{event_rc:0b}} run data modify storage fb:tmp dbg_allow.val set value 0b
 
 # 6. Live debug logging (only when verbose logging is enabled and not muted)
-$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp dbg_allow{val:1b} unless data storage fb:config {debug:{event_only_success:1b}} run tellraw @a ["", {"text": "[FB Live Debug: ", "color": "yellow", "bold": true}, {"text": "$(event)", "color": "gold", "bold": true}, {"text": "] ", "color": "yellow", "bold": true}, {"text": "Player: ", "color": "gray"}, {"selector": "@s", "color": "white"}, {"text": " | Item: ", "color": "gray"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "aqua"}, {"text": " | Live NBT (wand_type): ", "color": "gray"}, {"nbt": "live_cd", "storage": "fb:tmp", "color": "light_purple"}]
+$execute if data storage fb:config {debug:{event:1b}} if data storage fb:tmp dbg_allow{val:1b} unless data storage fb:config {debug:{event_only_success:1b}} run tellraw @a ["", {"text": "[FB Live Debug: ", "color": "yellow", "bold": true}, {"text": "$(event)", "color": "gold", "bold": true}, {"text": "] ", "color": "yellow", "bold": true}, {"text": "Player: ", "color": "gray"}, {"selector": "@s", "color": "white"}, {"text": " | Item: ", "color": "gray"}, {"nbt": "event_context.item.id", "storage": "fb:tmp", "color": "aqua"}, {"text": " | Custom Data: ", "color": "gray"}, {"nbt": "event_context.item_cd", "storage": "fb:tmp", "color": "light_purple"}]
 
-# 7. Start iteration if callbacks exist
+# 7. Start iteration if callbacks exist in list
 execute if data storage fb:tmp event_context.list[0] run function fb:event/loop_callbacks with storage fb:tmp event_context
