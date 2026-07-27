@@ -6,10 +6,12 @@
 data modify storage fb:tmp event_match set value {val: 0b}
 
 # 2. Check item ID on storage event_context or entity SelectedItem (with/without minecraft: prefix)
-$execute if data storage fb:tmp event_context{item: {id: "$(item_id)"}} run data modify storage fb:tmp event_match.val set value 1b
-$execute if data storage fb:tmp event_context{item: {id: "minecraft:$(item_id)"}} run data modify storage fb:tmp event_match.val set value 1b
+$execute if data storage fb:tmp {event_context: {item: {id: "$(item_id)"}}} run data modify storage fb:tmp event_match.val set value 1b
+$execute if data storage fb:tmp {event_context: {item: {id: "minecraft:$(item_id)"}}} run data modify storage fb:tmp event_match.val set value 1b
 $execute if data entity @s SelectedItem{id:"$(item_id)"} run data modify storage fb:tmp event_match.val set value 1b
 $execute if data entity @s SelectedItem{id:"minecraft:$(item_id)"} run data modify storage fb:tmp event_match.val set value 1b
+$execute if data entity @s Inventory[{Slot:-106b,id:"$(item_id)"}] run data modify storage fb:tmp event_match.val set value 1b
+$execute if data entity @s Inventory[{Slot:-106b,id:"minecraft:$(item_id)"}] run data modify storage fb:tmp event_match.val set value 1b
 
 # 3. Live debug matcher report (if verbose matcher debugging is enabled)
 $execute if data storage fb:config {debug:{event:1b, event_show_matcher:1b}} if data storage fb:tmp dbg_allow{val:1b} unless data storage fb:config {debug:{event_only_success:1b}} if data storage fb:tmp event_match{val:1b} run tellraw @a ["", {"text": "  [FB Matcher] ", "color": "dark_gray"}, {"text": "Item ID Matched: ", "color": "green"}, {"text": "$(item_id)", "color": "aqua"}]
