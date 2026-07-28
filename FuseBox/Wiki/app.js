@@ -292,118 +292,59 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cdCopyBtnDisplay) cdCopyBtnDisplay.addEventListener('click', () => copyToClipboard(cdCommandOutputDisplay.textContent, cdCopyBtnDisplay));
 
   // ==========================================
-  // 📱 ACTIONBAR CONFIGURATOR
+  // 📱 ACTIONBAR CONFIGURATOR (CUSTOM TEXT OVERRIDES EXCLUSIVE)
   // ==========================================
-  const abSourceInput = document.getElementById('ab-source');
+  const abCustomTextInput = document.getElementById('ab-custom-text');
   const abPlayerInput = document.getElementById('ab-player');
   const abGlobalTypeGroup = document.getElementById('ab-global-type-group');
   const abGlobalTypeInput = document.getElementById('ab-global_type');
-  const abNameGroup = document.getElementById('ab-name-group');
-  const abNameInput = document.getElementById('ab-name');
-  const abCustomTextGroup = document.getElementById('ab-custom-text-group');
-  const abCustomTextInput = document.getElementById('ab-custom-text');
-  const abFormatGroup = document.getElementById('ab-format-group');
-  const abFormatInput = document.getElementById('ab-format');
   const abColorInput = document.getElementById('ab-color');
-  const abColorSecGroup = document.getElementById('ab-color-sec-group');
-  const abColorSecInput = document.getElementById('ab-color_sec');
-  const abColorNumGroup = document.getElementById('ab-color-num-group');
-  const abColorNumInput = document.getElementById('ab-color_num');
   const abPrefixInput = document.getElementById('ab-prefix');
   const abSuffixInput = document.getElementById('ab-suffix');
   const abBoldInput = document.getElementById('ab-bold');
-  const abPreviewPaused = document.getElementById('ab-preview-paused');
   const abActionbarPreview = document.getElementById('ab-actionbarPreview');
   const abCommandOutput = document.getElementById('ab-commandOutput');
   const abCopyBtn = document.getElementById('ab-copyBtn');
+  const abClearOutput = document.getElementById('ab-clearOutput');
+  const abClearCopyBtn = document.getElementById('ab-clearCopyBtn');
 
   function updateAb() {
-    if (!abSourceInput) return;
-    const source = abSourceInput.value; // 'sw', 'cd', or 'custom'
+    if (!abCustomTextInput) return;
     const player = abPlayerInput.value.trim() || '@a';
     const isGlobalTarget = player === '@a';
 
-    const isCustomText = source === 'custom';
-
     if (abGlobalTypeGroup) abGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
-    if (abNameGroup) abNameGroup.style.display = isCustomText ? 'none' : 'flex';
-    if (abFormatGroup) abFormatGroup.style.display = isCustomText ? 'none' : 'flex';
-    if (abColorSecGroup) abColorSecGroup.style.display = isCustomText ? 'none' : 'flex';
-    if (abColorNumGroup) abColorNumGroup.style.display = isCustomText ? 'none' : 'flex';
-    if (abCustomTextGroup) abCustomTextGroup.style.display = isCustomText ? 'flex' : 'none';
 
     const globalType = isGlobalTarget ? abGlobalTypeInput.value : 'soft';
-    const name = abNameInput.value.trim() || 'demo';
-    const customText = abCustomTextInput.value;
-    const format = abFormatInput.value;
+    const customText = abCustomTextInput.value.trim() || 'Welcome to the Server!';
     const color = abColorInput.value;
-    const colorSec = abColorSecInput.value;
-    const colorNum = abColorNumInput.value;
     const prefix = abPrefixInput.value;
     const suffix = abSuffixInput.value;
     const bold = abBoldInput.checked;
-    const isPaused = abPreviewPaused.checked;
 
     const escapedPrefix = prefix.replace(/"/g, '\\"');
     const escapedSuffix = suffix.replace(/"/g, '\\"');
     const escapedText = customText.replace(/"/g, '\\"');
 
-    let command = '';
-    if (isCustomText) {
-      command = `/function fb:ab/display_custom {player:"${player}",text:"${escapedText}",color:"${color}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
-    } else {
-      const nameKey = source === 'sw' ? 'sw' : 'cd';
-      command = `/function fb:${source}/display_ab_custom {player:"${player}",${nameKey}:"${name}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
-    }
+    const command = `/function fb:ab/display_custom {player:"${player}",text:"${escapedText}",color:"${color}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
+    const clearCommand = `/tag ${player} remove fb.ab.custom`;
 
     abCommandOutput.textContent = command;
+    if (abClearOutput) abClearOutput.textContent = clearCommand;
 
     let previewHtml = '';
-    const colMain = isPaused ? colorMap.gray : colorMap[color];
-    const colSec = isPaused ? colorMap.gray : colorMap[colorSec];
-    const colNum = isPaused ? colorMap.dark_gray : colorMap[colorNum];
-    const isItalic = isPaused;
+    const colMain = colorMap[color];
 
-    if (prefix) previewHtml += buildSpan(prefix, colMain, bold, isItalic);
-
-    if (isCustomText) {
-      previewHtml += buildSpan(customText || 'Welcome!', colMain, bold, isItalic);
-    } else {
-      if (format === 'digital') {
-        previewHtml += buildSpan('00', colNum, bold, isItalic);
-        previewHtml += buildSpan(':', colSec, bold, isItalic);
-        previewHtml += buildSpan('00', colNum, bold, isItalic);
-        previewHtml += buildSpan(':', colSec, bold, isItalic);
-        previewHtml += buildSpan('00', colNum, bold, isItalic);
-      } else if (format === 'digital_short') {
-        previewHtml += buildSpan('00', colNum, bold, isItalic);
-        previewHtml += buildSpan(':', colSec, bold, isItalic);
-        previewHtml += buildSpan('00', colNum, bold, isItalic);
-        previewHtml += buildSpan('.', colSec, bold, isItalic);
-        previewHtml += buildSpan('00', colNum, bold, isItalic);
-      } else if (format === 'letters') {
-        previewHtml += buildSpan('0', colNum, bold, isItalic);
-        previewHtml += buildSpan('d ', colSec, bold, isItalic);
-        previewHtml += buildSpan('0', colNum, bold, isItalic);
-        previewHtml += buildSpan('h ', colSec, bold, isItalic);
-        previewHtml += buildSpan('0', colNum, bold, isItalic);
-        previewHtml += buildSpan('m ', colSec, bold, isItalic);
-        previewHtml += buildSpan('0', colNum, bold, isItalic);
-        previewHtml += buildSpan('s', colSec, bold, isItalic);
-      } else if (format === 'dynamic') {
-        previewHtml += buildSpan('0', colNum, bold, isItalic);
-        previewHtml += buildSpan('s', colSec, bold, isItalic);
-      }
-    }
-
-    if (suffix) previewHtml += buildSpan(suffix, colMain, bold, isItalic);
+    if (prefix) previewHtml += buildSpan(prefix, colMain, bold, false);
+    previewHtml += buildSpan(customText, colMain, bold, false);
+    if (suffix) previewHtml += buildSpan(suffix, colMain, bold, false);
 
     abActionbarPreview.innerHTML = previewHtml;
   }
 
   const abInputs = [
-    abSourceInput, abPlayerInput, abGlobalTypeInput, abNameInput, abCustomTextInput, abFormatInput,
-    abColorInput, abColorSecInput, abColorNumInput, abPrefixInput, abSuffixInput, abBoldInput, abPreviewPaused
+    abCustomTextInput, abPlayerInput, abGlobalTypeInput,
+    abColorInput, abPrefixInput, abSuffixInput, abBoldInput
   ];
   abInputs.forEach(i => {
     if (i) {
@@ -413,6 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if (abCopyBtn) abCopyBtn.addEventListener('click', () => copyToClipboard(abCommandOutput.textContent, abCopyBtn));
+  if (abClearCopyBtn) abClearCopyBtn.addEventListener('click', () => copyToClipboard(abClearOutput.textContent, abClearCopyBtn));
 
   // ==========================================
   // ⚡ EVENT CONFIGURATOR

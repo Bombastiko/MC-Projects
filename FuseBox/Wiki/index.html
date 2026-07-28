@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=7.0">
+  <link rel="stylesheet" href="style.css?v=8.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -98,7 +98,7 @@
           <div class="shortcut-card" onclick="switchPage('ab-configurator-page')">
             <div>
               <h3>📱 Actionbar Configurator</h3>
-              <p>Configure FuseBox actionbar overrides, custom text displays, and soft/hard priorities.</p>
+              <p>Configure FuseBox custom text actionbar overrides with soft/hard priorities.</p>
             </div>
             <div class="shortcut-arrow">Open Configurator →</div>
           </div>
@@ -127,7 +127,7 @@
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-events');">
             <div>
               <h3>⚡ Event System Guide</h3>
-              <p>Learn how to register <code>onRightClick</code>, <code>onHoldItem</code>,  impulse events, and NBT filters.</p>
+              <p>Learn how to register <code>onRightClick</code>, <code>onHoldItem</code>, and NBT filters.</p>
             </div>
             <div class="shortcut-arrow">Read Guide →</div>
           </div>
@@ -400,26 +400,23 @@
       </div>
     </div>
 
-    <!-- PAGE 3: ACTIONBAR CONFIGURATOR -->
+    <!-- PAGE 3: ACTIONBAR CONFIGURATOR (DEDICATED TO CUSTOM TEXT OVERRIDES) -->
     <div id="ab-configurator-page" class="page">
       <div class="page-header">
         <h1>Actionbar Configurator</h1>
-        <p>Configure FuseBox actionbar overrides for stopwatches, countdowns, or custom text overrides (integrated with FuseBox priority tags).</p>
+        <p>Generate <code>/function fb:ab/display_custom</code> commands for FuseBox actionbar custom text overrides.</p>
       </div>
 
       <div class="config-layout">
         <!-- FORM CARD -->
         <div class="card">
-          <div class="card-title">Actionbar Display Setup</div>
+          <div class="card-title">Custom Text Override Parameters</div>
           <form id="abConfigForm" onsubmit="event.preventDefault();">
             <div class="form-grid">
               <div class="field full-width">
-                <label for="ab-source">Display Source Type</label>
-                <select id="ab-source">
-                  <option value="sw" selected>Stopwatch (sw)</option>
-                  <option value="cd">Countdown (cd)</option>
-                  <option value="custom">FuseBox Custom Text Override (No Timer Required)</option>
-                </select>
+                <label for="ab-custom-text">Actionbar Message Text</label>
+                <input type="text" id="ab-custom-text" value="Welcome to the Server!" placeholder="e.g. Welcome to the Server!">
+                <span style="font-size:0.75rem; color:var(--text-dim);">Renders custom text directly in FuseBox's actionbar engine (adds <code>fb.ab.custom</code> tag for target players).</span>
               </div>
 
               <div class="field">
@@ -435,32 +432,8 @@
                 </select>
               </div>
 
-              <!-- TIMER SPECIFIC FIELD -->
-              <div class="field" id="ab-name-group">
-                <label for="ab-name">Timer Identifier Name</label>
-                <input type="text" id="ab-name" value="demo" required>
-              </div>
-
-              <!-- CUSTOM TEXT OVERRIDE FIELD -->
-              <div class="field full-width" id="ab-custom-text-group" style="display:none;">
-                <label for="ab-custom-text">Actionbar Message Text</label>
-                <input type="text" id="ab-custom-text" value="Welcome to the Server!" placeholder="e.g. Welcome to the Server!">
-                <span style="font-size:0.75rem; color:var(--text-dim);">Sets a custom text message in FuseBox's actionbar engine (adds <code>fb.ab.custom</code> tag for targeted players).</span>
-              </div>
-
-              <!-- FORMAT FIELD -->
-              <div class="field" id="ab-format-group">
-                <label for="ab-format">Format</label>
-                <select id="ab-format">
-                  <option value="digital_short" selected>Digital Short (MM:SS.ms)</option>
-                  <option value="digital">Digital (HH:MM:SS)</option>
-                  <option value="letters">Letters (Xd Xh Xm Xs)</option>
-                  <option value="dynamic">Dynamic</option>
-                </select>
-              </div>
-
               <div class="field">
-                <label for="ab-color">Primary Color</label>
+                <label for="ab-color">Primary Text Color</label>
                 <select id="ab-color">
                   <option value="gold" selected>Gold</option>
                   <option value="yellow">Yellow</option>
@@ -472,28 +445,9 @@
                 </select>
               </div>
 
-              <div class="field" id="ab-color-sec-group">
-                <label for="ab-color_sec">Separator Color</label>
-                <select id="ab-color_sec">
-                  <option value="yellow" selected>Yellow</option>
-                  <option value="gold">Gold</option>
-                  <option value="white">White</option>
-                  <option value="gray">Gray</option>
-                </select>
-              </div>
-
-              <div class="field" id="ab-color-num-group">
-                <label for="ab-color_num">Number Color</label>
-                <select id="ab-color_num">
-                  <option value="white" selected>White</option>
-                  <option value="gold">Gold</option>
-                  <option value="yellow">Yellow</option>
-                </select>
-              </div>
-
               <div class="field full-width">
                 <label for="ab-prefix">Prefix Text</label>
-                <input type="text" id="ab-prefix" value="Time: ">
+                <input type="text" id="ab-prefix" value="Info: ">
               </div>
 
               <div class="field full-width">
@@ -517,24 +471,22 @@
           <div class="card brand-border-card" style="margin-bottom:24px;">
             <div class="card-title">
               <span>Actionbar Live Preview</span>
-              <div style="display:flex; align-items:center; gap:6px;">
-                <label for="ab-preview-paused" style="font-size:0.75rem; color:var(--text-muted);">Paused</label>
-                <input type="checkbox" id="ab-preview-paused">
-              </div>
             </div>
             <div class="preview-box">
-              <div id="ab-actionbarPreview" class="actionbar-text">Time: 00:00.00</div>
+              <div id="ab-actionbarPreview" class="actionbar-text">Info: Welcome to the Server!</div>
             </div>
           </div>
 
           <div class="card brand-border-card">
             <div class="card-title">Generated Display Command</div>
             <div class="command-container">
-              <div class="command-code"><code id="ab-commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Time: ",suffix:"",bold:"false",global_type:"soft"}</code></div>
-              <button id="ab-copyBtn" class="btn-copy-compact">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-                Copy Actionbar Command
-              </button>
+              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">1. Set Actionbar Custom Text Override</label>
+              <div class="command-code"><code id="ab-commandOutput">/function fb:ab/display_custom {player:"@a",text:"Welcome to the Server!",color:"gold",prefix:"Info: ",suffix:"",bold:"false",global_type:"soft"}</code></div>
+              <button id="ab-copyBtn" class="btn-copy-compact">Copy Display Command</button>
+
+              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:8px;">2. Clear Player Actionbar Override</label>
+              <div class="command-code"><code id="ab-clearOutput">/tag @a remove fb.ab.custom</code></div>
+              <button id="ab-clearCopyBtn" class="btn-copy-compact">Copy Clear Tag Command</button>
             </div>
           </div>
         </div>
