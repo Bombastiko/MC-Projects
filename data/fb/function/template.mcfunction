@@ -1,1 +1,0 @@
-#/tellraw @p ["",{text:"[",bold:true},{text:"Fuse",bold:true,color:"yellow"},{text:"Box",bold:true,color:"dark_red"},{text:"]",bold:true},{text:"\n"}]

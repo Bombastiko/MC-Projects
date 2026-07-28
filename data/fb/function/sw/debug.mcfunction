@@ -1,2 +1,0 @@
-tellraw @a [{"text":"[DEBUG] Storage: ","color":"red"}, {"nbt":"sw.list","storage":"fb:main","color":"white"}]
-tellraw @a [{"text":"[DEBUG] Users: ","color":"red"}, {"nbt":"users","storage":"fb:main","color":"white"}]
