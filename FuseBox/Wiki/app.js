@@ -233,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const s = parseInt(cdSInput.value) || 0;
     const cdCmdRaw = cdCmdInput.value.trim();
     
-    // Silent command with no chat message or side effect if empty
     const cdCmd = cdCmdRaw.length > 0 ? cdCmdRaw : 'data get storage fb:tmp dummy';
     const format = cdFormatInput.value;
     const color = cdColorInput.value;
@@ -293,6 +292,104 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cdCopyBtnDisplay) cdCopyBtnDisplay.addEventListener('click', () => copyToClipboard(cdCommandOutputDisplay.textContent, cdCopyBtnDisplay));
 
   // ==========================================
+  // 📱 ACTIONBAR CONFIGURATOR
+  // ==========================================
+  const abSourceInput = document.getElementById('ab-source');
+  const abPlayerInput = document.getElementById('ab-player');
+  const abGlobalTypeGroup = document.getElementById('ab-global-type-group');
+  const abGlobalTypeInput = document.getElementById('ab-global_type');
+  const abNameInput = document.getElementById('ab-name');
+  const abFormatInput = document.getElementById('ab-format');
+  const abColorInput = document.getElementById('ab-color');
+  const abColorSecInput = document.getElementById('ab-color_sec');
+  const abColorNumInput = document.getElementById('ab-color_num');
+  const abPrefixInput = document.getElementById('ab-prefix');
+  const abSuffixInput = document.getElementById('ab-suffix');
+  const abBoldInput = document.getElementById('ab-bold');
+  const abPreviewPaused = document.getElementById('ab-preview-paused');
+  const abActionbarPreview = document.getElementById('ab-actionbarPreview');
+  const abCommandOutput = document.getElementById('ab-commandOutput');
+  const abCopyBtn = document.getElementById('ab-copyBtn');
+
+  function updateAb() {
+    if (!abSourceInput) return;
+    const source = abSourceInput.value; // 'sw' or 'cd'
+    const player = abPlayerInput.value.trim() || '@a';
+    const isGlobalTarget = player === '@a';
+
+    if (abGlobalTypeGroup) abGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
+
+    const globalType = isGlobalTarget ? abGlobalTypeInput.value : 'soft';
+    const name = abNameInput.value.trim() || 'demo';
+    const format = abFormatInput.value;
+    const color = abColorInput.value;
+    const colorSec = abColorSecInput.value;
+    const colorNum = abColorNumInput.value;
+    const prefix = abPrefixInput.value;
+    const suffix = abSuffixInput.value;
+    const bold = abBoldInput.checked;
+    const isPaused = abPreviewPaused.checked;
+
+    const escapedPrefix = prefix.replace(/"/g, '\\"');
+    const escapedSuffix = suffix.replace(/"/g, '\\"');
+
+    const nameKey = source === 'sw' ? 'sw' : 'cd';
+    const command = `/function fb:${source}/display_ab_custom {player:"${player}",${nameKey}:"${name}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
+    abCommandOutput.textContent = command;
+
+    let previewHtml = '';
+    const colMain = isPaused ? colorMap.gray : colorMap[color];
+    const colSec = isPaused ? colorMap.gray : colorMap[colorSec];
+    const colNum = isPaused ? colorMap.dark_gray : colorMap[colorNum];
+    const isItalic = isPaused;
+
+    if (prefix) previewHtml += buildSpan(prefix, colMain, bold, isItalic);
+
+    if (format === 'digital') {
+      previewHtml += buildSpan('00', colNum, bold, isItalic);
+      previewHtml += buildSpan(':', colSec, bold, isItalic);
+      previewHtml += buildSpan('00', colNum, bold, isItalic);
+      previewHtml += buildSpan(':', colSec, bold, isItalic);
+      previewHtml += buildSpan('00', colNum, bold, isItalic);
+    } else if (format === 'digital_short') {
+      previewHtml += buildSpan('00', colNum, bold, isItalic);
+      previewHtml += buildSpan(':', colSec, bold, isItalic);
+      previewHtml += buildSpan('00', colNum, bold, isItalic);
+      previewHtml += buildSpan('.', colSec, bold, isItalic);
+      previewHtml += buildSpan('00', colNum, bold, isItalic);
+    } else if (format === 'letters') {
+      previewHtml += buildSpan('0', colNum, bold, isItalic);
+      previewHtml += buildSpan('d ', colSec, bold, isItalic);
+      previewHtml += buildSpan('0', colNum, bold, isItalic);
+      previewHtml += buildSpan('h ', colSec, bold, isItalic);
+      previewHtml += buildSpan('0', colNum, bold, isItalic);
+      previewHtml += buildSpan('m ', colSec, bold, isItalic);
+      previewHtml += buildSpan('0', colNum, bold, isItalic);
+      previewHtml += buildSpan('s', colSec, bold, isItalic);
+    } else if (format === 'dynamic') {
+      previewHtml += buildSpan('0', colNum, bold, isItalic);
+      previewHtml += buildSpan('s', colSec, bold, isItalic);
+    }
+
+    if (suffix) previewHtml += buildSpan(suffix, colMain, bold, isItalic);
+
+    abActionbarPreview.innerHTML = previewHtml;
+  }
+
+  const abInputs = [
+    abSourceInput, abPlayerInput, abGlobalTypeInput, abNameInput, abFormatInput,
+    abColorInput, abColorSecInput, abColorNumInput, abPrefixInput, abSuffixInput, abBoldInput, abPreviewPaused
+  ];
+  abInputs.forEach(i => {
+    if (i) {
+      i.addEventListener('input', updateAb);
+      i.addEventListener('change', updateAb);
+    }
+  });
+
+  if (abCopyBtn) abCopyBtn.addEventListener('click', () => copyToClipboard(abCommandOutput.textContent, abCopyBtn));
+
+  // ==========================================
   // ⚡ EVENT CONFIGURATOR
   // ==========================================
   const egTypeInput = document.getElementById('eg-type');
@@ -348,5 +445,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial runs
   updateSw();
   updateCd();
+  updateAb();
   updateEventGen();
 });

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=4.0">
+  <link rel="stylesheet" href="style.css?v=5.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -34,6 +34,11 @@
         <button class="menu-item" data-page="cd-configurator-page">
           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M5 2h14M5 22h14M19 2v4c0 3-3 5-7 7-4-2-7-4-7-7V2M5 22v-4c0-3 3-5 7-7 4 2 7 4 7 7v4"></path></svg>
           Countdown
+        </button>
+
+        <button class="menu-item" data-page="ab-configurator-page">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+          Actionbar
         </button>
 
         <button class="menu-item" data-page="event-generator-page">
@@ -90,6 +95,14 @@
             <div class="shortcut-arrow">Open Configurator →</div>
           </div>
 
+          <div class="shortcut-card" onclick="switchPage('ab-configurator-page')">
+            <div>
+              <h3>📱 Actionbar Configurator</h3>
+              <p>Configure actionbar overrides, custom displays, soft/hard priorities, and formats.</p>
+            </div>
+            <div class="shortcut-arrow">Open Configurator →</div>
+          </div>
+
           <div class="shortcut-card" onclick="switchPage('event-generator-page')">
             <div>
               <h3>⚡ Event Configurator</h3>
@@ -103,6 +116,14 @@
       <div>
         <h2 style="font-size:1.15rem; font-weight:700; margin-bottom:14px; color:var(--text-main);">Documentation Shortcuts</h2>
         <div class="shortcut-grid">
+          <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-actionbar');">
+            <div>
+              <h3>📱 Actionbar System Guide</h3>
+              <p>Learn how actionbar priority overrides, soft vs hard modes, and player tags work.</p>
+            </div>
+            <div class="shortcut-arrow">Read Guide →</div>
+          </div>
+
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-events');">
             <div>
               <h3>⚡ Event System Guide</h3>
@@ -125,14 +146,6 @@
               <p>Complete function reference for countdown creation, expiry commands, and actionbars.</p>
             </div>
             <div class="shortcut-arrow">Read Reference →</div>
-          </div>
-
-          <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-dependency');">
-            <div>
-              <h3>📦 Datapack Dependency Check</h3>
-              <p>Copy-paste integration script for custom datapacks to verify if FuseBox is installed.</p>
-            </div>
-            <div class="shortcut-arrow">Read Integration →</div>
           </div>
         </div>
       </div>
@@ -387,7 +400,137 @@
       </div>
     </div>
 
-    <!-- PAGE 3: EVENT CONFIGURATOR -->
+    <!-- PAGE 3: ACTIONBAR CONFIGURATOR -->
+    <div id="ab-configurator-page" class="page">
+      <div class="page-header">
+        <h1>Actionbar Configurator</h1>
+        <p>Configure actionbar overrides, timer displays, soft/hard priorities, and custom player formatting.</p>
+      </div>
+
+      <div class="config-layout">
+        <!-- FORM CARD -->
+        <div class="card">
+          <div class="card-title">Actionbar Display Setup</div>
+          <form id="abConfigForm" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <div class="field">
+                <label for="ab-source">Timer Source Type</label>
+                <select id="ab-source">
+                  <option value="sw" selected>Stopwatch (sw)</option>
+                  <option value="cd">Countdown (cd)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="ab-player">Target Player / Selector</label>
+                <input type="text" id="ab-player" value="@a" required>
+              </div>
+
+              <div class="field" id="ab-global-type-group">
+                <label for="ab-global_type">Global Type Priority</label>
+                <select id="ab-global_type">
+                  <option value="soft" selected>Soft (Respect Player Overrides)</option>
+                  <option value="hard">Hard (Force All Players)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="ab-name">Timer Identifier Name</label>
+                <input type="text" id="ab-name" value="demo" required>
+              </div>
+
+              <div class="field">
+                <label for="ab-format">Format</label>
+                <select id="ab-format">
+                  <option value="digital_short" selected>Digital Short (MM:SS.ms)</option>
+                  <option value="digital">Digital (HH:MM:SS)</option>
+                  <option value="letters">Letters (Xd Xh Xm Xs)</option>
+                  <option value="dynamic">Dynamic</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="ab-color">Primary Color</label>
+                <select id="ab-color">
+                  <option value="gold" selected>Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="ab-color_sec">Separator Color</label>
+                <select id="ab-color_sec">
+                  <option value="yellow" selected>Yellow</option>
+                  <option value="gold">Gold</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="ab-color_num">Number Color</label>
+                <select id="ab-color_num">
+                  <option value="white" selected>White</option>
+                  <option value="gold">Gold</option>
+                  <option value="yellow">Yellow</option>
+                </select>
+              </div>
+
+              <div class="field full-width">
+                <label for="ab-prefix">Prefix Text</label>
+                <input type="text" id="ab-prefix" value="Time: ">
+              </div>
+
+              <div class="field full-width">
+                <label for="ab-suffix">Suffix Text</label>
+                <input type="text" id="ab-suffix" value="">
+              </div>
+
+              <div class="field toggle-field full-width">
+                <label for="ab-bold">Apply Bold Formatting</label>
+                <label class="switch">
+                  <input type="checkbox" id="ab-bold">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- PREVIEW & COMMAND CARD -->
+        <div>
+          <div class="card brand-border-card" style="margin-bottom:24px;">
+            <div class="card-title">
+              <span>Actionbar Live Preview</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <label for="ab-preview-paused" style="font-size:0.75rem; color:var(--text-muted);">Paused</label>
+                <input type="checkbox" id="ab-preview-paused">
+              </div>
+            </div>
+            <div class="preview-box">
+              <div id="ab-actionbarPreview" class="actionbar-text">Time: 00:00.00</div>
+            </div>
+          </div>
+
+          <div class="card brand-border-card">
+            <div class="card-title">Generated Display Command</div>
+            <div class="command-container">
+              <div class="command-code"><code id="ab-commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Time: ",suffix:"",bold:"false",global_type:"soft"}</code></div>
+              <button id="ab-copyBtn" class="btn-copy-compact">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                Copy Actionbar Command
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: EVENT CONFIGURATOR -->
     <div id="event-generator-page" class="page">
       <div class="page-header">
         <h1>Event Configurator</h1>
@@ -449,15 +592,16 @@
       </div>
     </div>
 
-    <!-- PAGE 4: DOCUMENTATION & WIKI (DETAILED & COMPREHENSIVE) -->
+    <!-- PAGE 5: DOCUMENTATION & WIKI -->
     <div id="docs-page" class="page">
       <div class="page-header">
         <h1>Documentation & API Reference</h1>
-        <p>Complete documentation for events, stopwatches, countdowns, and dependency checking in Minecraft 1.20.5+ / 1.21+.</p>
+        <p>Complete documentation for events, stopwatches, countdowns, actionbars, and dependency checking in Minecraft 1.20.5+ / 1.21+.</p>
       </div>
 
       <nav class="docs-nav">
         <button class="docs-tab active" data-doc="doc-overview">Overview</button>
+        <button class="docs-tab" data-doc="doc-actionbar">Actionbar System</button>
         <button class="docs-tab" data-doc="doc-events">Event System</button>
         <button class="docs-tab" data-doc="doc-stopwatches">Stopwatches API</button>
         <button class="docs-tab" data-doc="doc-countdowns">Countdowns API</button>
@@ -498,6 +642,47 @@
               <tr>
                 <td><code>/function fb:api/check_version</code></td>
                 <td>Sets score <code>#fb_installed fb.version</code> to current version number for third-party packs.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DOC: ACTIONBAR SYSTEM -->
+      <div id="doc-actionbar" class="doc-content">
+        <div class="card doc-block">
+          <h2>📱 Actionbar Display & Priority System</h2>
+          <p>FuseBox features an intelligent actionbar management system that prevents timer flickers, supports individual player overrides, and enforces global server priorities.</p>
+
+          <h3>Global Priority Modes: <code>soft</code> vs <code>hard</code></h3>
+          <ul>
+            <li><strong><code>soft</code> (Default Mode):</strong> Displays the timer globally for <code>@a</code>, but automatically respects individual player preferences. If a player has a custom personal timer set (tagged with <code>fb.ab.custom</code>), the global timer will step aside for that specific player while continuing to render for everyone else.</li>
+            <li><strong><code>hard</code> (Global Override Mode):</strong> Forces the global timer onto <em>all</em> online players (<code>@a</code>), overriding any individual player custom tags. Use this for server-wide mini-game events or emergency countdowns.</li>
+          </ul>
+
+          <h3>Player-Specific Actionbar Overrides</h3>
+          <p>When you target a specific player (e.g., <code>/function fb:sw/display_ab_custom {player:"oneBombastiko", ...}</code>), FuseBox adds the <code>fb.ab.custom</code> tag to that player. This allows player-specific speedrun timers or quest countdowns to be rendered exclusively for them without interfering with other players on the server.</p>
+
+          <h3>Actionbar Functions</h3>
+          <table class="wiki-table">
+            <thead>
+              <tr>
+                <th>Function Call</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
+                <td>Renders a stopwatch instance on the actionbar with custom colors and formats.</td>
+              </tr>
+              <tr>
+                <td><code>/function fb:cd/display_ab_custom {player:"@a",cd:"timer1",format:"digital_short",color:"red",color_sec:"gray",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
+                <td>Renders a countdown instance on the actionbar with custom colors and formats.</td>
+              </tr>
+              <tr>
+                <td><code>/tag &lt;player&gt; remove fb.ab.custom</code></td>
+                <td>Clears a player's personal actionbar override and reverts them back to global server actionbar displays.</td>
               </tr>
             </tbody>
           </table>
