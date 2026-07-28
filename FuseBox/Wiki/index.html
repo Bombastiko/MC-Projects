@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=8.0">
+  <link rel="stylesheet" href="style.css?v=9.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -38,7 +38,7 @@
 
         <button class="menu-item" data-page="ab-configurator-page">
           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><line x1="6" y1="12" x2="18" y2="12"></line></svg>
-          Actionbar
+          Actionbar Overwrite
         </button>
 
         <button class="menu-item" data-page="event-generator-page">
@@ -97,8 +97,8 @@
 
           <div class="shortcut-card" onclick="switchPage('ab-configurator-page')">
             <div>
-              <h3>📱 Actionbar Configurator</h3>
-              <p>Configure FuseBox custom text actionbar overrides with soft/hard priorities.</p>
+              <h3>📱 Actionbar Overwrite Configurator</h3>
+              <p>Generate <code>/function fb:display/ab/overwrite</code> commands for temporary custom JSON text actionbars.</p>
             </div>
             <div class="shortcut-arrow">Open Configurator →</div>
           </div>
@@ -118,8 +118,8 @@
         <div class="shortcut-grid">
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-actionbar');">
             <div>
-              <h3>📱 Actionbar System Guide</h3>
-              <p>Learn how actionbar priority overrides, soft vs hard modes, and player tags work.</p>
+              <h3>📱 Actionbar Overwrite System Guide</h3>
+              <p>Learn how temporary JSON actionbar text overrides, duration ticks, and <code>fb.ab_over</code> work.</p>
             </div>
             <div class="shortcut-arrow">Read Guide →</div>
           </div>
@@ -400,40 +400,37 @@
       </div>
     </div>
 
-    <!-- PAGE 3: ACTIONBAR CONFIGURATOR (DEDICATED TO CUSTOM TEXT OVERRIDES) -->
+    <!-- PAGE 3: ACTIONBAR OVERWRITE CONFIGURATOR -->
     <div id="ab-configurator-page" class="page">
       <div class="page-header">
-        <h1>Actionbar Configurator</h1>
-        <p>Generate <code>/function fb:ab/display_custom</code> commands for FuseBox actionbar custom text overrides.</p>
+        <h1>Actionbar Overwrite Configurator</h1>
+        <p>Generate <code>/function fb:display/ab/overwrite</code> commands to display temporary custom JSON text actionbars for a specific duration in ticks.</p>
       </div>
 
       <div class="config-layout">
         <!-- FORM CARD -->
         <div class="card">
-          <div class="card-title">Custom Text Override Parameters</div>
+          <div class="card-title">Actionbar Overwrite Parameters</div>
           <form id="abConfigForm" onsubmit="event.preventDefault();">
             <div class="form-grid">
               <div class="field full-width">
-                <label for="ab-custom-text">Actionbar Message Text</label>
-                <input type="text" id="ab-custom-text" value="Welcome to the Server!" placeholder="e.g. Welcome to the Server!">
-                <span style="font-size:0.75rem; color:var(--text-dim);">Renders custom text directly in FuseBox's actionbar engine (adds <code>fb.ab.custom</code> tag for target players).</span>
-              </div>
-
-              <div class="field">
                 <label for="ab-player">Target Player / Selector</label>
-                <input type="text" id="ab-player" value="@a" required>
+                <input type="text" id="ab-player" value="@a" required placeholder="e.g. @a, @s, or player name">
               </div>
 
-              <div class="field" id="ab-global-type-group">
-                <label for="ab-global_type">Global Type Priority</label>
-                <select id="ab-global_type">
-                  <option value="soft" selected>Soft (Respect Player Overrides)</option>
-                  <option value="hard">Hard (Force All Players)</option>
-                </select>
+              <div class="field full-width">
+                <label for="ab-duration">Duration in Ticks (20 Ticks = 1 Second)</label>
+                <input type="number" id="ab-duration" value="100" min="1" required>
+                <span style="font-size:0.75rem; color:var(--text-dim);" id="ab-duration-hint">100 ticks = 5.0 seconds duration</span>
+              </div>
+
+              <div class="field full-width">
+                <label for="ab-custom-text">Message Text</label>
+                <input type="text" id="ab-custom-text" value="Speed Boost Active!" placeholder="e.g. Speed Boost Active!">
               </div>
 
               <div class="field">
-                <label for="ab-color">Primary Text Color</label>
+                <label for="ab-color">Text Color</label>
                 <select id="ab-color">
                   <option value="gold" selected>Gold</option>
                   <option value="yellow">Yellow</option>
@@ -445,20 +442,15 @@
                 </select>
               </div>
 
-              <div class="field full-width">
+              <div class="field">
                 <label for="ab-prefix">Prefix Text</label>
-                <input type="text" id="ab-prefix" value="Info: ">
+                <input type="text" id="ab-prefix" value="[INFO] ">
               </div>
 
-              <div class="field full-width">
-                <label for="ab-suffix">Suffix Text</label>
-                <input type="text" id="ab-suffix" value="">
-              </div>
-
-              <div class="field toggle-field full-width">
+              <div class="field full-width toggle-field">
                 <label for="ab-bold">Apply Bold Formatting</label>
                 <label class="switch">
-                  <input type="checkbox" id="ab-bold">
+                  <input type="checkbox" id="ab-bold" checked>
                   <span class="slider"></span>
                 </label>
               </div>
@@ -473,20 +465,19 @@
               <span>Actionbar Live Preview</span>
             </div>
             <div class="preview-box">
-              <div id="ab-actionbarPreview" class="actionbar-text">Info: Welcome to the Server!</div>
+              <div id="ab-actionbarPreview" class="actionbar-text">[INFO] Speed Boost Active!</div>
             </div>
           </div>
 
           <div class="card brand-border-card">
-            <div class="card-title">Generated Display Command</div>
+            <div class="card-title">Generated Command</div>
             <div class="command-container">
-              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">1. Set Actionbar Custom Text Override</label>
-              <div class="command-code"><code id="ab-commandOutput">/function fb:ab/display_custom {player:"@a",text:"Welcome to the Server!",color:"gold",prefix:"Info: ",suffix:"",bold:"false",global_type:"soft"}</code></div>
-              <button id="ab-copyBtn" class="btn-copy-compact">Copy Display Command</button>
-
-              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:8px;">2. Clear Player Actionbar Override</label>
-              <div class="command-code"><code id="ab-clearOutput">/tag @a remove fb.ab.custom</code></div>
-              <button id="ab-clearCopyBtn" class="btn-copy-compact">Copy Clear Tag Command</button>
+              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Actionbar Overwrite Command</label>
+              <div class="command-code"><code id="ab-commandOutput">/function fb:display/ab/overwrite {player:"@a",text:'{"text":"[INFO] Speed Boost Active!","color":"gold","bold":true}',duration:100}</code></div>
+              <button id="ab-copyBtn" class="btn-copy-compact">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                Copy Overwrite Command
+              </button>
             </div>
           </div>
         </div>
@@ -614,55 +605,54 @@
       <!-- DOC: ACTIONBAR SYSTEM -->
       <div id="doc-actionbar" class="doc-content">
         <div class="card doc-block">
-          <h2>📱 Actionbar Display & Override System</h2>
-          <p>FuseBox features an intelligent actionbar management system that prevents timer flickers, supports individual player overrides via <code>fb.ab.custom</code> tags, and allows custom text overrides integrated directly into FuseBox's priority engine.</p>
+          <h2>📱 Actionbar Overwrite & Priority System</h2>
+          <p>FuseBox features a built-in actionbar overwrite engine that allows datapacks to display temporary custom JSON text messages for a set duration without interfering with active timers.</p>
 
-          <h3>1. FuseBox Custom Text Overrides (No Timer Needed)</h3>
-          <p>If you want to display a custom text message on the actionbar that seamlessly integrates into FuseBox's override system (so it overrides global timers for specific players without needing a stopwatch or countdown instance), use the FuseBox custom text display function:</p>
-          <pre><code>/function fb:ab/display_custom {player:"@s",text:"Welcome to the Server!",color:"gold",prefix:"Info: ",suffix:"",bold:"true",global_type:"soft"}</code></pre>
-          <p>This command automatically adds the <code>fb.ab.custom</code> tag to the targeted player and registers the custom message in <code>storage fb:config display</code> so FuseBox's tick loop renders it cleanly.</p>
+          <h3>1. Actionbar Overwrite Function: <code>/function fb:display/ab/overwrite</code></h3>
+          <p>Displays a custom JSON text component on the actionbar for a specified duration in Minecraft ticks (20 ticks = 1 second). While active, it temporarily overrides any running stopwatch or countdown display. Once the duration expires, FuseBox automatically reverts to normal timer rendering.</p>
+          <pre><code>/function fb:display/ab/overwrite {player:"@a",text:'{"text":"Speed Boost Active!","color":"gold","bold":true}',duration:100}</code></pre>
 
-          <h3>2. Global Priority Modes: <code>soft</code> vs <code>hard</code></h3>
-          <ul>
-            <li><strong><code>soft</code> (Default Mode):</strong> Displays the actionbar globally for <code>@a</code>, but automatically respects individual player custom overrides. If a player has a custom text or personal timer set (tagged with <code>fb.ab.custom</code>), the global timer steps aside for that player while continuing for everyone else.</li>
-            <li><strong><code>hard</code> (Global Override Mode):</strong> Forces the global actionbar onto <em>all</em> online players (<code>@a</code>), overriding any individual player custom tags. Use this for server-wide mini-game announcements or emergency countdowns.</li>
-          </ul>
-
-          <h3>3. Managing Player Overrides</h3>
-          <p>Whenever a custom text message or personal timer is assigned to a specific player (e.g. <code>player:"oneBombastiko"</code>), FuseBox attaches the <code>fb.ab.custom</code> tag to that player.</p>
-          <ul>
-            <li>To clear a player's personal override and return them to the global server actionbar display:
-              <pre><code>/tag &lt;player&gt; remove fb.ab.custom</code></pre>
-            </li>
-          </ul>
-
-          <h3>Actionbar Commands Quick Reference</h3>
+          <h3>Parameter Reference</h3>
           <table class="wiki-table">
             <thead>
               <tr>
-                <th>Function Call</th>
+                <th>Parameter</th>
+                <th>Type</th>
                 <th>Description</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><code>/function fb:ab/display_custom {player:"@s",text:"Custom Text",color:"gold",prefix:"Info: ",suffix:"",bold:"true",global_type:"soft"}</code></td>
-                <td>Registers a FuseBox custom text override (no timer instance required).</td>
+                <td><code>player</code></td>
+                <td>String</td>
+                <td>Target selector (e.g. <code>"@a"</code>, <code>"@s"</code>, or player name).</td>
               </tr>
               <tr>
-                <td><code>/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
-                <td>Renders a stopwatch instance on the actionbar with custom colors and formats.</td>
+                <td><code>text</code></td>
+                <td>String / JSON Component</td>
+                <td>Raw Minecraft JSON text component string (e.g. <code>'{"text":"Message","color":"gold"}'</code>).</td>
               </tr>
               <tr>
-                <td><code>/function fb:cd/display_ab_custom {player:"@a",cd:"timer1",format:"digital_short",color:"red",color_sec:"gray",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
-                <td>Renders a countdown instance on the actionbar with custom colors and formats.</td>
-              </tr>
-              <tr>
-                <td><code>/tag &lt;player&gt; remove fb.ab.custom</code></td>
-                <td>Clears a player's personal actionbar override tag and restores global display.</td>
+                <td><code>duration</code></td>
+                <td>Integer</td>
+                <td>Display duration in ticks (e.g. <code>100</code> ticks = 5 seconds). Sets score <code>fb.ab_over</code> on player.</td>
               </tr>
             </tbody>
           </table>
+
+          <h3>2. Under the Hood Mechanics</h3>
+          <ul>
+            <li>Stores the custom JSON text payload in <code>storage fb:overwrite &lt;player&gt;.text</code>.</li>
+            <li>Sets the <code>fb.ab_over</code> scoreboard objective on target players to the specified <code>duration</code> value.</li>
+            <li>During each tick, FuseBox's display loop checks if <code>fb.ab_over</code> &gt; 0. If positive, it renders the custom JSON text component and decrements the score by 1.</li>
+            <li>When <code>fb.ab_over</code> reaches 0, the overwrite automatically expires and normal timer displays resume seamlessly.</li>
+          </ul>
+
+          <h3>3. Global Display Priorities: <code>soft</code> vs <code>hard</code></h3>
+          <ul>
+            <li><strong><code>soft</code> (Default Mode):</strong> Displays timers globally for <code>@a</code>, but automatically steps aside for individual players with active custom overrides.</li>
+            <li><strong><code>hard</code> (Global Mode):</strong> Forces global timer display across all online players, overriding individual player tags during critical server events.</li>
+          </ul>
         </div>
       </div>
 

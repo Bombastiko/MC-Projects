@@ -292,59 +292,54 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cdCopyBtnDisplay) cdCopyBtnDisplay.addEventListener('click', () => copyToClipboard(cdCommandOutputDisplay.textContent, cdCopyBtnDisplay));
 
   // ==========================================
-  // 📱 ACTIONBAR CONFIGURATOR (CUSTOM TEXT OVERRIDES EXCLUSIVE)
+  // 📱 ACTIONBAR OVERWRITE CONFIGURATOR (/function fb:display/ab/overwrite)
   // ==========================================
-  const abCustomTextInput = document.getElementById('ab-custom-text');
   const abPlayerInput = document.getElementById('ab-player');
-  const abGlobalTypeGroup = document.getElementById('ab-global-type-group');
-  const abGlobalTypeInput = document.getElementById('ab-global_type');
+  const abDurationInput = document.getElementById('ab-duration');
+  const abDurationHint = document.getElementById('ab-duration-hint');
+  const abCustomTextInput = document.getElementById('ab-custom-text');
   const abColorInput = document.getElementById('ab-color');
   const abPrefixInput = document.getElementById('ab-prefix');
-  const abSuffixInput = document.getElementById('ab-suffix');
   const abBoldInput = document.getElementById('ab-bold');
   const abActionbarPreview = document.getElementById('ab-actionbarPreview');
   const abCommandOutput = document.getElementById('ab-commandOutput');
   const abCopyBtn = document.getElementById('ab-copyBtn');
-  const abClearOutput = document.getElementById('ab-clearOutput');
-  const abClearCopyBtn = document.getElementById('ab-clearCopyBtn');
 
   function updateAb() {
     if (!abCustomTextInput) return;
     const player = abPlayerInput.value.trim() || '@a';
-    const isGlobalTarget = player === '@a';
-
-    if (abGlobalTypeGroup) abGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
-
-    const globalType = isGlobalTarget ? abGlobalTypeInput.value : 'soft';
-    const customText = abCustomTextInput.value.trim() || 'Welcome to the Server!';
+    const duration = parseInt(abDurationInput.value) || 100;
+    const messageText = abCustomTextInput.value.trim() || 'Speed Boost Active!';
     const color = abColorInput.value;
     const prefix = abPrefixInput.value;
-    const suffix = abSuffixInput.value;
     const bold = abBoldInput.checked;
 
-    const escapedPrefix = prefix.replace(/"/g, '\\"');
-    const escapedSuffix = suffix.replace(/"/g, '\\"');
-    const escapedText = customText.replace(/"/g, '\\"');
+    const seconds = (duration / 20).toFixed(1);
+    if (abDurationHint) {
+      abDurationHint.textContent = `${duration} ticks = ${seconds} seconds duration`;
+    }
 
-    const command = `/function fb:ab/display_custom {player:"${player}",text:"${escapedText}",color:"${color}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
-    const clearCommand = `/tag ${player} remove fb.ab.custom`;
+    const fullMessage = prefix + messageText;
+    const escapedMessage = fullMessage.replace(/"/g, '\\"');
+    const boldJson = bold ? ',"bold":true' : '';
+    const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
+
+    const command = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
 
     abCommandOutput.textContent = command;
-    if (abClearOutput) abClearOutput.textContent = clearCommand;
 
     let previewHtml = '';
     const colMain = colorMap[color];
 
     if (prefix) previewHtml += buildSpan(prefix, colMain, bold, false);
-    previewHtml += buildSpan(customText, colMain, bold, false);
-    if (suffix) previewHtml += buildSpan(suffix, colMain, bold, false);
+    previewHtml += buildSpan(messageText, colMain, bold, false);
 
     abActionbarPreview.innerHTML = previewHtml;
   }
 
   const abInputs = [
-    abCustomTextInput, abPlayerInput, abGlobalTypeInput,
-    abColorInput, abPrefixInput, abSuffixInput, abBoldInput
+    abPlayerInput, abDurationInput, abCustomTextInput,
+    abColorInput, abPrefixInput, abBoldInput
   ];
   abInputs.forEach(i => {
     if (i) {
@@ -354,7 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if (abCopyBtn) abCopyBtn.addEventListener('click', () => copyToClipboard(abCommandOutput.textContent, abCopyBtn));
-  if (abClearCopyBtn) abClearCopyBtn.addEventListener('click', () => copyToClipboard(abClearOutput.textContent, abClearCopyBtn));
 
   // ==========================================
   // ⚡ EVENT CONFIGURATOR
