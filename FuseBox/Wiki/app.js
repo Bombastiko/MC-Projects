@@ -43,7 +43,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Minecraft Hex Colors mapping
+  // Copy to Clipboard Utility
+  function copyToClipboard(text, btnElement) {
+    navigator.clipboard.writeText(text).then(() => {
+      const originalText = btnElement.innerHTML;
+      btnElement.classList.add('copied');
+      btnElement.innerHTML = `✓ Copied!`;
+      setTimeout(() => {
+        btnElement.classList.remove('copied');
+        btnElement.innerHTML = originalText;
+      }, 2000);
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+    });
+  }
+
+  // Minecraft Colors mapping
   const colorMap = {
     gold: '#ffaa00',
     yellow: '#ffff55',
@@ -88,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const player = playerInput.value.trim() || '@a';
     const isGlobalTarget = player === '@a';
     
-    globalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
+    if (globalTypeGroup) globalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
 
     const globalType = isGlobalTarget ? globalTypeInput.value : 'soft';
     const sw = swInput.value.trim() || 'demo';
@@ -152,11 +167,13 @@ document.addEventListener('DOMContentLoaded', () => {
     colorSecInput, colorNumInput, prefixInput, suffixInput, boldInput, previewPaused
   ];
   swInputs.forEach(i => {
-    i.addEventListener('input', updateSw);
-    i.addEventListener('change', updateSw);
+    if (i) {
+      i.addEventListener('input', updateSw);
+      i.addEventListener('change', updateSw);
+    }
   });
 
-  copyBtn.addEventListener('click', () => copyToClipboard(commandOutput.textContent, copyBtn));
+  if (copyBtn) copyBtn.addEventListener('click', () => copyToClipboard(commandOutput.textContent, copyBtn));
 
   // ==========================================
   // ⏳ COUNTDOWN CONFIGURATOR
@@ -188,17 +205,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const cdCopyBtnDisplay = document.getElementById('cd-copyBtnDisplay');
 
   function updateCd() {
-    const player = cdPlayerInput.value.trim() || '@a';
+    const player = cdPlayerInput ? cdPlayerInput.value.trim() || '@a' : '@a';
     const isGlobalTarget = player === '@a';
     
-    cdGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
+    if (cdGlobalTypeGroup) cdGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
 
     const globalType = isGlobalTarget ? cdGlobalTypeInput.value : 'soft';
-    const cdName = cdNameInput.value.trim() || 'demo';
+    const cdName = cdNameInput.value.trim() || 'timer1';
     const h = parseInt(cdHInput.value) || 0;
     const m = parseInt(cdMInput.value) || 0;
     const s = parseInt(cdSInput.value) || 0;
-    const cmd = cdCmdInput.value.replace(/"/g, '\\"');
+    const cdCmd = cdCmdInput.value.trim() || 'say Countdown expired!';
     const format = cdFormatInput.value;
     const color = cdColorInput.value;
     const colorSec = cdColorSecInput.value;
@@ -208,21 +225,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const bold = cdBoldInput.checked;
     const isPaused = cdPreviewPaused.checked;
 
-    // 1. Generate Command 1: Create
-    const createCmd = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},on_complete:"${cmd}"}`;
-    cdCommandOutputCreate.textContent = createCmd;
-
-    // 2. Generate Command 2: Start
-    const startCmd = `/function fb:cd/start {name:"${cdName}"}`;
-    cdCommandOutputStart.textContent = startCmd;
-
-    // 3. Generate Command 3: Display Configuration
+    // Escaped command string
+    const escapedCdCmd = cdCmd.replace(/'/g, "\\'");
     const escapedPrefix = prefix.replace(/"/g, '\\"');
     const escapedSuffix = suffix.replace(/"/g, '\\"');
-    const displayCmd = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
-    cdCommandOutputDisplay.textContent = displayCmd;
 
-    // 4. Render HUD Preview
+    // Generate 3 Commands
+    cdCommandOutputCreate.textContent = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},cmd:'${escapedCdCmd}'}`;
+    cdCommandOutputStart.textContent = `/function fb:cd/start {name:"${cdName}"}`;
+    cdCommandOutputDisplay.textContent = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
+
+    // Render Preview
     let previewHtml = '';
     const colMain = isPaused ? colorMap.gray : colorMap[color];
     const colSec = isPaused ? colorMap.gray : colorMap[colorSec];
@@ -231,8 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (prefix) previewHtml += buildSpan(prefix, colMain, bold, isItalic);
 
-    const pad = (val) => val.toString().padStart(2, '0');
-
+    const pad = (n) => (n < 10 ? '0' + n : n);
     if (format === 'digital') {
       previewHtml += buildSpan(pad(h), colNum, bold, isItalic);
       previewHtml += buildSpan(':', colSec, bold, isItalic);
@@ -246,31 +258,15 @@ document.addEventListener('DOMContentLoaded', () => {
       previewHtml += buildSpan('.', colSec, bold, isItalic);
       previewHtml += buildSpan('00', colNum, bold, isItalic);
     } else if (format === 'letters') {
-      if (h > 0) {
-        previewHtml += buildSpan(h, colNum, bold, isItalic);
-        previewHtml += buildSpan('h ', colSec, bold, isItalic);
-      }
+      previewHtml += buildSpan(h, colNum, bold, isItalic);
+      previewHtml += buildSpan('h ', colSec, bold, isItalic);
       previewHtml += buildSpan(m, colNum, bold, isItalic);
       previewHtml += buildSpan('m ', colSec, bold, isItalic);
       previewHtml += buildSpan(s, colNum, bold, isItalic);
       previewHtml += buildSpan('s', colSec, bold, isItalic);
     } else if (format === 'dynamic') {
-      if (h > 0) {
-        previewHtml += buildSpan(h, colNum, bold, isItalic);
-        previewHtml += buildSpan('h ', colSec, bold, isItalic);
-        previewHtml += buildSpan(m, colNum, bold, isItalic);
-        previewHtml += buildSpan('m ', colSec, bold, isItalic);
-        previewHtml += buildSpan(s, colNum, bold, isItalic);
-        previewHtml += buildSpan('s', colSec, bold, isItalic);
-      } else if (m > 0) {
-        previewHtml += buildSpan(m, colNum, bold, isItalic);
-        previewHtml += buildSpan('m ', colSec, bold, isItalic);
-        previewHtml += buildSpan(s, colNum, bold, isItalic);
-        previewHtml += buildSpan('s', colSec, bold, isItalic);
-      } else {
-        previewHtml += buildSpan(s, colNum, bold, isItalic);
-        previewHtml += buildSpan('s', colSec, bold, isItalic);
-      }
+      previewHtml += buildSpan(s, colNum, bold, isItalic);
+      previewHtml += buildSpan('s', colSec, bold, isItalic);
     }
 
     if (suffix) previewHtml += buildSpan(suffix, colMain, bold, isItalic);
@@ -279,200 +275,82 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const cdInputs = [
-    cdPlayerInput, cdGlobalTypeInput, cdNameInput, cdHInput, cdMInput, cdSInput,
-    cdCmdInput, cdFormatInput, cdColorInput, cdColorSecInput,
-    cdColorNumInput, cdPrefixInput, cdSuffixInput, cdBoldInput, cdPreviewPaused
+    cdPlayerInput, cdGlobalTypeInput, cdNameInput, cdHInput, cdMInput, cdSInput, cdCmdInput,
+    cdFormatInput, cdColorInput, cdColorSecInput, cdColorNumInput, cdPrefixInput, cdSuffixInput, cdBoldInput, cdPreviewPaused
   ];
   cdInputs.forEach(i => {
-    i.addEventListener('input', updateCd);
-    i.addEventListener('change', updateCd);
+    if (i) {
+      i.addEventListener('input', updateCd);
+      i.addEventListener('change', updateCd);
+    }
   });
 
-  cdBtnAnimPrev.addEventListener('click', testCdAnimation);
-
-  cdCopyBtnCreate.addEventListener('click', () => copyToClipboard(cdCommandOutputCreate.textContent, cdCopyBtnCreate));
-  cdCopyBtnStart.addEventListener('click', () => copyToClipboard(cdCommandOutputStart.textContent, cdCopyBtnStart));
-  cdCopyBtnDisplay.addEventListener('click', () => copyToClipboard(cdCommandOutputDisplay.textContent, cdCopyBtnDisplay));
-
-  // ==========================================
-  // 📋 CLIPBOARD HELPER
-  // ==========================================
-  function copyToClipboard(text, button) {
-    navigator.clipboard.writeText(text).then(() => {
-      const originalText = button.textContent;
-      button.textContent = 'Copied!';
-      button.style.backgroundColor = '#22c55e';
-      button.style.color = '#ffffff';
-      
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.style.backgroundColor = '';
-        button.style.color = '';
-      }, 1500);
-    }).catch(err => {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      
-      const originalText = button.textContent;
-      button.textContent = 'Copied!';
-      setTimeout(() => {
-        button.textContent = originalText;
-      }, 1500);
-    });
-  }
-
-  // Initialize SW and CD once
-  updateSw();
-  updateCd();
+  if (cdCopyBtnCreate) cdCopyBtnCreate.addEventListener('click', () => copyToClipboard(cdCommandOutputCreate.textContent, cdCopyBtnCreate));
+  if (cdCopyBtnStart) cdCopyBtnStart.addEventListener('click', () => copyToClipboard(cdCommandOutputStart.textContent, cdCopyBtnStart));
+  if (cdCopyBtnDisplay) cdCopyBtnDisplay.addEventListener('click', () => copyToClipboard(cdCommandOutputDisplay.textContent, cdCopyBtnDisplay));
 
   // ==========================================
   // ⚡ EVENT GENERATOR
   // ==========================================
-  const egEvent = document.getElementById('eg-event');
-  const egType = document.getElementById('eg-type');
-  const egCommand = document.getElementById('eg-command');
-  const egFunction = document.getElementById('eg-function');
-  const egItemId = document.getElementById('eg-item-id');
-  const egCustomData = document.getElementById('eg-custom-data');
+  const egEventInput = document.getElementById('eg-event');
+  const egItemInput = document.getElementById('eg-item');
+  const egCdInput = document.getElementById('eg-cd');
+  const egFnInput = document.getElementById('eg-fn');
+  const egCommandOutput = document.getElementById('eg-commandOutput');
+  const egCopyBtn = document.getElementById('eg-copyBtn');
 
-  const egCommandGroup = document.getElementById('eg-command-group');
-  const egFunctionGroup = document.getElementById('eg-function-group');
-  const egItemIdGroup = document.getElementById('eg-item-id-group');
-  const egCustomDataGroup = document.getElementById('eg-custom-data-group');
+  function updateEventGen() {
+    if (!egEventInput) return;
+    const eventName = egEventInput.value;
+    const item = egItemInput.value.trim();
+    const cd = egCdInput.value.trim() || '{}';
+    const fn = egFnInput.value.trim() || 'say Triggered!';
 
-  const egRegisterOutput = document.getElementById('eg-register-output');
-  const egUnregisterOutput = document.getElementById('eg-unregister-output');
-  
-  const egCopyRegBtn = document.getElementById('eg-copy-reg-btn');
-  const egCopyUnregBtn = document.getElementById('eg-copy-unreg-btn');
+    const hasItem = item.length > 0;
+    const hasCd = cd !== '{}' && cd.length > 0;
 
-  window.updateEventGen = function() {
-    if (!egEvent || !egType) return;
-
-    const eventVal = egEvent.value;
-    const typeVal = egType.value;
-    const isItemEvent = eventVal === 'onRightClick' || eventVal === 'onHoldItem';
-
-    // Show/Hide inputs
-    if (egCommandGroup) egCommandGroup.style.display = typeVal === 'command' ? 'flex' : 'none';
-    if (egFunctionGroup) egFunctionGroup.style.display = typeVal === 'function' ? 'flex' : 'none';
-    if (egItemIdGroup) egItemIdGroup.style.display = isItemEvent ? 'flex' : 'none';
-    if (egCustomDataGroup) egCustomDataGroup.style.display = isItemEvent ? 'flex' : 'none';
-
-    // Get input values
-    const commandVal = (egCommand ? egCommand.value.trim() : '') || 'say Hello, @s!';
-    const functionVal = (egFunction ? egFunction.value.trim() : '') || 'my_pack:welcome';
-    const itemIdVal = (egItemId ? egItemId.value.trim() : '') || 'minecraft:carrot_on_a_stick';
-    const customDataVal = (egCustomData ? egCustomData.value.trim() : '') || '{}';
-
-    let regCmd = '';
-    let unregCmd = '';
-
-    if (isItemEvent) {
-      if (typeVal === 'command') {
-        regCmd = `/function fb:event/register_item_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}",item_id:"${itemIdVal}",custom_data:${customDataVal}}`;
-        unregCmd = `/function fb:event/unregister_item_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}",item_id:"${itemIdVal}",custom_data:${customDataVal}}`;
-      } else {
-        regCmd = `/function fb:event/register_item {event:"${eventVal}",fn:"${functionVal}",item_id:"${itemIdVal}",custom_data:${customDataVal}}`;
-        unregCmd = `/function fb:event/unregister_item {event:"${eventVal}",fn:"${functionVal}",item_id:"${itemIdVal}",custom_data:${customDataVal}}`;
-      }
+    let fnName = 'register';
+    if (hasItem) {
+      fnName = 'register_item_cmd';
     } else {
-      if (typeVal === 'command') {
-        regCmd = `/function fb:event/register_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}"}`;
-        unregCmd = `/function fb:event/unregister_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}"}`;
-      } else {
-        regCmd = `/function fb:event/register {event:"${eventVal}",fn:"${functionVal}"}`;
-        unregCmd = `/function fb:event/unregister {event:"${eventVal}",fn:"${functionVal}"}`;
-      }
+      fnName = 'register_cmd';
     }
 
-    if (egRegisterOutput) egRegisterOutput.textContent = regCmd;
-    if (egUnregisterOutput) egUnregisterOutput.textContent = unregCmd;
-  };
+    let command = '';
+    if (hasItem) {
+      command = `/function fb:event/${fnName} {name:"${eventName}",item_id:"${item}",custom_data:${cd},fn:"${fn}"}`;
+    } else {
+      command = `/function fb:event/${fnName} {name:"${eventName}",fn:"${fn}"}`;
+    }
 
-  const eventGenForm = document.getElementById('eventGenForm');
-  if (eventGenForm) {
-    eventGenForm.addEventListener('input', window.updateEventGen);
-    eventGenForm.addEventListener('change', window.updateEventGen);
+    egCommandOutput.textContent = command;
   }
 
-  const egInputs = [egEvent, egType, egCommand, egFunction, egItemId, egCustomData];
-  egInputs.forEach(input => {
-    if (input) {
-      input.addEventListener('input', window.updateEventGen);
-      input.addEventListener('change', window.updateEventGen);
+  const egInputs = [egEventInput, egItemInput, egCdInput, egFnInput];
+  egInputs.forEach(i => {
+    if (i) {
+      i.addEventListener('input', updateEventGen);
+      i.addEventListener('change', updateEventGen);
     }
   });
 
-  if (egCopyRegBtn) egCopyRegBtn.addEventListener('click', () => copyToClipboard(egRegisterOutput.textContent, egCopyRegBtn));
-  if (egCopyUnregBtn) egCopyUnregBtn.addEventListener('click', () => copyToClipboard(egUnregisterOutput.textContent, egCopyUnregBtn));
+  if (egCopyBtn) egCopyBtn.addEventListener('click', () => copyToClipboard(egCommandOutput.textContent, egCopyBtn));
 
-  // Initialize event generator
-  if (typeof window.updateEventGen === 'function') {
-    window.updateEventGen();
+  // Search Filter in Documentation
+  const docsSearchInput = document.getElementById('docsSearchInput');
+  if (docsSearchInput) {
+    docsSearchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const tables = document.querySelectorAll('.ref-table tbody tr');
+      tables.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+    });
   }
+
+  // Initial runs
+  updateSw();
+  if (cdPlayerInput) updateCd();
+  if (egEventInput) updateEventGen();
 });
-
-// Global Event Generator update function
-window.updateEventGen = function() {
-  const egEvent = document.getElementById('eg-event');
-  const egType = document.getElementById('eg-type');
-  const egCommand = document.getElementById('eg-command');
-  const egFunction = document.getElementById('eg-function');
-  const egItemId = document.getElementById('eg-item-id');
-  const egCustomData = document.getElementById('eg-custom-data');
-
-  if (!egEvent || !egType) return;
-
-  const eventVal = egEvent.value;
-  const typeVal = egType.value;
-  const isItemEvent = eventVal === 'onRightClick' || eventVal === 'onHoldItem';
-
-  const egCommandGroup = document.getElementById('eg-command-group');
-  const egFunctionGroup = document.getElementById('eg-function-group');
-  const egItemIdGroup = document.getElementById('eg-item-id-group');
-  const egCustomDataGroup = document.getElementById('eg-custom-data-group');
-
-  const egRegisterOutput = document.getElementById('eg-register-output');
-  const egUnregisterOutput = document.getElementById('eg-unregister-output');
-
-  // Show/Hide inputs
-  if (egCommandGroup) egCommandGroup.style.display = typeVal === 'command' ? 'flex' : 'none';
-  if (egFunctionGroup) egFunctionGroup.style.display = typeVal === 'function' ? 'flex' : 'none';
-  if (egItemIdGroup) egItemIdGroup.style.display = isItemEvent ? 'flex' : 'none';
-  if (egCustomDataGroup) egCustomDataGroup.style.display = isItemEvent ? 'flex' : 'none';
-
-  // Get input values
-  const commandVal = (egCommand && egCommand.value) ? egCommand.value.trim() : 'say Hello, @s!';
-  const functionVal = (egFunction && egFunction.value) ? egFunction.value.trim() : 'my_pack:welcome';
-  const itemIdVal = (egItemId && egItemId.value) ? egItemId.value.trim() : 'minecraft:carrot_on_a_stick';
-  const customDataVal = (egCustomData && egCustomData.value) ? egCustomData.value.trim() : '{}';
-
-  let regCmd = '';
-  let unregCmd = '';
-
-  if (isItemEvent) {
-    if (typeVal === 'command') {
-      regCmd = `/function fb:event/register_item_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}",item_id:"${itemIdVal}",custom_data:${customDataVal || '{}'}}`;
-      unregCmd = `/function fb:event/unregister_item_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}",item_id:"${itemIdVal}",custom_data:${customDataVal || '{}'}}`;
-    } else {
-      regCmd = `/function fb:event/register_item {event:"${eventVal}",fn:"${functionVal}",item_id:"${itemIdVal}",custom_data:${customDataVal || '{}'}}`;
-      unregCmd = `/function fb:event/unregister_item {event:"${eventVal}",fn:"${functionVal}",item_id:"${itemIdVal}",custom_data:${customDataVal || '{}'}}`;
-    }
-  } else {
-    if (typeVal === 'command') {
-      regCmd = `/function fb:event/register_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}"}`;
-      unregCmd = `/function fb:event/unregister_cmd {event:"${eventVal}",cmd:"${commandVal.replace(/"/g, '\\"')}"}`;
-    } else {
-      regCmd = `/function fb:event/register {event:"${eventVal}",fn:"${functionVal}"}`;
-      unregCmd = `/function fb:event/unregister {event:"${eventVal}",fn:"${functionVal}"}`;
-    }
-  }
-
-  if (egRegisterOutput) egRegisterOutput.textContent = regCmd;
-  if (egUnregisterOutput) egUnregisterOutput.textContent = unregCmd;
-};
