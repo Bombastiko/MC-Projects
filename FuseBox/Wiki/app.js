@@ -24,16 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Documentation Tab switching logic
-  const docsNavItems = document.querySelectorAll('.docs-nav-item');
-  const docSections = document.querySelectorAll('.doc-section');
+  const docsTabs = document.querySelectorAll('.docs-tab');
+  const docContents = document.querySelectorAll('.doc-content');
 
-  docsNavItems.forEach(item => {
+  docsTabs.forEach(item => {
     item.addEventListener('click', () => {
-      docsNavItems.forEach(i => i.classList.remove('active'));
+      docsTabs.forEach(i => i.classList.remove('active'));
       item.classList.add('active');
 
       const targetDoc = item.getAttribute('data-doc');
-      docSections.forEach(section => {
+      docContents.forEach(section => {
         if (section.id === targetDoc) {
           section.classList.add('active');
         } else {
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         btnElement.classList.remove('copied');
         btnElement.innerHTML = originalText;
-      }, 2000);
+      }, 1800);
     }).catch(err => {
       console.error('Failed to copy: ', err);
     });
@@ -70,12 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
     dark_gray: '#555555'
   };
 
-  // Helper: Build actionbar styled spans
   function buildSpan(text, textColor, isBold, isItalic) {
     const dropShadowColor = textColor === '#ffffff' ? '#3f3f3f' : 'rgba(0,0,0,0.85)';
     const boldStyle = isBold ? 'font-weight: bold;' : 'font-weight: normal;';
     const italicStyle = isItalic ? 'font-style: italic;' : 'font-style: normal;';
-    const style = `color: ${textColor}; text-shadow: 1.5px 1.5px 0px ${dropShadowColor}; ${boldStyle} ${italicStyle}`;
+    const style = `color: ${textColor}; text-shadow: 2px 2px 0px ${dropShadowColor}; ${boldStyle} ${italicStyle}`;
     return `<span style="${style}">${text}</span>`;
   }
 
@@ -100,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const actionbarPreview = document.getElementById('actionbarPreview');
 
   function updateSw() {
+    if (!playerInput) return;
     const player = playerInput.value.trim() || '@a';
     const isGlobalTarget = player === '@a';
     
@@ -116,13 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const bold = boldInput.checked;
     const isPaused = previewPaused.checked;
 
-    // 1. Generate Command
     const escapedPrefix = prefix.replace(/"/g, '\\"');
     const escapedSuffix = suffix.replace(/"/g, '\\"');
     const command = `/function fb:sw/display_ab_custom {player:"${player}",sw:"${sw}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
     commandOutput.textContent = command;
 
-    // 2. Render HUD Preview
     let previewHtml = '';
     const colMain = isPaused ? colorMap.gray : colorMap[color];
     const colSec = isPaused ? colorMap.gray : colorMap[colorSec];
@@ -188,12 +186,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const cdCmdInput = document.getElementById('cd-cmd');
   const cdFormatInput = document.getElementById('cd-format');
   const cdColorInput = document.getElementById('cd-color');
-  const cdColorSecInput = document.getElementById('cd-color_sec');
-  const cdColorNumInput = document.getElementById('cd-color_num');
   const cdPrefixInput = document.getElementById('cd-prefix');
-  const cdSuffixInput = document.getElementById('cd-suffix');
   const cdBoldInput = document.getElementById('cd-bold');
-  
   const cdPreviewPaused = document.getElementById('cd-preview-paused');
   const cdActionbarPreview = document.getElementById('cd-actionbarPreview');
   
@@ -205,7 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const cdCopyBtnDisplay = document.getElementById('cd-copyBtnDisplay');
 
   function updateCd() {
-    const player = cdPlayerInput ? cdPlayerInput.value.trim() || '@a' : '@a';
+    if (!cdPlayerInput) return;
+    const player = cdPlayerInput.value.trim() || '@a';
     const isGlobalTarget = player === '@a';
     
     if (cdGlobalTypeGroup) cdGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
@@ -218,28 +213,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const cdCmd = cdCmdInput.value.trim() || 'say Countdown expired!';
     const format = cdFormatInput.value;
     const color = cdColorInput.value;
-    const colorSec = cdColorSecInput.value;
-    const colorNum = cdColorNumInput.value;
     const prefix = cdPrefixInput.value;
-    const suffix = cdSuffixInput.value;
     const bold = cdBoldInput.checked;
     const isPaused = cdPreviewPaused.checked;
 
-    // Escaped command string
     const escapedCdCmd = cdCmd.replace(/'/g, "\\'");
     const escapedPrefix = prefix.replace(/"/g, '\\"');
-    const escapedSuffix = suffix.replace(/"/g, '\\"');
 
-    // Generate 3 Commands
     cdCommandOutputCreate.textContent = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},cmd:'${escapedCdCmd}'}`;
     cdCommandOutputStart.textContent = `/function fb:cd/start {name:"${cdName}"}`;
-    cdCommandOutputDisplay.textContent = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
+    cdCommandOutputDisplay.textContent = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"gray",color_num:"white",prefix:"${escapedPrefix}",suffix:"",bold:"${bold}",global_type:"${globalType}"}`;
 
-    // Render Preview
     let previewHtml = '';
     const colMain = isPaused ? colorMap.gray : colorMap[color];
-    const colSec = isPaused ? colorMap.gray : colorMap[colorSec];
-    const colNum = isPaused ? colorMap.dark_gray : colorMap[colorNum];
+    const colSec = colorMap.gray;
+    const colNum = colorMap.white;
     const isItalic = isPaused;
 
     if (prefix) previewHtml += buildSpan(prefix, colMain, bold, isItalic);
@@ -257,26 +245,17 @@ document.addEventListener('DOMContentLoaded', () => {
       previewHtml += buildSpan(pad(s), colNum, bold, isItalic);
       previewHtml += buildSpan('.', colSec, bold, isItalic);
       previewHtml += buildSpan('00', colNum, bold, isItalic);
-    } else if (format === 'letters') {
-      previewHtml += buildSpan(h, colNum, bold, isItalic);
-      previewHtml += buildSpan('h ', colSec, bold, isItalic);
-      previewHtml += buildSpan(m, colNum, bold, isItalic);
-      previewHtml += buildSpan('m ', colSec, bold, isItalic);
-      previewHtml += buildSpan(s, colNum, bold, isItalic);
-      previewHtml += buildSpan('s', colSec, bold, isItalic);
-    } else if (format === 'dynamic') {
+    } else {
       previewHtml += buildSpan(s, colNum, bold, isItalic);
       previewHtml += buildSpan('s', colSec, bold, isItalic);
     }
-
-    if (suffix) previewHtml += buildSpan(suffix, colMain, bold, isItalic);
 
     cdActionbarPreview.innerHTML = previewHtml;
   }
 
   const cdInputs = [
     cdPlayerInput, cdGlobalTypeInput, cdNameInput, cdHInput, cdMInput, cdSInput, cdCmdInput,
-    cdFormatInput, cdColorInput, cdColorSecInput, cdColorNumInput, cdPrefixInput, cdSuffixInput, cdBoldInput, cdPreviewPaused
+    cdFormatInput, cdColorInput, cdPrefixInput, cdBoldInput, cdPreviewPaused
   ];
   cdInputs.forEach(i => {
     if (i) {
@@ -307,14 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fn = egFnInput.value.trim() || 'say Triggered!';
 
     const hasItem = item.length > 0;
-    const hasCd = cd !== '{}' && cd.length > 0;
-
-    let fnName = 'register';
-    if (hasItem) {
-      fnName = 'register_item_cmd';
-    } else {
-      fnName = 'register_cmd';
-    }
+    const fnName = hasItem ? 'register_item_cmd' : 'register_cmd';
 
     let command = '';
     if (hasItem) {
@@ -336,21 +308,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (egCopyBtn) egCopyBtn.addEventListener('click', () => copyToClipboard(egCommandOutput.textContent, egCopyBtn));
 
-  // Search Filter in Documentation
-  const docsSearchInput = document.getElementById('docsSearchInput');
-  if (docsSearchInput) {
-    docsSearchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      const tables = document.querySelectorAll('.ref-table tbody tr');
-      tables.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(query) ? '' : 'none';
-      });
-    });
-  }
-
   // Initial runs
   updateSw();
-  if (cdPlayerInput) updateCd();
-  if (egEventInput) updateEventGen();
+  updateCd();
+  updateEventGen();
 });
