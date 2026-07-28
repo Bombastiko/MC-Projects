@@ -1,45 +1,62 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Navigation elements
+// Global Navigation Helpers for Dashboard Shortcuts
+function switchPage(pageId) {
   const menuItems = document.querySelectorAll('.menu-item');
   const pages = document.querySelectorAll('.page');
 
-  // Page switching logic
+  menuItems.forEach(i => {
+    if (i.getAttribute('data-page') === pageId) {
+      i.classList.add('active');
+    } else {
+      i.classList.remove('active');
+    }
+  });
+
+  pages.forEach(page => {
+    if (page.id === pageId) {
+      page.classList.add('active');
+    } else {
+      page.classList.remove('active');
+    }
+  });
+}
+
+function switchDocTab(docId) {
+  const docsTabs = document.querySelectorAll('.docs-tab');
+  const docContents = document.querySelectorAll('.doc-content');
+
+  docsTabs.forEach(tab => {
+    if (tab.getAttribute('data-doc') === docId) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.remove('active');
+    }
+  });
+
+  docContents.forEach(section => {
+    if (section.id === docId) {
+      section.classList.add('active');
+    } else {
+      section.classList.remove('active');
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Navigation elements
+  const menuItems = document.querySelectorAll('.menu-item');
   menuItems.forEach(item => {
     item.addEventListener('click', () => {
-      menuItems.forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-
       const targetPage = item.getAttribute('data-page');
-      pages.forEach(page => {
-        if (page.id === targetPage) {
-          page.classList.add('active');
-          if (targetPage === 'event-generator-page' && typeof updateEventGen === 'function') {
-            updateEventGen();
-          }
-        } else {
-          page.classList.remove('active');
-        }
-      });
+      switchPage(targetPage);
     });
   });
 
   // Documentation Tab switching logic
   const docsTabs = document.querySelectorAll('.docs-tab');
-  const docContents = document.querySelectorAll('.doc-content');
-
   docsTabs.forEach(item => {
     item.addEventListener('click', () => {
-      docsTabs.forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-
       const targetDoc = item.getAttribute('data-doc');
-      docContents.forEach(section => {
-        if (section.id === targetDoc) {
-          section.classList.add('active');
-        } else {
-          section.classList.remove('active');
-        }
-      });
+      switchDocTab(targetDoc);
     });
   });
 
