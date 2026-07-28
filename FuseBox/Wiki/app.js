@@ -231,7 +231,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const h = parseInt(cdHInput.value) || 0;
     const m = parseInt(cdMInput.value) || 0;
     const s = parseInt(cdSInput.value) || 0;
-    const cdCmd = cdCmdInput.value.trim() || 'say Countdown expired!';
+    const cdCmdRaw = cdCmdInput.value.trim();
+    
+    // Silent command with no chat message or side effect if empty
+    const cdCmd = cdCmdRaw.length > 0 ? cdCmdRaw : 'data get storage fb:tmp dummy';
     const format = cdFormatInput.value;
     const color = cdColorInput.value;
     const prefix = cdPrefixInput.value;
@@ -292,6 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // ⚡ EVENT CONFIGURATOR
   // ==========================================
+  const egTypeInput = document.getElementById('eg-type');
+  const egFnLabel = document.getElementById('eg-fn-label');
   const egEventInput = document.getElementById('eg-event');
   const egItemInput = document.getElementById('eg-item');
   const egCdInput = document.getElementById('eg-cd');
@@ -301,13 +306,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateEventGen() {
     if (!egEventInput) return;
+    const actionType = egTypeInput ? egTypeInput.value : 'command';
     const eventName = egEventInput.value;
     const item = egItemInput.value.trim();
-    const cd = egCdInput.value.trim() || '{}';
-    const fn = egFnInput.value.trim() || 'say Triggered!';
+    const cd = egCdInput.value.trim() || '{id:"ascend"}';
+    const fn = egFnInput.value.trim() || (actionType === 'command' ? 'scoreboard players add @s fb.t_fire 1' : 'my_pack:cast_spell');
+
+    if (egFnLabel) {
+      egFnLabel.textContent = actionType === 'command' ? 'Target Command' : 'Target Function';
+    }
 
     const hasItem = item.length > 0;
-    const fnName = hasItem ? 'register_item_cmd' : 'register_cmd';
+    let fnName = '';
+
+    if (actionType === 'command') {
+      fnName = hasItem ? 'register_item_cmd' : 'register_cmd';
+    } else {
+      fnName = hasItem ? 'register_item' : 'register';
+    }
 
     let command = '';
     if (hasItem) {
@@ -319,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     egCommandOutput.textContent = command;
   }
 
-  const egInputs = [egEventInput, egItemInput, egCdInput, egFnInput];
+  const egInputs = [egTypeInput, egEventInput, egItemInput, egCdInput, egFnInput];
   egInputs.forEach(i => {
     if (i) {
       i.addEventListener('input', updateEventGen);

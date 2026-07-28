@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=3.0">
+  <link rel="stylesheet" href="style.css?v=4.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -266,7 +266,7 @@
     <div id="cd-configurator-page" class="page">
       <div class="page-header">
         <h1>Countdown Configurator</h1>
-        <p>Generate commands for actionbar countdowns with custom expiry callbacks.</p>
+        <p>Generate commands for actionbar countdowns with optional expiry callbacks.</p>
       </div>
 
       <div class="config-layout">
@@ -335,7 +335,8 @@
 
               <div class="field full-width">
                 <label for="cd-cmd">Expiry Callback Command</label>
-                <input type="text" id="cd-cmd" value="say Countdown expired!">
+                <input type="text" id="cd-cmd" value="" placeholder="Optional command on timer expiry (e.g. say Done!)">
+                <span style="font-size:0.75rem; color:var(--text-dim);">If left empty, a silent command with no chat output or side effect will be used.</span>
               </div>
 
               <div class="field toggle-field full-width">
@@ -370,7 +371,7 @@
             <div class="card-title">Generated Commands</div>
             <div class="command-container">
               <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">1. Create Countdown</label>
-              <div class="command-code"><code id="cd-commandOutputCreate">/function fb:cd/create {name:"timer1",h:0,m:1,s:30,cmd:'say Countdown expired!'}</code></div>
+              <div class="command-code"><code id="cd-commandOutputCreate">/function fb:cd/create {name:"timer1",h:0,m:1,s:30,cmd:'data get storage fb:tmp dummy'}</code></div>
               <button id="cd-copyBtnCreate" class="btn-copy-compact">Copy Create</button>
 
               <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:6px;">2. Start Countdown</label>
@@ -390,7 +391,7 @@
     <div id="event-generator-page" class="page">
       <div class="page-header">
         <h1>Event Configurator</h1>
-        <p>Register reactive player events with <code>item_id</code> and <code>custom_data</code> filters.</p>
+        <p>Register reactive player events with <code>item_id</code> and <code>custom_data</code> NBT component filters.</p>
       </div>
 
       <div class="config-layout">
@@ -398,6 +399,14 @@
           <div class="card-title">Event Parameters</div>
           <form id="eventGenForm" onsubmit="event.preventDefault();">
             <div class="form-grid">
+              <div class="field">
+                <label for="eg-type">Callback Action Type</label>
+                <select id="eg-type">
+                  <option value="command" selected>Direct Command (cmd)</option>
+                  <option value="function">Function Call (fn)</option>
+                </select>
+              </div>
+
               <div class="field">
                 <label for="eg-event">Event Name</label>
                 <select id="eg-event">
@@ -411,19 +420,20 @@
                 </select>
               </div>
 
-              <div class="field">
+              <div class="field full-width">
                 <label for="eg-item">Required Item ID (Optional)</label>
-                <input type="text" id="eg-item" value="carrot_on_a_stick">
+                <input type="text" id="eg-item" value="carrot_on_a_stick" placeholder="e.g. carrot_on_a_stick">
               </div>
 
               <div class="field full-width">
-                <label for="eg-cd">Required Custom Data NBT (Optional)</label>
-                <input type="text" id="eg-cd" value='{wand_type:"fire"}'>
+                <label for="eg-cd">Required Custom Data NBT Compound</label>
+                <input type="text" id="eg-cd" value='{id:"ascend"}' placeholder='e.g. {id:"ascend"} or {id:"fire"}'>
+                <span style="font-size:0.75rem; color:var(--text-dim);">Matches items with modern Minecraft 1.20.5+ custom_data component (e.g. /give @s carrot_on_a_stick[custom_data={id:"ascend"}]).</span>
               </div>
 
               <div class="field full-width">
-                <label for="eg-fn">Target Action (Command or Function)</label>
-                <input type="text" id="eg-fn" value='scoreboard players add @s fb.t_fire 1'>
+                <label for="eg-fn" id="eg-fn-label">Target Command</label>
+                <input type="text" id="eg-fn" value='scoreboard players add @s fb.t_fire 1' placeholder='e.g. scoreboard players add @s fb.t_fire 1 or my_pack:cast_spell'>
               </div>
             </div>
           </form>
@@ -432,14 +442,14 @@
         <div class="card brand-border-card">
           <div class="card-title">Registration Command</div>
           <div class="command-container">
-            <div class="command-code"><code id="eg-commandOutput">/function fb:event/register_item_cmd {name:"onRightClick",item_id:"carrot_on_a_stick",custom_data:{wand_type:"fire"},fn:"scoreboard players add @s fb.t_fire 1"}</code></div>
+            <div class="command-code"><code id="eg-commandOutput">/function fb:event/register_item_cmd {name:"onRightClick",item_id:"carrot_on_a_stick",custom_data:{id:"ascend"},fn:"scoreboard players add @s fb.t_fire 1"}</code></div>
             <button id="eg-copyBtn" class="btn-copy-compact">Copy Registration Command</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- PAGE 4: DOCUMENTATION & WIKI (RICH COMPREHENSIVE CONTENT) -->
+    <!-- PAGE 4: DOCUMENTATION & WIKI (DETAILED & COMPREHENSIVE) -->
     <div id="docs-page" class="page">
       <div class="page-header">
         <h1>Documentation & API Reference</h1>
@@ -475,7 +485,7 @@
               </tr>
               <tr>
                 <td><code>/function fb:event/reset_db</code></td>
-                <td>Clears all registered callbacks and scoreboards.</td>
+                <td>Clears all registered event callbacks and scoreboards.</td>
               </tr>
               <tr>
                 <td><code>/function fb:sw/reset-db</code></td>
@@ -484,6 +494,10 @@
               <tr>
                 <td><code>/function fb:cd/reset-db</code></td>
                 <td>Wipes all countdown timer instances and scoreboards.</td>
+              </tr>
+              <tr>
+                <td><code>/function fb:api/check_version</code></td>
+                <td>Sets score <code>#fb_installed fb.version</code> to current version number for third-party packs.</td>
               </tr>
             </tbody>
           </table>
@@ -523,14 +537,14 @@
           <pre><code>/function fb:event/register_cmd {event:"onJoin", cmd:"say Welcome back, @s!"}</code></pre>
 
           <p><strong>3. Function Callbacks (Item Events with custom_data):</strong></p>
-          <pre><code>/function fb:event/register_item {event:"onRightClick", fn:"my_pack:cast_spell", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"fire"}}</code></pre>
+          <pre><code>/function fb:event/register_item {event:"onRightClick", fn:"my_pack:cast_spell", item_id:"minecraft:carrot_on_a_stick", custom_data:{id:"ascend"}}</code></pre>
 
           <p><strong>4. Direct Command Callbacks (Item Events with custom_data):</strong></p>
-          <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"speed"}}</code></pre>
+          <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{id:"ascend"}}</code></pre>
 
           <h3>Custom Items & Custom Data (1.20.5+)</h3>
           <p>In modern Minecraft 1.20.5+, custom items are uniquely identified by tags in their <code>minecraft:custom_data</code> component:</p>
-          <pre><code>/give @s carrot_on_a_stick[custom_data={wand_type:"fire"}]</code></pre>
+          <pre><code>/give @s carrot_on_a_stick[custom_data={id:"ascend"}]</code></pre>
         </div>
       </div>
 
@@ -538,8 +552,72 @@
       <div id="doc-stopwatches" class="doc-content">
         <div class="card doc-block">
           <h2>⏱️ Stopwatch API Reference</h2>
-          <p>Create and display live actionbar stopwatches for players.</p>
+          <p>Create and display live actionbar stopwatches for players with full control over formats, colors, and global display priorities.</p>
 
+          <h3>Parameter Reference</h3>
+          <table class="wiki-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>player</code></td>
+                <td>String</td>
+                <td>Target selector (e.g. <code>@a</code>, <code>@s</code>, or player name).</td>
+              </tr>
+              <tr>
+                <td><code>sw</code></td>
+                <td>String</td>
+                <td>Stopwatch identifier string (e.g. <code>demo</code>).</td>
+              </tr>
+              <tr>
+                <td><code>format</code></td>
+                <td>String</td>
+                <td><code>digital</code> (HH:MM:SS), <code>digital_short</code> (MM:SS.ms), <code>letters</code> (Xd Xh Xm Xs), <code>dynamic</code>.</td>
+              </tr>
+              <tr>
+                <td><code>color</code></td>
+                <td>String</td>
+                <td>Primary color tag: <code>gold</code>, <code>yellow</code>, <code>white</code>, <code>gray</code>, <code>red</code>, <code>green</code>, <code>blue</code>.</td>
+              </tr>
+              <tr>
+                <td><code>color_sec</code></td>
+                <td>String</td>
+                <td>Separator color tag (for colons <code>:</code> and dots <code>.</code>).</td>
+              </tr>
+              <tr>
+                <td><code>color_num</code></td>
+                <td>String</td>
+                <td>Number color tag for timer digits.</td>
+              </tr>
+              <tr>
+                <td><code>prefix</code></td>
+                <td>String</td>
+                <td>Text prepended before the timer numbers.</td>
+              </tr>
+              <tr>
+                <td><code>suffix</code></td>
+                <td>String</td>
+                <td>Text appended after the timer numbers.</td>
+              </tr>
+              <tr>
+                <td><code>bold</code></td>
+                <td>Boolean</td>
+                <td><code>"true"</code> or <code>"false"</code> formatting flag.</td>
+              </tr>
+              <tr>
+                <td><code>global_type</code></td>
+                <td>String</td>
+                <td><code>soft</code> (allows player custom overrides) or <code>hard</code> (forces global display).</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Stopwatch Functions</h3>
           <table class="wiki-table">
             <thead>
               <tr>
@@ -562,11 +640,11 @@
               </tr>
               <tr>
                 <td><code>/function fb:sw/delete {name:"demo"}</code></td>
-                <td>Deletes the <code>demo</code> stopwatch.</td>
+                <td>Deletes the <code>demo</code> stopwatch instance.</td>
               </tr>
               <tr>
-                <td><code>/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
-                <td>Displays the stopwatch on the actionbar for players.</td>
+                <td><code>/function fb:sw/reset-db</code></td>
+                <td>Wipes all stopwatch instances and scoreboards.</td>
               </tr>
             </tbody>
           </table>
@@ -577,8 +655,47 @@
       <div id="doc-countdowns" class="doc-content">
         <div class="card doc-block">
           <h2>⏳ Countdown API Reference</h2>
-          <p>Create countdowns with automatic expiry commands and actionbar displays.</p>
+          <p>Create countdowns with automatic expiry commands and custom actionbar displays.</p>
 
+          <h3>Parameter Reference</h3>
+          <table class="wiki-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>name</code></td>
+                <td>String</td>
+                <td>Countdown identifier string (e.g. <code>timer1</code>).</td>
+              </tr>
+              <tr>
+                <td><code>h</code>, <code>m</code>, <code>s</code></td>
+                <td>Integer</td>
+                <td>Hours, minutes, and seconds duration.</td>
+              </tr>
+              <tr>
+                <td><code>cmd</code></td>
+                <td>String</td>
+                <td>Expiry callback command executed as player when timer reaches 0. Default silent command: <code>data get storage fb:tmp dummy</code>.</td>
+              </tr>
+              <tr>
+                <td><code>player</code></td>
+                <td>String</td>
+                <td>Target selector (e.g. <code>@a</code> or <code>@s</code>).</td>
+              </tr>
+              <tr>
+                <td><code>format</code></td>
+                <td>String</td>
+                <td>Display format (<code>digital</code>, <code>digital_short</code>, <code>letters</code>, <code>dynamic</code>).</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Countdown Functions</h3>
           <table class="wiki-table">
             <thead>
               <tr>
@@ -588,28 +705,28 @@
             </thead>
             <tbody>
               <tr>
-                <td><code>/function fb:cd/create {name:"timer1",h:0,m:1,s:30,cmd:'say Countdown expired!'}</code></td>
-                <td>Creates a countdown with specified duration and expiry command.</td>
+                <td><code>/function fb:cd/create {name:"timer1",h:0,m:1,s:30,cmd:'data get storage fb:tmp dummy'}</code></td>
+                <td>Creates a countdown timer instance.</td>
               </tr>
               <tr>
                 <td><code>/function fb:cd/start {name:"timer1"}</code></td>
-                <td>Starts the countdown.</td>
+                <td>Starts the <code>timer1</code> countdown.</td>
               </tr>
               <tr>
                 <td><code>/function fb:cd/pause {name:"timer1"}</code></td>
-                <td>Pauses the countdown.</td>
+                <td>Pauses the <code>timer1</code> countdown.</td>
               </tr>
               <tr>
                 <td><code>/function fb:cd/resume {name:"timer1"}</code></td>
-                <td>Resumes the countdown.</td>
+                <td>Resumes the <code>timer1</code> countdown.</td>
               </tr>
               <tr>
                 <td><code>/function fb:cd/delete {name:"timer1"}</code></td>
-                <td>Deletes the countdown instance.</td>
+                <td>Deletes the <code>timer1</code> countdown instance.</td>
               </tr>
               <tr>
-                <td><code>/function fb:cd/display_ab_custom {player:"@a",cd:"timer1",format:"digital_short",color:"red",color_sec:"gray",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
-                <td>Renders the countdown on the actionbar.</td>
+                <td><code>/function fb:cd/reset-db</code></td>
+                <td>Wipes all countdown instances and scoreboards.</td>
               </tr>
             </tbody>
           </table>
@@ -620,17 +737,21 @@
       <div id="doc-dependency" class="doc-content">
         <div class="card doc-block">
           <h2>📦 Datapack Dependency Check</h2>
-          <p>If you are developing a custom datapack that requires FuseBox, add this check to your pack's <code>load.mcfunction</code>:</p>
+          <p>If you are developing a custom datapack that requires FuseBox, add this check to your pack's <code>load.mcfunction</code> to verify if FuseBox is installed and up-to-date:</p>
 
           <pre><code># 1. Initialize temporary check objective
 scoreboard objectives add fb.version dummy
 scoreboard players set #fb_installed fb.version 0
 
 # 2. Call FuseBox version check function
+# (If FuseBox is installed, this function sets #fb_installed fb.version to current version)
 function fb:api/check_version
 
 # 3. Check results and display errors/warnings
+# (If score is still 0, FuseBox is NOT installed or has been removed)
 execute if score #fb_installed fb.version matches 0 run tellraw @a [{"text": "[my_pack] ", "color": "gold", "bold": true}, {"text": "Error: FuseBox is NOT installed! This pack requires FuseBox v0.1 Alpha or newer.", "color": "red"}]
+
+# (If score is less than the required version, warn the user)
 execute if score #fb_installed fb.version matches 1.. if score #fb_installed fb.version matches ..0 run tellraw @a [{"text": "[my_pack] ", "color": "gold", "bold": true}, {"text": "Warning: FuseBox is out of date! Please update FuseBox to at least v0.1 Alpha.", "color": "red"}]</code></pre>
         </div>
       </div>
