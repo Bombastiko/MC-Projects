@@ -298,10 +298,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const abPlayerInput = document.getElementById('ab-player');
   const abGlobalTypeGroup = document.getElementById('ab-global-type-group');
   const abGlobalTypeInput = document.getElementById('ab-global_type');
+  const abNameGroup = document.getElementById('ab-name-group');
   const abNameInput = document.getElementById('ab-name');
+  const abCustomTextGroup = document.getElementById('ab-custom-text-group');
+  const abCustomTextInput = document.getElementById('ab-custom-text');
+  const abFormatGroup = document.getElementById('ab-format-group');
   const abFormatInput = document.getElementById('ab-format');
   const abColorInput = document.getElementById('ab-color');
+  const abColorSecGroup = document.getElementById('ab-color-sec-group');
   const abColorSecInput = document.getElementById('ab-color_sec');
+  const abColorNumGroup = document.getElementById('ab-color-num-group');
   const abColorNumInput = document.getElementById('ab-color_num');
   const abPrefixInput = document.getElementById('ab-prefix');
   const abSuffixInput = document.getElementById('ab-suffix');
@@ -313,14 +319,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateAb() {
     if (!abSourceInput) return;
-    const source = abSourceInput.value; // 'sw' or 'cd'
+    const source = abSourceInput.value; // 'sw', 'cd', or 'custom'
     const player = abPlayerInput.value.trim() || '@a';
     const isGlobalTarget = player === '@a';
 
-    if (abGlobalTypeGroup) abGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
+    const isCustomText = source === 'custom';
+
+    if (abGlobalTypeGroup) abGlobalTypeGroup.style.display = (!isCustomText && isGlobalTarget) ? 'flex' : 'none';
+    if (abNameGroup) abNameGroup.style.display = isCustomText ? 'none' : 'flex';
+    if (abFormatGroup) abFormatGroup.style.display = isCustomText ? 'none' : 'flex';
+    if (abColorSecGroup) abColorSecGroup.style.display = isCustomText ? 'none' : 'flex';
+    if (abColorNumGroup) abColorNumGroup.style.display = isCustomText ? 'none' : 'flex';
+    if (abCustomTextGroup) abCustomTextGroup.style.display = isCustomText ? 'flex' : 'none';
 
     const globalType = isGlobalTarget ? abGlobalTypeInput.value : 'soft';
     const name = abNameInput.value.trim() || 'demo';
+    const customText = abCustomTextInput.value;
     const format = abFormatInput.value;
     const color = abColorInput.value;
     const colorSec = abColorSecInput.value;
@@ -332,9 +346,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const escapedPrefix = prefix.replace(/"/g, '\\"');
     const escapedSuffix = suffix.replace(/"/g, '\\"');
+    const escapedText = customText.replace(/"/g, '\\"');
 
-    const nameKey = source === 'sw' ? 'sw' : 'cd';
-    const command = `/function fb:${source}/display_ab_custom {player:"${player}",${nameKey}:"${name}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
+    let command = '';
+    if (isCustomText) {
+      const boldJson = bold ? ',"bold":true' : '';
+      command = `/title ${player} actionbar [{"text":"${escapedPrefix}","color":"${color}"},{"text":"${escapedText}","color":"${color}"${boldJson}},{"text":"${escapedSuffix}","color":"${color}"}]`;
+    } else {
+      const nameKey = source === 'sw' ? 'sw' : 'cd';
+      command = `/function fb:${source}/display_ab_custom {player:"${player}",${nameKey}:"${name}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
+    }
+
     abCommandOutput.textContent = command;
 
     let previewHtml = '';
@@ -345,30 +367,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (prefix) previewHtml += buildSpan(prefix, colMain, bold, isItalic);
 
-    if (format === 'digital') {
-      previewHtml += buildSpan('00', colNum, bold, isItalic);
-      previewHtml += buildSpan(':', colSec, bold, isItalic);
-      previewHtml += buildSpan('00', colNum, bold, isItalic);
-      previewHtml += buildSpan(':', colSec, bold, isItalic);
-      previewHtml += buildSpan('00', colNum, bold, isItalic);
-    } else if (format === 'digital_short') {
-      previewHtml += buildSpan('00', colNum, bold, isItalic);
-      previewHtml += buildSpan(':', colSec, bold, isItalic);
-      previewHtml += buildSpan('00', colNum, bold, isItalic);
-      previewHtml += buildSpan('.', colSec, bold, isItalic);
-      previewHtml += buildSpan('00', colNum, bold, isItalic);
-    } else if (format === 'letters') {
-      previewHtml += buildSpan('0', colNum, bold, isItalic);
-      previewHtml += buildSpan('d ', colSec, bold, isItalic);
-      previewHtml += buildSpan('0', colNum, bold, isItalic);
-      previewHtml += buildSpan('h ', colSec, bold, isItalic);
-      previewHtml += buildSpan('0', colNum, bold, isItalic);
-      previewHtml += buildSpan('m ', colSec, bold, isItalic);
-      previewHtml += buildSpan('0', colNum, bold, isItalic);
-      previewHtml += buildSpan('s', colSec, bold, isItalic);
-    } else if (format === 'dynamic') {
-      previewHtml += buildSpan('0', colNum, bold, isItalic);
-      previewHtml += buildSpan('s', colSec, bold, isItalic);
+    if (isCustomText) {
+      previewHtml += buildSpan(customText || 'Welcome!', colMain, bold, isItalic);
+    } else {
+      if (format === 'digital') {
+        previewHtml += buildSpan('00', colNum, bold, isItalic);
+        previewHtml += buildSpan(':', colSec, bold, isItalic);
+        previewHtml += buildSpan('00', colNum, bold, isItalic);
+        previewHtml += buildSpan(':', colSec, bold, isItalic);
+        previewHtml += buildSpan('00', colNum, bold, isItalic);
+      } else if (format === 'digital_short') {
+        previewHtml += buildSpan('00', colNum, bold, isItalic);
+        previewHtml += buildSpan(':', colSec, bold, isItalic);
+        previewHtml += buildSpan('00', colNum, bold, isItalic);
+        previewHtml += buildSpan('.', colSec, bold, isItalic);
+        previewHtml += buildSpan('00', colNum, bold, isItalic);
+      } else if (format === 'letters') {
+        previewHtml += buildSpan('0', colNum, bold, isItalic);
+        previewHtml += buildSpan('d ', colSec, bold, isItalic);
+        previewHtml += buildSpan('0', colNum, bold, isItalic);
+        previewHtml += buildSpan('h ', colSec, bold, isItalic);
+        previewHtml += buildSpan('0', colNum, bold, isItalic);
+        previewHtml += buildSpan('m ', colSec, bold, isItalic);
+        previewHtml += buildSpan('0', colNum, bold, isItalic);
+        previewHtml += buildSpan('s', colSec, bold, isItalic);
+      } else if (format === 'dynamic') {
+        previewHtml += buildSpan('0', colNum, bold, isItalic);
+        previewHtml += buildSpan('s', colSec, bold, isItalic);
+      }
     }
 
     if (suffix) previewHtml += buildSpan(suffix, colMain, bold, isItalic);
@@ -377,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const abInputs = [
-    abSourceInput, abPlayerInput, abGlobalTypeInput, abNameInput, abFormatInput,
+    abSourceInput, abPlayerInput, abGlobalTypeInput, abNameInput, abCustomTextInput, abFormatInput,
     abColorInput, abColorSecInput, abColorNumInput, abPrefixInput, abSuffixInput, abBoldInput, abPreviewPaused
   ];
   abInputs.forEach(i => {
