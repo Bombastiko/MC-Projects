@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=10.0">
+  <link rel="stylesheet" href="style.css?v=11.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -118,8 +118,8 @@
         <div class="shortcut-grid">
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-events');">
             <div>
-              <h3>⚡ Event System & Test Suite</h3>
-              <p>Learn how to register events and run the automated in-game test suite (<code>/function fb:event/test</code>).</p>
+              <h3>⚡ Event System Guide</h3>
+              <p>Learn how to register <code>onRightClick</code>, <code>onHoldItem</code>, and NBT filters.</p>
             </div>
             <div class="shortcut-arrow">Read Guide →</div>
           </div>
@@ -560,7 +560,7 @@
         <button class="docs-tab" data-doc="doc-stopwatches">Stopwatches API</button>
         <button class="docs-tab" data-doc="doc-countdowns">Countdowns API</button>
         <button class="docs-tab" data-doc="doc-dependency">Dependency Check</button>
-        <button class="docs-tab" data-doc="doc-troubleshooting">Debugging & Testing</button>
+        <button class="docs-tab" data-doc="doc-troubleshooting">Debugging</button>
       </nav>
 
       <!-- DOC: OVERVIEW -->
@@ -578,14 +578,6 @@
             </thead>
             <tbody>
               <tr>
-                <td><code>/function fb:event/test</code></td>
-                <td>Launches automated in-game Event Test Suite with interactive chat menu and test items.</td>
-              </tr>
-              <tr>
-                <td><code>/function fb:event/test_finish</code></td>
-                <td>Evaluates test trigger scores and outputs a PASSED/FAILED report card.</td>
-              </tr>
-              <tr>
                 <td><code>/function fb:debug/menu</code></td>
                 <td>Opens in-game debug chat menu to toggle event and timer diagnostics.</td>
               </tr>
@@ -600,6 +592,10 @@
               <tr>
                 <td><code>/function fb:cd/reset-db</code></td>
                 <td>Wipes all countdown timer instances and scoreboards.</td>
+              </tr>
+              <tr>
+                <td><code>/function fb:api/check_version</code></td>
+                <td>Sets score <code>#fb_installed fb.version</code> to current version number for third-party packs.</td>
               </tr>
             </tbody>
           </table>
@@ -657,19 +653,8 @@
       <!-- DOC: EVENT SYSTEM -->
       <div id="doc-events" class="doc-content">
         <div class="card doc-block">
-          <h2>⚡ Event System API & Automated Test Suite</h2>
-          <p>Register reactive player events with <code>item_id</code> and <code>custom_data</code> NBT component filters, and verify them using FuseBox's automated in-game test suite.</p>
-
-          <h3>🧪 In-Game Automated Event Test Suite</h3>
-          <p>FuseBox includes a built-in automated test suite to instantly test all event triggers, item NBT filters, and callbacks in singleplayer or multiplayer:</p>
-          
-          <p><strong>1. Start the Test Suite:</strong></p>
-          <pre><code>/function fb:event/test</code></pre>
-          <p>This command automatically registers test callbacks for <code>onRightClick</code>, <code>onHoldItem</code>, <code>onDamage</code>, <code>onEntityKill</code>, and <code>whileOnline</code>, gives you 3 test items, and outputs an interactive test menu in chat with clickable trigger buttons.</p>
-
-          <p><strong>2. View the Assertion Report Card:</strong></p>
-          <pre><code>/function fb:event/test_finish</code></pre>
-          <p>Outputs a detailed report card showing <code>[PASSED]</code> or <code>[FAILED]</code> assertions and exact trigger counts for each tested event!</p>
+          <h2>⚡ Event System API</h2>
+          <p>Register reactive player events with <code>item_id</code> and <code>custom_data</code> NBT component filters.</p>
 
           <h3>Standard Events</h3>
           <ul>
@@ -873,26 +858,19 @@ execute if score #fb_installed fb.version matches 1.. if score #fb_installed fb.
       <div id="doc-troubleshooting" class="doc-content">
         <div class="card doc-block">
           <h2>🛠️ Debugging & Diagnostics</h2>
-          <p>FuseBox features built-in tools to run automated event test suites, inspect NBT storages, and toggle chat diagnostics.</p>
+          <p>FuseBox features built-in tools to inspect NBT storages and toggle chat diagnostics.</p>
 
-          <h3>1. Automated In-Game Event Test Suite</h3>
-          <pre><code># Start automated test suite (gives items & shows interactive chat menu)
-/function fb:event/test
-
-# Display assertion results report card (PASSED / FAILED)
-/function fb:event/test_finish</code></pre>
-
-          <h3>2. In-Game Debug Menu</h3>
+          <h3>1. In-Game Debug Menu</h3>
           <pre><code>/function fb:debug/menu</code></pre>
 
-          <h3>3. Toggle Chat Diagnostics</h3>
+          <h3>2. Toggle Chat Diagnostics</h3>
           <pre><code># Turn debug ON
 /data modify storage fb:config debug set value 1b
 
 # Turn debug OFF
 /data modify storage fb:config debug set value 0b</code></pre>
 
-          <h3>4. Inspect Registrations</h3>
+          <h3>3. Inspect Registrations</h3>
           <pre><code>/function fb:sw/debug_info
 /function fb:cd/debug_info
 /function fb:event/debug_info</code></pre>
