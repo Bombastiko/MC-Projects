@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=6.0">
+  <link rel="stylesheet" href="style.css?v=7.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -98,7 +98,7 @@
           <div class="shortcut-card" onclick="switchPage('ab-configurator-page')">
             <div>
               <h3>📱 Actionbar Configurator</h3>
-              <p>Configure actionbar overrides, custom text displays, soft/hard priorities, and formats.</p>
+              <p>Configure FuseBox actionbar overrides, custom text displays, and soft/hard priorities.</p>
             </div>
             <div class="shortcut-arrow">Open Configurator →</div>
           </div>
@@ -119,7 +119,7 @@
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-actionbar');">
             <div>
               <h3>📱 Actionbar System Guide</h3>
-              <p>Learn how actionbar priority overrides, soft vs hard modes, and custom text displays work.</p>
+              <p>Learn how actionbar priority overrides, soft vs hard modes, and player tags work.</p>
             </div>
             <div class="shortcut-arrow">Read Guide →</div>
           </div>
@@ -127,7 +127,7 @@
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-events');">
             <div>
               <h3>⚡ Event System Guide</h3>
-              <p>Learn how to register <code>onRightClick</code>, <code>onHoldItem</code>, <code>onJoin</code>, and NBT filters.</p>
+              <p>Learn how to register <code>onRightClick</code>, <code>onHoldItem</code>,  impulse events, and NBT filters.</p>
             </div>
             <div class="shortcut-arrow">Read Guide →</div>
           </div>
@@ -404,7 +404,7 @@
     <div id="ab-configurator-page" class="page">
       <div class="page-header">
         <h1>Actionbar Configurator</h1>
-        <p>Configure actionbar displays for stopwatches, countdowns, or direct standalone raw text messages (no timer required).</p>
+        <p>Configure FuseBox actionbar overrides for stopwatches, countdowns, or custom text overrides (integrated with FuseBox priority tags).</p>
       </div>
 
       <div class="config-layout">
@@ -418,7 +418,7 @@
                 <select id="ab-source">
                   <option value="sw" selected>Stopwatch (sw)</option>
                   <option value="cd">Countdown (cd)</option>
-                  <option value="custom">Custom Standalone Text (No Timer Required)</option>
+                  <option value="custom">FuseBox Custom Text Override (No Timer Required)</option>
                 </select>
               </div>
 
@@ -441,11 +441,11 @@
                 <input type="text" id="ab-name" value="demo" required>
               </div>
 
-              <!-- CUSTOM RAW TEXT FIELD -->
+              <!-- CUSTOM TEXT OVERRIDE FIELD -->
               <div class="field full-width" id="ab-custom-text-group" style="display:none;">
                 <label for="ab-custom-text">Actionbar Message Text</label>
                 <input type="text" id="ab-custom-text" value="Welcome to the Server!" placeholder="e.g. Welcome to the Server!">
-                <span style="font-size:0.75rem; color:var(--text-dim);">Renders direct text on the actionbar without needing any active timer instance.</span>
+                <span style="font-size:0.75rem; color:var(--text-dim);">Sets a custom text message in FuseBox's actionbar engine (adds <code>fb.ab.custom</code> tag for targeted players).</span>
               </div>
 
               <!-- FORMAT FIELD -->
@@ -662,23 +662,29 @@
       <!-- DOC: ACTIONBAR SYSTEM -->
       <div id="doc-actionbar" class="doc-content">
         <div class="card doc-block">
-          <h2>📱 Actionbar Display & Priority System</h2>
-          <p>FuseBox features an intelligent actionbar management system that prevents timer flickers, supports individual player overrides, and allows standalone custom text messages without requiring active timer instances.</p>
+          <h2>📱 Actionbar Display & Override System</h2>
+          <p>FuseBox features an intelligent actionbar management system that prevents timer flickers, supports individual player overrides via <code>fb.ab.custom</code> tags, and allows custom text overrides integrated directly into FuseBox's priority engine.</p>
 
-          <h3>Standalone Custom Text Messages (No Timer Required)</h3>
-          <p>You can send formatted text messages directly to player actionbars independently of any stopwatch or countdown system using Minecraft's raw JSON actionbar command:</p>
-          <pre><code>/title @a actionbar [{"text":"Welcome to the Server!","color":"gold","bold":true}]</code></pre>
+          <h3>1. FuseBox Custom Text Overrides (No Timer Needed)</h3>
+          <p>If you want to display a custom text message on the actionbar that seamlessly integrates into FuseBox's override system (so it overrides global timers for specific players without needing a stopwatch or countdown instance), use the FuseBox custom text display function:</p>
+          <pre><code>/function fb:ab/display_custom {player:"@s",text:"Welcome to the Server!",color:"gold",prefix:"Info: ",suffix:"",bold:"true",global_type:"soft"}</code></pre>
+          <p>This command automatically adds the <code>fb.ab.custom</code> tag to the targeted player and registers the custom message in <code>storage fb:config display</code> so FuseBox's tick loop renders it cleanly.</p>
 
-          <h3>Global Priority Modes: <code>soft</code> vs <code>hard</code></h3>
+          <h3>2. Global Priority Modes: <code>soft</code> vs <code>hard</code></h3>
           <ul>
-            <li><strong><code>soft</code> (Default Mode):</strong> Displays the timer globally for <code>@a</code>, but automatically respects individual player preferences. If a player has a custom personal timer set (tagged with <code>fb.ab.custom</code>), the global timer will step aside for that specific player while continuing to render for everyone else.</li>
-            <li><strong><code>hard</code> (Global Override Mode):</strong> Forces the global timer onto <em>all</em> online players (<code>@a</code>), overriding any individual player custom tags. Use this for server-wide mini-game events or emergency countdowns.</li>
+            <li><strong><code>soft</code> (Default Mode):</strong> Displays the actionbar globally for <code>@a</code>, but automatically respects individual player custom overrides. If a player has a custom text or personal timer set (tagged with <code>fb.ab.custom</code>), the global timer steps aside for that player while continuing for everyone else.</li>
+            <li><strong><code>hard</code> (Global Override Mode):</strong> Forces the global actionbar onto <em>all</em> online players (<code>@a</code>), overriding any individual player custom tags. Use this for server-wide mini-game announcements or emergency countdowns.</li>
           </ul>
 
-          <h3>Player-Specific Actionbar Overrides</h3>
-          <p>When you target a specific player (e.g., <code>/function fb:sw/display_ab_custom {player:"oneBombastiko", ...}</code>), FuseBox adds the <code>fb.ab.custom</code> tag to that player. This allows player-specific speedrun timers or quest countdowns to be rendered exclusively for them without interfering with other players on the server.</p>
+          <h3>3. Managing Player Overrides</h3>
+          <p>Whenever a custom text message or personal timer is assigned to a specific player (e.g. <code>player:"oneBombastiko"</code>), FuseBox attaches the <code>fb.ab.custom</code> tag to that player.</p>
+          <ul>
+            <li>To clear a player's personal override and return them to the global server actionbar display:
+              <pre><code>/tag &lt;player&gt; remove fb.ab.custom</code></pre>
+            </li>
+          </ul>
 
-          <h3>Actionbar Functions</h3>
+          <h3>Actionbar Commands Quick Reference</h3>
           <table class="wiki-table">
             <thead>
               <tr>
@@ -688,8 +694,8 @@
             </thead>
             <tbody>
               <tr>
-                <td><code>/title &lt;player&gt; actionbar [{"text":"Message","color":"gold"}]</code></td>
-                <td>Renders a direct standalone custom text message on the actionbar (no timer needed).</td>
+                <td><code>/function fb:ab/display_custom {player:"@s",text:"Custom Text",color:"gold",prefix:"Info: ",suffix:"",bold:"true",global_type:"soft"}</code></td>
+                <td>Registers a FuseBox custom text override (no timer instance required).</td>
               </tr>
               <tr>
                 <td><code>/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
@@ -701,7 +707,7 @@
               </tr>
               <tr>
                 <td><code>/tag &lt;player&gt; remove fb.ab.custom</code></td>
-                <td>Clears a player's personal actionbar override and reverts them back to global server actionbar displays.</td>
+                <td>Clears a player's personal actionbar override tag and restores global display.</td>
               </tr>
             </tbody>
           </table>

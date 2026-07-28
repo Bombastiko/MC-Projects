@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isCustomText = source === 'custom';
 
-    if (abGlobalTypeGroup) abGlobalTypeGroup.style.display = (!isCustomText && isGlobalTarget) ? 'flex' : 'none';
+    if (abGlobalTypeGroup) abGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
     if (abNameGroup) abNameGroup.style.display = isCustomText ? 'none' : 'flex';
     if (abFormatGroup) abFormatGroup.style.display = isCustomText ? 'none' : 'flex';
     if (abColorSecGroup) abColorSecGroup.style.display = isCustomText ? 'none' : 'flex';
@@ -350,8 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let command = '';
     if (isCustomText) {
-      const boldJson = bold ? ',"bold":true' : '';
-      command = `/title ${player} actionbar [{"text":"${escapedPrefix}","color":"${color}"},{"text":"${escapedText}","color":"${color}"${boldJson}},{"text":"${escapedSuffix}","color":"${color}"}]`;
+      command = `/function fb:ab/display_custom {player:"${player}",text:"${escapedText}",color:"${color}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
     } else {
       const nameKey = source === 'sw' ? 'sw' : 'cd';
       command = `/function fb:${source}/display_ab_custom {player:"${player}",${nameKey}:"${name}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
