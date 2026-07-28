@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuseBox Toolset</title>
+  <meta name="description" content="Configure actionbar layouts and view documentation for the Minecraft FuseBox datapack.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar">
+    <div class="logo-container">
+      <img src="logo.png" alt="FuseBox Logo" class="logo-img-large">
+    </div>
+    <nav class="menu">
+      <button class="menu-item active" data-page="configurator-page">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </span>
+        Stopwatch
+      </button>
+      <button class="menu-item" data-page="cd-configurator-page">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2h14M5 22h14M19 2v4c0 3-3 5-7 7-4-2-7-4-7-7V2M5 22v-4c0-3 3-5 7-7 4 2 7 4 7 7v4"></path></svg>
+        </span>
+        Countdown
+      </button>
+      <button class="menu-item" data-page="event-generator-page">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        </span>
+        Event Generator
+      </button>
+      <button class="menu-item" data-page="docs-page">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        </span>
+        Documentation
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      v1.0.0
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="content">
+    
+    <!-- PAGE 1: STOPWATCH CONFIGURATOR -->
+    <div id="configurator-page" class="page active">
+      <div class="page-header">
+        <h1>Stopwatch Configurator</h1>
+        <p>Generate commands for actionbar stopwatches.</p>
+      </div>
+
+      <div class="config-layout">
+        <!-- FORM INPUTS -->
+        <section class="card form-section">
+          <form id="configForm" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="player">Player / Target Selector</label>
+                <input type="text" id="player" value="@a" placeholder="e.g. @a or oneBombastiko" required>
+              </div>
+
+              <div class="input-group" id="global-type-group">
+                <label for="global_type">Global Type</label>
+                <select id="global_type">
+                  <option value="soft" selected>Soft (Custom Override)</option>
+                  <option value="hard">Hard (Force All)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="sw">Stopwatch Name</label>
+                <input type="text" id="sw" value="demo" placeholder="e.g. demo" required>
+              </div>
+
+              <div class="input-group">
+                <label for="format">Display Format</label>
+                <select id="format">
+                  <option value="digital">Digital (HH:MM:SS)</option>
+                  <option value="digital_short" selected>Digital Short (MM:SS.ms)</option>
+                  <option value="letters">Letters (Xd Xh Xm Xs)</option>
+                  <option value="dynamic">Dynamic (auto-truncate)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="color">Primary Color (Prefix/Suffix)</label>
+                <select id="color">
+                  <option value="gold" selected>Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="color_sec">Secondary Color (Separators)</label>
+                <select id="color_sec">
+                  <option value="yellow" selected>Yellow</option>
+                  <option value="gold">Gold</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="color_num">Number Color</label>
+                <select id="color_num">
+                  <option value="white" selected>White</option>
+                  <option value="gold">Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group full-width">
+                <label for="prefix">Prefix Text</label>
+                <input type="text" id="prefix" value="Timer: " placeholder="e.g. Timer: ">
+              </div>
+
+              <div class="input-group full-width">
+                <label for="suffix">Suffix Text</label>
+                <input type="text" id="suffix" value="" placeholder="e.g.  elapsed">
+              </div>
+
+              <div class="input-group toggle-group full-width">
+                <label for="bold">Apply Bold Formatting</label>
+                <label class="switch">
+                  <input type="checkbox" id="bold">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- PREVIEW & OUTPUT -->
+        <section class="preview-section">
+          <div class="card preview-card">
+            <div class="preview-header">
+              <h2>Actionbar Live Preview</h2>
+              <div class="preview-toggle">
+                <label for="preview-paused">Show Paused State</label>
+                <input type="checkbox" id="preview-paused">
+              </div>
+            </div>
+            <div class="minecraft-screen">
+              <div class="actionbar-container">
+                <div id="actionbarPreview" class="actionbar-text">Timer: 00:00.00</div>
+              </div>
+              <div class="hotbar-mock"></div>
+            </div>
+          </div>
+
+          <div class="card output-card">
+            <h2>Generated Command</h2>
+            <div class="command-box">
+              <code id="commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code>
+              <button id="copyBtn" class="btn-copy">Copy</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PAGE 2: COUNTDOWN CONFIGURATOR -->
+    <div id="cd-configurator-page" class="page">
+      <div class="page-header">
+        <h1>Countdown Configurator</h1>
+        <p>Generate commands for actionbar countdowns.</p>
+      </div>
+
+      <div class="config-layout">
+        <!-- FORM INPUTS -->
+        <section class="card form-section">
+          <form id="cdConfigForm" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="cd-player">Player / Target Selector</label>
+                <input type="text" id="cd-player" value="@a" placeholder="e.g. @a or oneBombastiko" required>
+              </div>
+
+              <div class="input-group" id="cd-global-type-group">
+                <label for="cd-global_type">Global Type</label>
+                <select id="cd-global_type">
+                  <option value="soft" selected>Soft (Custom Override)</option>
+                  <option value="hard">Hard (Force All)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="cd-name">Countdown Name</label>
+                <input type="text" id="cd-name" value="demo" placeholder="e.g. demo" required>
+              </div>
+
+              <div class="input-group full-width time-inputs-container">
+                <label>Initial Time Settings</label>
+                <div class="time-inputs">
+                  <input type="number" id="cd-h" value="0" min="0" placeholder="H">
+                  <span>h</span>
+                  <input type="number" id="cd-m" value="5" min="0" max="59" placeholder="M">
+                  <span>m</span>
+                  <input type="number" id="cd-s" value="0" min="0" max="59" placeholder="S">
+                  <span>s</span>
+                </div>
+              </div>
+
+              <div class="input-group full-width">
+                <label for="cd-cmd">On Complete Command</label>
+                <input type="text" id="cd-cmd" value="say Timer finished!" placeholder="e.g. say BOOM!">
+              </div>
+
+              <div class="input-group">
+                <label for="cd-format">Display Format</label>
+                <select id="cd-format">
+                  <option value="digital">Digital (HH:MM:SS)</option>
+                  <option value="digital_short" selected>Digital Short (MM:SS.ms)</option>
+                  <option value="letters">Letters (Xd Xh Xm Xs)</option>
+                  <option value="dynamic">Dynamic (auto-truncate)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="cd-color">Primary Color (Prefix/Suffix)</label>
+                <select id="cd-color">
+                  <option value="gold" selected>Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="cd-color_sec">Secondary Color (Separators)</label>
+                <select id="cd-color_sec">
+                  <option value="yellow" selected>Yellow</option>
+                  <option value="gold">Gold</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="cd-color_num">Number Color</label>
+                <select id="cd-color_num">
+                  <option value="white" selected>White</option>
+                  <option value="gold">Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
+
+              <div class="input-group full-width">
+                <label for="cd-prefix">Prefix Text</label>
+                <input type="text" id="cd-prefix" value="Timer: " placeholder="e.g. Timer: ">
+              </div>
+
+              <div class="input-group full-width">
+                <label for="cd-suffix">Suffix Text</label>
+                <input type="text" id="cd-suffix" value="" placeholder="e.g.  left">
+              </div>
+
+              <div class="input-group toggle-group full-width">
+                <label for="cd-bold">Apply Bold Formatting</label>
+                <label class="switch">
+                  <input type="checkbox" id="cd-bold">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- PREVIEW & OUTPUT -->
+        <section class="preview-section">
+          <!-- LIVE MINECRAFT ACTIONBAR PREVIEW -->
+          <div class="card preview-card">
+            <div class="preview-header">
+              <h2>Actionbar Live Preview</h2>
+              <div class="preview-actions">
+                <button id="cd-btn-anim-prev" class="btn-secondary">Test Animation</button>
+                <div class="preview-toggle">
+                  <label for="cd-preview-paused">Show Paused State</label>
+                  <input type="checkbox" id="cd-preview-paused">
+                </div>
+              </div>
+            </div>
+            <div class="minecraft-screen">
+              <div class="actionbar-container">
+                <div id="cd-actionbarPreview" class="actionbar-text">Timer: 05:00.00</div>
+              </div>
+              <div class="hotbar-mock"></div>
+            </div>
+          </div>
+
+          <!-- GENERATED CREATE COMMAND -->
+          <div class="card output-card small-margin">
+            <h2>Command 1: Create Countdown</h2>
+            <div class="command-box">
+              <code id="cd-commandOutputCreate">/function fb:cd/create {name:"demo",h:0,m:5,s:0,on_complete:"say Timer finished!"}</code>
+              <button id="cd-copyBtnCreate" class="btn-copy">Copy</button>
+            </div>
+          </div>
+
+          <!-- GENERATED START COMMAND -->
+          <div class="card output-card small-margin">
+            <h2>Command 2: Start Countdown</h2>
+            <div class="command-box">
+              <code id="cd-commandOutputStart">/function fb:cd/start {name:"demo"}</code>
+              <button id="cd-copyBtnStart" class="btn-copy">Copy</button>
+            </div>
+          </div>
+
+          <!-- GENERATED DISPLAY CONFIG COMMAND -->
+          <div class="card output-card">
+            <h2>Command 3: Display Configuration</h2>
+            <div class="command-box">
+              <code id="cd-commandOutputDisplay">/function fb:cd/display_ab_custom {player:"@a",cd:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code>
+              <button id="cd-copyBtnDisplay" class="btn-copy">Copy</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PAGE 3: EVENT GENERATOR -->
+    <div id="event-generator-page" class="page">
+      <div class="page-header">
+        <h1>Event Generator</h1>
+        <p>Easily generate register and unregister commands for standard and item events.</p>
+      </div>
+
+      <div class="config-layout">
+        <!-- FORM INPUTS -->
+        <section class="card form-section">
+          <form id="eventGenForm" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              
+              <div class="input-group">
+                <label for="eg-event">Event Type</label>
+                <select id="eg-event" onchange="updateEventGen()" oninput="updateEventGen()">
+                  <optgroup label="Standard Events">
+                    <option value="onJoin" selected>onJoin (Join Server)</option>
+                    <option value="onDeath">onDeath (Player Death)</option>
+                    <option value="onLeave">onLeave (Leave Server)</option>
+                    <option value="onKillPlayer">onKillPlayer (Kill Player)</option>
+                    <option value="onKilledByPlayer">onKilledByPlayer (Killed By Player)</option>
+                    <option value="onDamage">onDamage (Take Damage)</option>
+                    <option value="onEntityKill">onEntityKill (Kill Mob)</option>
+                    <option value="whileOnline">whileOnline (Every Tick Online)</option>
+                    <option value="whileOffline">whileOffline (Every Tick Offline)</option>
+                  </optgroup>
+                  <optgroup label="Item-Specific Events">
+                    <option value="onRightClick">onRightClick (Right Click Item)</option>
+                    <option value="onHoldItem">onHoldItem (Hold Item Every Tick)</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="eg-type">Callback Type</label>
+                <select id="eg-type" onchange="updateEventGen()" oninput="updateEventGen()">
+                  <option value="command" selected>Direct Command</option>
+                  <option value="function">Function Callback</option>
+                </select>
+              </div>
+
+              <!-- Conditional fields for Command -->
+              <div class="input-group full-width" id="eg-command-group">
+                <label for="eg-command">Command to Execute</label>
+                <input type="text" id="eg-command" value="say Hello, @s!" placeholder="e.g. effect give @s speed 5 1" oninput="updateEventGen()" onchange="updateEventGen()">
+              </div>
+
+              <!-- Conditional fields for Function -->
+              <div class="input-group full-width" id="eg-function-group" style="display: none;">
+                <label for="eg-function">Function Namespace/Path</label>
+                <input type="text" id="eg-function" value="my_pack:welcome" placeholder="e.g. namespace:folder/my_function" oninput="updateEventGen()" onchange="updateEventGen()">
+              </div>
+
+              <!-- Item-Specific Fields -->
+              <div class="input-group" id="eg-item-id-group" style="display: none;">
+                <label for="eg-item-id">Item ID</label>
+                <input type="text" id="eg-item-id" value="minecraft:carrot_on_a_stick" placeholder="e.g. minecraft:carrot_on_a_stick" oninput="updateEventGen()" onchange="updateEventGen()">
+              </div>
+
+              <div class="input-group" id="eg-custom-data-group" style="display: none;">
+                <label for="eg-custom-data">Custom Data Filter (NBT JSON)</label>
+                <input type="text" id="eg-custom-data" value="{id:&quot;speed&quot;}" placeholder="e.g. {id:&quot;speed&quot;}" oninput="updateEventGen()" onchange="updateEventGen()">
+              </div>
+
+            </div>
+          </form>
+        </section>
+
+        <!-- OUTPUTS -->
+        <section class="preview-section">
+          <div class="card output-card">
+            <h2>Registration Command</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Run this command to register your callback:</p>
+            <div class="command-box">
+              <code id="eg-register-output">/function fb:event/register_cmd {event:"onJoin", cmd:"say Hello, @s!"}</code>
+              <button id="eg-copy-reg-btn" class="btn-copy">Copy</button>
+            </div>
+          </div>
+
+          <div class="card output-card" style="margin-top: 15px;">
+            <h2>Unregistration Command</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Run this command to remove your callback later:</p>
+            <div class="command-box">
+              <code id="eg-unregister-output">/function fb:event/unregister_cmd {event:"onJoin", cmd:"say Hello, @s!"}</code>
+              <button id="eg-copy-unreg-btn" class="btn-copy">Copy</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PAGE 4: DOCUMENTATION -->
+    <div id="docs-page" class="page">
+      <div class="page-header">
+        <h1>Documentation</h1>
+        <p>FuseBox system references and API documentation.</p>
+      </div>
+
+      <div class="docs-split-layout">
+        <!-- DOCUMENTATION TABS -->
+        <aside class="docs-nav">
+          <button class="docs-nav-item active" data-doc="doc-quickstart">Quick Start</button>
+          <button class="docs-nav-item" data-doc="doc-controls">Controlling Timers</button>
+          <button class="docs-nav-item" data-doc="doc-display">Priorities & Displays</button>
+          <button class="docs-nav-item" data-doc="doc-events">Event System API</button>
+          <button class="docs-nav-item" data-doc="doc-dependency">Dependency Check</button>
+          <button class="docs-nav-item" data-doc="doc-troubleshooting">Debugging & Logging</button>
+        </aside>
+
+        <!-- DOCUMENTATION CONTENT -->
+        <section class="docs-content">
+          <!-- DOC: QUICK START -->
+          <div id="doc-quickstart" class="doc-section active">
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </span>
+                Quick Start: Stopwatches (sw)
+              </h2>
+              <p>Stopwatches are created and immediately active. Use them to track elapsed time.</p>
+              <p><strong>1. Reload Minecraft datapacks:</strong></p>
+              <pre><code>/reload</code></pre>
+              <p><strong>2. Create and run a stopwatch:</strong></p>
+              <pre><code>/function fb:sw/create {name:"demo"}</code></pre>
+              <p><strong>3. Register player display layout:</strong></p>
+              <pre><code>/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Time: ",suffix:"",bold:"false",global_type:"soft"}</code></pre>
+            </div>
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2h14M5 22h14M19 2v4c0 3-3 5-7 7-4-2-7-4-7-7V2M5 22v-4c0-3 3-5 7-7 4 2 7 4 7 7v4"></path></svg>
+                </span>
+                Quick Start: Countdown Timers (cd)
+              </h2>
+              <p>Countdowns initialize in a paused state. You must explicitly start them to begin ticking down.</p>
+              <p><strong>1. Initialize a countdown (1 minute, 30 seconds):</strong></p>
+              <pre><code>/function fb:cd/create {name:"my_timer",h:0,m:1,s:30,on_complete:"say Done!"}</code></pre>
+              <p><strong>2. Assign display config to players:</strong></p>
+              <pre><code>/function fb:cd/display_ab_custom {player:"@a",cd:"my_timer",format:"digital_short",color:"red",color_sec:"yellow",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></pre>
+              <p><strong>3. Start the timer:</strong></p>
+              <pre><code>/function fb:cd/start {name:"my_timer"}</code></pre>
+            </div>
+          </div>
+
+          <!-- DOC: CONTROLS -->
+          <div id="doc-controls" class="doc-section">
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </span>
+                Controlling Active Timers
+              </h2>
+              <p>Manage stopwatch and countdown states dynamically using player-executable commands.</p>
+              <div class="control-table-wrapper">
+                <table class="control-table">
+                  <thead>
+                    <tr>
+                      <th>Action</th>
+                      <th>Stopwatch Command</th>
+                      <th>Countdown Command</th>
+                      <th>Effect</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Start</strong></td>
+                      <td>(Automatic)</td>
+                      <td><code>/function fb:cd/start {name:"x"}</code></td>
+                      <td>Registers timer to the active ticking loops.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Pause</strong></td>
+                      <td><code>/function fb:sw/pause {name:"x"}</code></td>
+                      <td><code>/function fb:cd/pause {name:"x"}</code></td>
+                      <td>Suspends tick decrementing. Renders ausgegraut & italic.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Resume</strong></td>
+                      <td><code>/function fb:sw/resume {name:"x"}</code></td>
+                      <td><code>/function fb:cd/resume {name:"x"}</code></td>
+                      <td>Restores active ticking state and default colors.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Delete</strong></td>
+                      <td><code>/function fb:sw/delete {name:"x"}</code></td>
+                      <td><code>/function fb:cd/delete {name:"x"}</code></td>
+                      <td>Wipes NBT config, registers, and resets objectives.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p><strong>Timer Database Storage Paths (for NBT manipulation):</strong></p>
+              <ul>
+                <li>Stopwatches: <code>fb:main sw.list</code> (Running names)</li>
+                <li>Countdowns Running List: <code>fb:main cd.list</code> (Ticking timers)</li>
+                <li>Countdowns Static Registry: <code>fb:main cd.db</code> (Configuration & Commands)</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </span>
+                Scoreboard Objectives & Reading Values
+              </h2>
+              <p>For advanced scripting and condition checking, FuseBox exposes all stopwatch and countdown values directly to scoreboard objectives. Each active timer writes its tick, second, minute, hour, day, and state values to a dummy player named after the timer (prefixed with <code>#</code>, e.g., <code>#demo</code>).</p>
+              
+              <h3>Available Scoreboard Objectives</h3>
+              
+              <p><strong>1. Stopwatch Objectives (sw):</strong></p>
+              <ul>
+                <li><code>fb.sw.at</code>: Accumulated ticks (total ticks elapsed since start).</li>
+                <li><code>fb.sw.t</code>: Current tick within the second (0 to 19).</li>
+                <li><code>fb.sw.ms</code>: Current millisecond approximation within the second (0 to 99).</li>
+                <li><code>fb.sw.s</code>: Current seconds within the minute (0 to 59).</li>
+                <li><code>fb.sw.m</code>: Current minutes within the hour (0 to 59).</li>
+                <li><code>fb.sw.h</code>: Current hours within the day (0 to 23).</li>
+                <li><code>fb.sw.d</code>: Current days elapsed.</li>
+              </ul>
+
+              <p><strong>2. Countdown Objectives (cd):</strong></p>
+              <ul>
+                <li><code>fb.cd.t</code>: Remaining ticks within the second (19 down to 0).</li>
+                <li><code>fb.cd.ms</code>: Remaining milliseconds within the second (99 down to 0).</li>
+                <li><code>fb.cd.s</code>: Remaining seconds within the minute (0 to 59).</li>
+                <li><code>fb.cd.m</code>: Remaining minutes within the hour (0 to 59).</li>
+                <li><code>fb.cd.h</code>: Remaining hours within the day (0 to 23).</li>
+                <li><code>fb.cd.d</code>: Remaining days.</li>
+                <li><code>fb.cd.state</code>: Active state of the countdown:
+                  <ul>
+                    <li><code>0</code>: Ticking (Active).</li>
+                    <li><code>1</code>: Finished / Expired.</li>
+                  </ul>
+                </li>
+              </ul>
+
+              <h3 style="margin-top: 15px;">Reading and Querying Scores</h3>
+              <p><strong>Checking conditions in functions:</strong></p>
+              <p>Check if a countdown named <code>game_timer</code> has expired (state is 1):</p>
+              <pre><code>execute if score #game_timer fb.cd.state matches 1 run say Time is up!</code></pre>
+              <p>Check if a stopwatch named <code>lap_time</code> is at exactly 1 minute and 30 seconds:</p>
+              <pre><code>execute if score #lap_time fb.sw.m matches 1 if score #lap_time fb.sw.s matches 30 run say 1:30 reached!</code></pre>
+              
+              <p style="margin-top: 10px;"><strong>Displaying scores in chat / Tellraw:</strong></p>
+              <p>You can print the scoreboard values directly in chat or titles using standard JSON text components:</p>
+              <pre><code>/tellraw @a ["", {"text": "Lap time: "}, {"score": {"name": "#lap_time", "objective": "fb.sw.m"}}, {"text": ":"}, {"score": {"name": "#lap_time", "objective": "fb.sw.s"}}]</code></pre>
+            </div>
+          </div>
+
+          <!-- DOC: DISPLAY -->
+          <div id="doc-display" class="doc-section">
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </span>
+                Display Priority Rules
+              </h2>
+              <p>Display configurations determine what is printed to the actionbar. Priorities resolve conflicts when multiple layouts are configured.</p>
+              <p><strong>1. Global configuration (targetting <code>@a</code>):</strong></p>
+              <ul>
+                <li><code>soft</code>: Default global display. Overridden automatically if a player receives an individual layout.</li>
+                <li><code>hard</code>: Enforces global layouts. Bypasses individual configurations for all players.</li>
+              </ul>
+              <p><strong>2. Individual configuration (targetting specific usernames):</strong></p>
+              <p>Bypasses soft global displays for that specific player. Useful for map cutscenes or player-specific race timers.</p>
+              <p><strong>3. Clear actionbar display settings:</strong></p>
+              <p>Removes a player's registry and resets their custom settings, defaulting them back to global configuration:</p>
+              <pre><code>/function fb:display/ab/clear {player:"oneBombastiko"}</code></pre>
+            </div>
+
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </span>
+                Hard Actionbar Overwrite
+              </h2>
+              <p>Sometimes you need to show temporary system messages or warnings on a player's actionbar (e.g., "Entering Boss Arena" or "Round 1"). You can hard-overwrite the actionbar for a specific duration, temporarily hiding all stopwatches and countdowns.</p>
+              
+              <p><strong>API Usage:</strong></p>
+              <p>Run the overwrite function by passing the target selector/player, formatted JSON text, and duration in ticks (20 ticks = 1 second):</p>
+              <pre><code>/function fb:display/ab/overwrite {player:"@a", text:[{"text":"WARNING: ", "color":"red", "bold":true}, {"text":"Boss is spawning!", "color":"yellow"}], duration:60}</code></pre>
+              
+              <p style="margin-top: 10px;"><strong>Key Behaviors:</strong></p>
+              <ul>
+                <li><strong>Absolute Priority</strong>: Overwrites both global and individual layouts during the duration.</li>
+                <li><strong>Seamless Restore</strong>: Once the duration expires, players automatically resume seeing their active ticking stopwatches and countdowns exactly where they left off.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- DOC: EVENTS -->
+          <div id="doc-events" class="doc-section">
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                </span>
+                Event System API
+              </h2>
+              <p>Register callback functions or direct commands that trigger automatically upon gameplay events. Callbacks are invoked <code>as</code> the player who triggered the event, with macro parameters containing the player username in <code>$(player)</code>.</p>
+              
+              <h3>Standard Events</h3>
+              <ul>
+                <li><code>onJoin</code>: Fires when a player logs in or joins the world.</li>
+                <li><code>onDeath</code>: Fires immediately when a player dies.</li>
+                <li><code>onLeave</code>: Fires immediately when a player disconnects or leaves.</li>
+                <li><code>onKillPlayer</code>: Fires <code>as</code> the killer when they kill another player.</li>
+                <li><code>onKilledByPlayer</code>: Fires <code>as</code> the victim when killed by another player.</li>
+                <li><code>onDamage</code>: Fires <code>as</code> the player when they take damage from any source.</li>
+                <li><code>onEntityKill</code>: Fires <code>as</code> the player when they kill a mob/monster.</li>
+                <li><code>whileOnline</code>: Fires every tick for all players currently online.</li>
+                <li><code>whileOffline</code>: Fires every tick for all registered players currently offline.</li>
+              </ul>
+
+              <h3>Item-Specific Events</h3>
+              <ul>
+                <li><code>onRightClick</code>: Fires when a player right-clicks holding a Carrot on a Stick or Warped Fungus on a Stick.</li>
+                <li><code>onHoldItem</code>: Fires every tick while a player is holding a specific item.</li>
+              </ul>
+
+              <h3 style="margin-top: 15px;">API Registration Commands</h3>
+              <p><strong>1. Function Callbacks (Standard Events):</strong></p>
+              <pre><code>/function fb:event/register {event:"onJoin", fn:"my_pack:welcome"}</code></pre>
+              
+              <p><strong>2. Direct Command Callbacks (Standard Events):</strong></p>
+              <p>Executes a direct command immediately. Use <code>@s</code> to target the event player.</p>
+              <pre><code>/function fb:event/register_cmd {event:"onJoin", cmd:"say Welcome back, @s!"}</code></pre>
+
+              <p><strong>3. Function Callbacks (Item Events):</strong></p>
+              <p>Only fires if the held item matches the specified ID and custom NBT data compound.</p>
+              <pre><code>/function fb:event/register_item {event:"onRightClick", fn:"my_pack:cast_spell", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"fire"}}</code></pre>
+              
+              <p><strong>4. Direct Command Callbacks (Item Events):</strong></p>
+              <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"speed"}}</code></pre>
+
+              <h3 style="margin-top: 15px;">API Unregistration & Cleaning</h3>
+              <p>To unregister, use the corresponding unregister commands. Pass the exact filters (<code>item_id</code>, <code>custom_data</code>) used during registration to target specific items:</p>
+              <ul>
+                <li>Unregister Standard Function: <pre><code>/function fb:event/unregister {event:"onJoin", fn:"my_pack:welcome"}</code></pre></li>
+                <li>Unregister Standard Command: <pre><code>/function fb:event/unregister_cmd {event:"onJoin", cmd:"say Welcome back, @s!"}</code></pre></li>
+                <li>Unregister Item Function: <pre><code>/function fb:event/unregister_item {event:"onRightClick", fn:"my_pack:cast_spell", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"fire"}}</code></pre></li>
+                <li>Unregister Item Command: <pre><code>/function fb:event/unregister_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{wand_type:"speed"}}</code></pre></li>
+                <li>Clear All Callbacks for Event: <pre><code>/function fb:event/clear {event:"onJoin"}</code></pre></li>
+              </ul>
+
+              <h3 style="margin-top: 15px;">Custom Items & Custom Data (1.20.5+)</h3>
+              <p>In modern Minecraft, custom items are uniquely identified by tags in their <code>minecraft:custom_data</code> component. For example, a custom fire staff item can be generated with:</p>
+              <pre><code>/give @s carrot_on_a_stick[custom_data={wand_type:"fire"}]</code></pre>
+            </div>
+          </div>
+
+          <!-- DOC: DEPENDENCY CHECK -->
+          <div id="doc-dependency" class="doc-section">
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </span>
+                Datapack Dependency Check
+              </h2>
+              <p>If you are developing a custom datapack that requires FuseBox, you can include a simple check in your pack's <code>load</code> function to verify if FuseBox is installed and up-to-date.</p>
+              
+              <p><strong>Copy-Paste Integration:</strong></p>
+              <p>Add these commands to the end of your datapack's <code>load.mcfunction</code> (replace <code>my_pack</code> with your pack's namespace):</p>
+              <pre><code># 1. Initialize temporary check objective
+scoreboard objectives add fb.version dummy
+scoreboard players set #fb_installed fb.version 0
+
+# 2. Call FuseBox version check function
+# (If FuseBox is installed, this function sets #fb_installed fb.version to the version number)
+function fb:api/check_version
+
+# 3. Check results and display errors/warnings
+# (If score is still 0, FuseBox is NOT installed or has been removed)
+execute if score #fb_installed fb.version matches 0 run tellraw @a [{"text": "[my_pack] ", "color": "gold", "bold": true}, {"text": "Error: FuseBox is NOT installed! This pack requires FuseBox v0.1 Alpha or newer.", "color": "red"}]
+
+# (If score is less than the required version (e.g., 1 for v0.1), warn the user)
+execute if score #fb_installed fb.version matches 1.. if score #fb_installed fb.version matches ..0 run tellraw @a [{"text": "[my_pack] ", "color": "gold", "bold": true}, {"text": "Warning: FuseBox is out of date! Please update FuseBox to at least v0.1 Alpha.", "color": "red"}]</code></pre>
+            </div>
+          </div>
+
+          <!-- DOC: TROUBLESHOOTING -->
+          <div id="doc-troubleshooting" class="doc-section">
+            <div class="card">
+              <h2>
+                <span class="icon-inline">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                </span>
+                Debugging & Administration
+              </h2>
+              <p>FuseBox features built-in tools to inspect NBT storages, check active objectives, and safely clear data.</p>
+              
+              <p><strong>1. Toggle Debug Mode:</strong></p>
+              <p>Prints internal processing status and ticking updates directly in the chat.</p>
+              <pre><code># Turn debug ON
+/data modify storage fb:config debug set value 1b
+
+# Turn debug OFF
+/data modify storage fb:config debug set value 0b</code></pre>
+              
+              <p><strong>2. Print Scoreboard and Registry Dumps:</strong></p>
+              <p>Outputs formatted listings of all running timers, event registrations, and objective values to chat.</p>
+              <pre><code># Inspect stopwatches
+/function fb:sw/debug_info
+
+# Inspect countdowns
+/function fb:cd/debug_info
+
+# Inspect event registrations
+/function fb:event/debug_info</code></pre>
+
+              <p><strong>3. Wipe Storages:</strong></p>
+              <p>Safely resets databases to clean up or troubleshoot errors.</p>
+              <pre><code># Reset Stopwatch data
+/function fb:sw/reset-db
+
+# Reset Countdown data
+/function fb:cd/reset-db</code></pre>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
