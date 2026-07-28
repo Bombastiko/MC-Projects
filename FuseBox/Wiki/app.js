@@ -14,8 +14,10 @@ function switchPage(pageId) {
   pages.forEach(page => {
     if (page.id === pageId) {
       page.classList.add('active');
+      page.style.display = 'block';
     } else {
       page.classList.remove('active');
+      page.style.display = 'none';
     }
   });
 }
@@ -35,8 +37,10 @@ function switchDocTab(docId) {
   docContents.forEach(section => {
     if (section.id === docId) {
       section.classList.add('active');
+      section.style.display = 'block';
     } else {
       section.classList.remove('active');
+      section.style.display = 'none';
     }
   });
 }
@@ -286,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cdCopyBtnDisplay) cdCopyBtnDisplay.addEventListener('click', () => copyToClipboard(cdCommandOutputDisplay.textContent, cdCopyBtnDisplay));
 
   // ==========================================
-  // ⚡ EVENT GENERATOR
+  // ⚡ EVENT CONFIGURATOR
   // ==========================================
   const egEventInput = document.getElementById('eg-event');
   const egItemInput = document.getElementById('eg-item');

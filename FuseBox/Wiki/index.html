@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=2.0">
+  <link rel="stylesheet" href="style.css?v=3.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
   <!-- SIDEBAR NAVIGATION -->
   <aside class="sidebar">
     <div>
-      <!-- LOGO BRAND (NO CONTAINING BOX / NO BORDER) -->
+      <!-- LOGO BRAND (NO BOX / NO BORDER) -->
       <div class="logo-brand">
         <img src="logo.png" alt="FuseBox Logo" width="32" height="32" style="width:32px; height:32px; max-width:32px; max-height:32px; object-fit:contain;" class="logo-img">
         <span class="logo-title">FuseBox</span>
@@ -38,7 +38,7 @@
 
         <button class="menu-item" data-page="event-generator-page">
           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          Event Generator
+          Event Configurator
         </button>
 
         <button class="menu-item" data-page="docs-page">
@@ -72,7 +72,7 @@
       </div>
 
       <div style="margin-bottom:32px;">
-        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:14px; color:var(--text-main);">Module Configurators</h2>
+        <h2 style="font-size:1.15rem; font-weight:700; margin-bottom:14px; color:var(--text-main);">Module Configurators</h2>
         <div class="shortcut-grid">
           <div class="shortcut-card" onclick="switchPage('configurator-page')">
             <div>
@@ -92,16 +92,16 @@
 
           <div class="shortcut-card" onclick="switchPage('event-generator-page')">
             <div>
-              <h3>⚡ Event Generator</h3>
+              <h3>⚡ Event Configurator</h3>
               <p>Register reactive player events with item ID and custom_data NBT component filters.</p>
             </div>
-            <div class="shortcut-arrow">Open Generator →</div>
+            <div class="shortcut-arrow">Open Configurator →</div>
           </div>
         </div>
       </div>
 
       <div>
-        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:14px; color:var(--text-main);">Documentation Shortcuts</h2>
+        <h2 style="font-size:1.15rem; font-weight:700; margin-bottom:14px; color:var(--text-main);">Documentation Shortcuts</h2>
         <div class="shortcut-grid">
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-events');">
             <div>
@@ -233,8 +233,8 @@
 
         <!-- PREVIEW & COMMAND CARD -->
         <div>
-          <!-- PREVIEW CARD WITH GRADIENT BORDER -->
-          <div class="card gradient-border-highlight" style="margin-bottom:24px;">
+          <!-- PREVIEW CARD -->
+          <div class="card brand-border-card" style="margin-bottom:24px;">
             <div class="card-title">
               <span>Actionbar Live Preview</span>
               <div style="display:flex; align-items:center; gap:6px;">
@@ -247,8 +247,8 @@
             </div>
           </div>
 
-          <!-- COMMAND CARD WITH GRADIENT BORDER -->
-          <div class="card gradient-border-highlight">
+          <!-- COMMAND CARD -->
+          <div class="card brand-border-card">
             <div class="card-title">Generated Command</div>
             <div class="command-container">
               <div class="command-code"><code id="commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code></div>
@@ -351,8 +351,8 @@
 
         <!-- PREVIEW & COMMANDS CARD -->
         <div>
-          <!-- PREVIEW CARD WITH GRADIENT BORDER -->
-          <div class="card gradient-border-highlight" style="margin-bottom:24px;">
+          <!-- PREVIEW CARD -->
+          <div class="card brand-border-card" style="margin-bottom:24px;">
             <div class="card-title">
               <span>Actionbar Live Preview</span>
               <div style="display:flex; align-items:center; gap:6px;">
@@ -365,8 +365,8 @@
             </div>
           </div>
 
-          <!-- COMMANDS CARD WITH GRADIENT BORDER -->
-          <div class="card gradient-border-highlight">
+          <!-- COMMANDS CARD -->
+          <div class="card brand-border-card">
             <div class="card-title">Generated Commands</div>
             <div class="command-container">
               <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">1. Create Countdown</label>
@@ -386,10 +386,10 @@
       </div>
     </div>
 
-    <!-- PAGE 3: EVENT GENERATOR -->
+    <!-- PAGE 3: EVENT CONFIGURATOR -->
     <div id="event-generator-page" class="page">
       <div class="page-header">
-        <h1>Event Generator</h1>
+        <h1>Event Configurator</h1>
         <p>Register reactive player events with <code>item_id</code> and <code>custom_data</code> filters.</p>
       </div>
 
@@ -429,7 +429,7 @@
           </form>
         </div>
 
-        <div class="card gradient-border-highlight">
+        <div class="card brand-border-card">
           <div class="card-title">Registration Command</div>
           <div class="command-container">
             <div class="command-code"><code id="eg-commandOutput">/function fb:event/register_item_cmd {name:"onRightClick",item_id:"carrot_on_a_stick",custom_data:{wand_type:"fire"},fn:"scoreboard players add @s fb.t_fire 1"}</code></div>
