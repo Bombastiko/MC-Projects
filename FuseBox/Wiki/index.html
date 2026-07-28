@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=9.0">
+  <link rel="stylesheet" href="style.css?v=10.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -116,18 +116,18 @@
       <div>
         <h2 style="font-size:1.15rem; font-weight:700; margin-bottom:14px; color:var(--text-main);">Documentation Shortcuts</h2>
         <div class="shortcut-grid">
-          <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-actionbar');">
+          <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-events');">
             <div>
-              <h3>📱 Actionbar Overwrite System Guide</h3>
-              <p>Learn how temporary JSON actionbar text overrides, duration ticks, and <code>fb.ab_over</code> work.</p>
+              <h3>⚡ Event System & Test Suite</h3>
+              <p>Learn how to register events and run the automated in-game test suite (<code>/function fb:event/test</code>).</p>
             </div>
             <div class="shortcut-arrow">Read Guide →</div>
           </div>
 
-          <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-events');">
+          <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-actionbar');">
             <div>
-              <h3>⚡ Event System Guide</h3>
-              <p>Learn how to register <code>onRightClick</code>, <code>onHoldItem</code>, and NBT filters.</p>
+              <h3>📱 Actionbar Overwrite System</h3>
+              <p>Learn how temporary JSON actionbar text overrides, duration ticks, and <code>fb.ab_over</code> work.</p>
             </div>
             <div class="shortcut-arrow">Read Guide →</div>
           </div>
@@ -560,7 +560,7 @@
         <button class="docs-tab" data-doc="doc-stopwatches">Stopwatches API</button>
         <button class="docs-tab" data-doc="doc-countdowns">Countdowns API</button>
         <button class="docs-tab" data-doc="doc-dependency">Dependency Check</button>
-        <button class="docs-tab" data-doc="doc-troubleshooting">Debugging</button>
+        <button class="docs-tab" data-doc="doc-troubleshooting">Debugging & Testing</button>
       </nav>
 
       <!-- DOC: OVERVIEW -->
@@ -578,6 +578,14 @@
             </thead>
             <tbody>
               <tr>
+                <td><code>/function fb:event/test</code></td>
+                <td>Launches automated in-game Event Test Suite with interactive chat menu and test items.</td>
+              </tr>
+              <tr>
+                <td><code>/function fb:event/test_finish</code></td>
+                <td>Evaluates test trigger scores and outputs a PASSED/FAILED report card.</td>
+              </tr>
+              <tr>
                 <td><code>/function fb:debug/menu</code></td>
                 <td>Opens in-game debug chat menu to toggle event and timer diagnostics.</td>
               </tr>
@@ -592,10 +600,6 @@
               <tr>
                 <td><code>/function fb:cd/reset-db</code></td>
                 <td>Wipes all countdown timer instances and scoreboards.</td>
-              </tr>
-              <tr>
-                <td><code>/function fb:api/check_version</code></td>
-                <td>Sets score <code>#fb_installed fb.version</code> to current version number for third-party packs.</td>
               </tr>
             </tbody>
           </table>
@@ -647,20 +651,25 @@
             <li>During each tick, FuseBox's display loop checks if <code>fb.ab_over</code> &gt; 0. If positive, it renders the custom JSON text component and decrements the score by 1.</li>
             <li>When <code>fb.ab_over</code> reaches 0, the overwrite automatically expires and normal timer displays resume seamlessly.</li>
           </ul>
-
-          <h3>3. Global Display Priorities: <code>soft</code> vs <code>hard</code></h3>
-          <ul>
-            <li><strong><code>soft</code> (Default Mode):</strong> Displays timers globally for <code>@a</code>, but automatically steps aside for individual players with active custom overrides.</li>
-            <li><strong><code>hard</code> (Global Mode):</strong> Forces global timer display across all online players, overriding individual player tags during critical server events.</li>
-          </ul>
         </div>
       </div>
 
       <!-- DOC: EVENT SYSTEM -->
       <div id="doc-events" class="doc-content">
         <div class="card doc-block">
-          <h2>⚡ Event System API</h2>
-          <p>Register reactive player events with <code>item_id</code> and <code>custom_data</code> NBT component filters.</p>
+          <h2>⚡ Event System API & Automated Test Suite</h2>
+          <p>Register reactive player events with <code>item_id</code> and <code>custom_data</code> NBT component filters, and verify them using FuseBox's automated in-game test suite.</p>
+
+          <h3>🧪 In-Game Automated Event Test Suite</h3>
+          <p>FuseBox includes a built-in automated test suite to instantly test all event triggers, item NBT filters, and callbacks in singleplayer or multiplayer:</p>
+          
+          <p><strong>1. Start the Test Suite:</strong></p>
+          <pre><code>/function fb:event/test</code></pre>
+          <p>This command automatically registers test callbacks for <code>onRightClick</code>, <code>onHoldItem</code>, <code>onDamage</code>, <code>onEntityKill</code>, and <code>whileOnline</code>, gives you 3 test items, and outputs an interactive test menu in chat with clickable trigger buttons.</p>
+
+          <p><strong>2. View the Assertion Report Card:</strong></p>
+          <pre><code>/function fb:event/test_finish</code></pre>
+          <p>Outputs a detailed report card showing <code>[PASSED]</code> or <code>[FAILED]</code> assertions and exact trigger counts for each tested event!</p>
 
           <h3>Standard Events</h3>
           <ul>
@@ -693,10 +702,6 @@
 
           <p><strong>4. Direct Command Callbacks (Item Events with custom_data):</strong></p>
           <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{id:"ascend"}}</code></pre>
-
-          <h3>Custom Items & Custom Data (1.20.5+)</h3>
-          <p>In modern Minecraft 1.20.5+, custom items are uniquely identified by tags in their <code>minecraft:custom_data</code> component:</p>
-          <pre><code>/give @s carrot_on_a_stick[custom_data={id:"ascend"}]</code></pre>
         </div>
       </div>
 
@@ -735,36 +740,6 @@
                 <td><code>color</code></td>
                 <td>String</td>
                 <td>Primary color tag: <code>gold</code>, <code>yellow</code>, <code>white</code>, <code>gray</code>, <code>red</code>, <code>green</code>, <code>blue</code>.</td>
-              </tr>
-              <tr>
-                <td><code>color_sec</code></td>
-                <td>String</td>
-                <td>Separator color tag (for colons <code>:</code> and dots <code>.</code>).</td>
-              </tr>
-              <tr>
-                <td><code>color_num</code></td>
-                <td>String</td>
-                <td>Number color tag for timer digits.</td>
-              </tr>
-              <tr>
-                <td><code>prefix</code></td>
-                <td>String</td>
-                <td>Text prepended before the timer numbers.</td>
-              </tr>
-              <tr>
-                <td><code>suffix</code></td>
-                <td>String</td>
-                <td>Text appended after the timer numbers.</td>
-              </tr>
-              <tr>
-                <td><code>bold</code></td>
-                <td>Boolean</td>
-                <td><code>"true"</code> or <code>"false"</code> formatting flag.</td>
-              </tr>
-              <tr>
-                <td><code>global_type</code></td>
-                <td>String</td>
-                <td><code>soft</code> (allows player custom overrides) or <code>hard</code> (forces global display).</td>
               </tr>
             </tbody>
           </table>
@@ -834,16 +809,6 @@
                 <td>String</td>
                 <td>Expiry callback command executed as player when timer reaches 0. Default silent command: <code>data get storage fb:tmp dummy</code>.</td>
               </tr>
-              <tr>
-                <td><code>player</code></td>
-                <td>String</td>
-                <td>Target selector (e.g. <code>@a</code> or <code>@s</code>).</td>
-              </tr>
-              <tr>
-                <td><code>format</code></td>
-                <td>String</td>
-                <td>Display format (<code>digital</code>, <code>digital_short</code>, <code>letters</code>, <code>dynamic</code>).</td>
-              </tr>
             </tbody>
           </table>
 
@@ -896,14 +861,10 @@ scoreboard objectives add fb.version dummy
 scoreboard players set #fb_installed fb.version 0
 
 # 2. Call FuseBox version check function
-# (If FuseBox is installed, this function sets #fb_installed fb.version to current version)
 function fb:api/check_version
 
 # 3. Check results and display errors/warnings
-# (If score is still 0, FuseBox is NOT installed or has been removed)
 execute if score #fb_installed fb.version matches 0 run tellraw @a [{"text": "[my_pack] ", "color": "gold", "bold": true}, {"text": "Error: FuseBox is NOT installed! This pack requires FuseBox v0.1 Alpha or newer.", "color": "red"}]
-
-# (If score is less than the required version, warn the user)
 execute if score #fb_installed fb.version matches 1.. if score #fb_installed fb.version matches ..0 run tellraw @a [{"text": "[my_pack] ", "color": "gold", "bold": true}, {"text": "Warning: FuseBox is out of date! Please update FuseBox to at least v0.1 Alpha.", "color": "red"}]</code></pre>
         </div>
       </div>
@@ -912,19 +873,26 @@ execute if score #fb_installed fb.version matches 1.. if score #fb_installed fb.
       <div id="doc-troubleshooting" class="doc-content">
         <div class="card doc-block">
           <h2>🛠️ Debugging & Diagnostics</h2>
-          <p>FuseBox features built-in tools to inspect NBT storages, check active objectives, and safely clear data.</p>
+          <p>FuseBox features built-in tools to run automated event test suites, inspect NBT storages, and toggle chat diagnostics.</p>
 
-          <h3>1. In-Game Debug Menu</h3>
+          <h3>1. Automated In-Game Event Test Suite</h3>
+          <pre><code># Start automated test suite (gives items & shows interactive chat menu)
+/function fb:event/test
+
+# Display assertion results report card (PASSED / FAILED)
+/function fb:event/test_finish</code></pre>
+
+          <h3>2. In-Game Debug Menu</h3>
           <pre><code>/function fb:debug/menu</code></pre>
 
-          <h3>2. Toggle Chat Diagnostics</h3>
+          <h3>3. Toggle Chat Diagnostics</h3>
           <pre><code># Turn debug ON
 /data modify storage fb:config debug set value 1b
 
 # Turn debug OFF
 /data modify storage fb:config debug set value 0b</code></pre>
 
-          <h3>3. Inspect Registrations</h3>
+          <h3>4. Inspect Registrations</h3>
           <pre><code>/function fb:sw/debug_info
 /function fb:cd/debug_info
 /function fb:event/debug_info</code></pre>
