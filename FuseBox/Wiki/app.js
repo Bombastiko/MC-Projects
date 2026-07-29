@@ -492,14 +492,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // 3. Validate onRightClick & onHoldItem requirements
+    // 3. Validate Inputs based on whether it is an Item Event or Standard Event
     let isItemValid = true;
+    let isCdValid = true;
+
     if (isItemEvent) {
       if (isRightClick) {
         if (egItemLabel) egItemLabel.textContent = 'Required Item ID (Carrot or Warped Fungus on a Stick) *';
         if (egItemHint) egItemHint.style.display = 'flex';
         const cleanItem = item.toLowerCase();
-        isItemValid = validRightClickItems.includes(cleanItem);
+        isItemValid = item.length > 0 && validRightClickItems.includes(cleanItem);
 
         if (!isItemValid && item.length > 0) {
           if (egItemHint) {
@@ -511,12 +513,20 @@ document.addEventListener('DOMContentLoaded', () => {
           egItemHint.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Required for onRightClick: minecraft:carrot_on_a_stick or minecraft:warped_fungus_on_a_stick`;
         }
       } else {
+        // onHoldItem: Item ID is mandatory (can be any item)
         if (egItemLabel) egItemLabel.textContent = 'Required Item ID *';
         if (egItemHint) egItemHint.style.display = 'none';
         isItemValid = item.length > 0;
       }
-      validateInput(egItemInput, isItemValid && item.length > 0);
-      validateInput(egCdInput, cd.length > 0);
+
+      isCdValid = cd.length > 0;
+
+      validateInput(egItemInput, isItemValid);
+      validateInput(egCdInput, isCdValid);
+    } else {
+      // Non-item events: remove red border classes from hidden fields
+      validateInput(egItemInput, true);
+      validateInput(egCdInput, true);
     }
 
     const isFnValid = fn.length > 0;
@@ -524,9 +534,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Generate Output Command
     if (isItemEvent) {
-      const isCdValid = cd.length > 0;
-      if (!isCdValid || !isFnValid || !item || !isItemValid) {
-        if (isRightClick && item && !isItemValid) {
+      if (!isItemValid || !isCdValid || !isFnValid) {
+        if (isRightClick && item && !validRightClickItems.includes(item.toLowerCase())) {
           egCommandOutput.textContent = `<Error: onRightClick requires item_id to be 'carrot_on_a_stick' or 'warped_fungus_on_a_stick'>`;
           egCommandOutput.style.color = '#ff5555';
         } else {

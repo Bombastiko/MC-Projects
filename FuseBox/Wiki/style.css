@@ -267,12 +267,15 @@ input::placeholder {
   font-style: normal;
 }
 
-/* ONLY THE BORDER TURNS RED FOR INVALID / UNFILLED FIELDS */
+/* ONLY THE 1PX BORDER TURNS RED FOR INVALID / UNFILLED FIELDS */
 input.input-invalid, select.input-invalid {
   border-color: #ff4444 !important;
 }
 
-/* UTILITY TO BULLETPROOF HIDE UNUSED FIELDS */
+/* HIGH SPECIFICITY UTILITY TO GUARANTEE HIDING UNUSED FIELDS */
+.field.hidden-field,
+.field.full-width.hidden-field,
+div.hidden-field,
 .hidden-field {
   display: none !important;
 }
