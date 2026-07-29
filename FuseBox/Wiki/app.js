@@ -303,7 +303,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const escapedCdCmd = cdCmd.replace(/'/g, "\\'");
       const escapedPrefix = prefix.replace(/"/g, '\\"');
 
-      cdCommandOutputCreate.textContent = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},cmd:'${escapedCdCmd}'}`;
+      // EXPLICIT DATAPACK MACRO ARGUMENT: on_complete
+      cdCommandOutputCreate.textContent = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},on_complete:'${escapedCdCmd}'}`;
       cdCommandOutputStart.textContent = `/function fb:cd/start {name:"${cdName}"}`;
       cdCommandOutputDisplay.textContent = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"gray",color_num:"white",prefix:"${escapedPrefix}",suffix:"",bold:"${bold}",global_type:"${globalType}"}`;
     }
@@ -532,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isFnValid = fn.length > 0;
     validateInput(egFnInput, isFnValid);
 
-    // 4. Generate Output Command
+    // 4. Generate Output Command (100% Synced with FuseBox Datapack Macros!)
     if (isItemEvent) {
       if (!isItemValid || !isCdValid || !isFnValid) {
         if (isRightClick && item && !validRightClickItems.includes(item.toLowerCase())) {
@@ -544,8 +545,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         egCommandOutput.style.color = 'var(--accent-yellow)';
-        const fnName = actionType === 'command' ? 'register_item_cmd' : 'register_item';
-        egCommandOutput.textContent = `/function fb:event/${fnName} {name:"${eventName}",item_id:"${item}",custom_data:${cd},fn:"${fn}"}`;
+        if (actionType === 'command') {
+          egCommandOutput.textContent = `/function fb:event/register_item_cmd {event:"${eventName}",item_id:"${item}",custom_data:${cd},cmd:"${fn}"}`;
+        } else {
+          egCommandOutput.textContent = `/function fb:event/register_item {event:"${eventName}",item_id:"${item}",custom_data:${cd},fn:"${fn}"}`;
+        }
       }
     } else {
       // Standard events (onJoin, onDeath, onLeave, onKillPlayer, onDamage, whileOnline, whileOffline)
@@ -554,9 +558,11 @@ document.addEventListener('DOMContentLoaded', () => {
         egCommandOutput.style.color = 'var(--text-muted)';
       } else {
         egCommandOutput.style.color = 'var(--accent-yellow)';
-        const fnName = actionType === 'command' ? 'register_cmd' : 'register';
-        const fnKey = actionType === 'command' ? 'cmd' : 'fn';
-        egCommandOutput.textContent = `/function fb:event/${fnName} {name:"${eventName}",${fnKey}:"${fn}"}`;
+        if (actionType === 'command') {
+          egCommandOutput.textContent = `/function fb:event/register_cmd {event:"${eventName}",cmd:"${fn}"}`;
+        } else {
+          egCommandOutput.textContent = `/function fb:event/register {event:"${eventName}",fn:"${fn}"}`;
+        }
       }
     }
   }
