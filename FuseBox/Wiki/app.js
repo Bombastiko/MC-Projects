@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Copy to Clipboard Utility
   function copyToClipboard(text, btnElement) {
+    if (!text || text.startsWith('<')) return;
     navigator.clipboard.writeText(text).then(() => {
       const originalText = btnElement.innerHTML;
       btnElement.classList.add('copied');
@@ -99,8 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
     return `<span style="${style}">${text}</span>`;
   }
 
+  function validateInput(inputElement, isValid) {
+    if (!inputElement) return;
+    if (isValid) {
+      inputElement.classList.remove('input-invalid');
+    } else {
+      inputElement.classList.add('input-invalid');
+    }
+  }
+
   // ==========================================
-  // 🛠 STOPWATCH CONFIGURATOR
+  // ⏱️ STOPWATCH CONFIGURATOR
   // ==========================================
   const playerInput = document.getElementById('player');
   const globalTypeGroup = document.getElementById('global-type-group');
@@ -121,26 +131,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateSw() {
     if (!playerInput) return;
-    const player = playerInput.value.trim() || '@a';
+    const rawPlayer = playerInput.value.trim();
+    const rawSw = swInput.value.trim();
+
+    const isPlayerValid = rawPlayer.length > 0;
+    const isSwValid = rawSw.length > 0;
+
+    validateInput(playerInput, isPlayerValid);
+    validateInput(swInput, isSwValid);
+
+    const player = isPlayerValid ? rawPlayer : '@a';
+    const sw = isSwValid ? rawSw : 'demo';
     const isGlobalTarget = player === '@a';
     
     if (globalTypeGroup) globalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
 
     const globalType = isGlobalTarget ? globalTypeInput.value : 'soft';
-    const sw = swInput.value.trim() || 'demo';
     const format = formatInput.value;
     const color = colorInput.value;
     const colorSec = colorSecInput.value;
     const colorNum = colorNumInput.value;
-    const prefix = prefixInput.value;
-    const suffix = suffixInput.value;
+    const prefix = prefixInput.value.trim();
+    const suffix = suffixInput.value.trim();
     const bold = boldInput.checked;
     const isPaused = previewPaused.checked;
 
-    const escapedPrefix = prefix.replace(/"/g, '\\"');
-    const escapedSuffix = suffix.replace(/"/g, '\\"');
-    const command = `/function fb:sw/display_ab_custom {player:"${player}",sw:"${sw}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
-    commandOutput.textContent = command;
+    if (!isPlayerValid || !isSwValid) {
+      commandOutput.textContent = '<Fill required fields (*) above to generate command>';
+      commandOutput.style.color = 'var(--text-muted)';
+    } else {
+      commandOutput.style.color = 'var(--accent-yellow)';
+      const escapedPrefix = prefix.replace(/"/g, '\\"');
+      const escapedSuffix = suffix.replace(/"/g, '\\"');
+      commandOutput.textContent = `/function fb:sw/display_ab_custom {player:"${player}",sw:"${sw}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
+    }
 
     let previewHtml = '';
     const colMain = isPaused ? colorMap.gray : colorMap[color];
@@ -148,7 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const colNum = isPaused ? colorMap.dark_gray : colorMap[colorNum];
     const isItalic = isPaused;
 
-    if (prefix) previewHtml += buildSpan(prefix, colMain, bold, isItalic);
+    const displayPrefix = prefix || 'Timer: ';
+    previewHtml += buildSpan(displayPrefix, colMain, bold, isItalic);
 
     if (format === 'digital') {
       previewHtml += buildSpan('00', colNum, bold, isItalic);
@@ -221,13 +246,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateCd() {
     if (!cdPlayerInput) return;
-    const player = cdPlayerInput.value.trim() || '@a';
+    const rawPlayer = cdPlayerInput.value.trim();
+    const rawName = cdNameInput.value.trim();
+
+    const isPlayerValid = rawPlayer.length > 0;
+    const isNameValid = rawName.length > 0;
+
+    validateInput(cdPlayerInput, isPlayerValid);
+    validateInput(cdNameInput, isNameValid);
+
+    const player = isPlayerValid ? rawPlayer : '@a';
+    const cdName = isNameValid ? rawName : 'timer1';
     const isGlobalTarget = player === '@a';
     
     if (cdGlobalTypeGroup) cdGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
 
     const globalType = isGlobalTarget ? cdGlobalTypeInput.value : 'soft';
-    const cdName = cdNameInput.value.trim() || 'timer1';
     const h = parseInt(cdHInput.value) || 0;
     const m = parseInt(cdMInput.value) || 0;
     const s = parseInt(cdSInput.value) || 0;
@@ -236,16 +270,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const cdCmd = cdCmdRaw.length > 0 ? cdCmdRaw : 'data get storage fb:tmp dummy';
     const format = cdFormatInput.value;
     const color = cdColorInput.value;
-    const prefix = cdPrefixInput.value;
+    const prefix = cdPrefixInput.value.trim();
     const bold = cdBoldInput.checked;
     const isPaused = cdPreviewPaused.checked;
 
-    const escapedCdCmd = cdCmd.replace(/'/g, "\\'");
-    const escapedPrefix = prefix.replace(/"/g, '\\"');
+    if (!isPlayerValid || !isNameValid) {
+      cdCommandOutputCreate.textContent = '<Fill required fields (*) above to generate commands>';
+      cdCommandOutputStart.textContent = '<Fill required fields (*) above to generate commands>';
+      cdCommandOutputDisplay.textContent = '<Fill required fields (*) above to generate commands>';
+      cdCommandOutputCreate.style.color = 'var(--text-muted)';
+      cdCommandOutputStart.style.color = 'var(--text-muted)';
+      cdCommandOutputDisplay.style.color = 'var(--text-muted)';
+    } else {
+      cdCommandOutputCreate.style.color = 'var(--accent-yellow)';
+      cdCommandOutputStart.style.color = 'var(--accent-yellow)';
+      cdCommandOutputDisplay.style.color = 'var(--accent-yellow)';
 
-    cdCommandOutputCreate.textContent = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},cmd:'${escapedCdCmd}'}`;
-    cdCommandOutputStart.textContent = `/function fb:cd/start {name:"${cdName}"}`;
-    cdCommandOutputDisplay.textContent = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"gray",color_num:"white",prefix:"${escapedPrefix}",suffix:"",bold:"${bold}",global_type:"${globalType}"}`;
+      const escapedCdCmd = cdCmd.replace(/'/g, "\\'");
+      const escapedPrefix = prefix.replace(/"/g, '\\"');
+
+      cdCommandOutputCreate.textContent = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},cmd:'${escapedCdCmd}'}`;
+      cdCommandOutputStart.textContent = `/function fb:cd/start {name:"${cdName}"}`;
+      cdCommandOutputDisplay.textContent = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"gray",color_num:"white",prefix:"${escapedPrefix}",suffix:"",bold:"${bold}",global_type:"${globalType}"}`;
+    }
 
     let previewHtml = '';
     const colMain = isPaused ? colorMap.gray : colorMap[color];
@@ -253,7 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const colNum = colorMap.white;
     const isItalic = isPaused;
 
-    if (prefix) previewHtml += buildSpan(prefix, colMain, bold, isItalic);
+    const displayPrefix = prefix || 'Time Left: ';
+    previewHtml += buildSpan(displayPrefix, colMain, bold, isItalic);
 
     const pad = (n) => (n < 10 ? '0' + n : n);
     if (format === 'digital') {
@@ -307,11 +355,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateAb() {
     if (!abCustomTextInput) return;
-    const player = abPlayerInput.value.trim() || '@a';
-    const duration = parseInt(abDurationInput.value) || 100;
-    const messageText = abCustomTextInput.value.trim() || 'Speed Boost Active!';
+    const rawPlayer = abPlayerInput.value.trim();
+    const rawDuration = abDurationInput.value.trim();
+    const rawText = abCustomTextInput.value.trim();
+
+    const isPlayerValid = rawPlayer.length > 0;
+    const isDurationValid = rawDuration.length > 0 && parseInt(rawDuration) > 0;
+    const isTextValid = rawText.length > 0;
+
+    validateInput(abPlayerInput, isPlayerValid);
+    validateInput(abDurationInput, isDurationValid);
+    validateInput(abCustomTextInput, isTextValid);
+
+    const player = isPlayerValid ? rawPlayer : '@a';
+    const duration = isDurationValid ? parseInt(rawDuration) : 100;
+    const messageText = isTextValid ? rawText : 'Speed Boost Active!';
     const color = abColorInput.value;
-    const prefix = abPrefixInput.value;
+    const prefix = abPrefixInput.value.trim();
     const bold = abBoldInput.checked;
 
     const seconds = (duration / 20).toFixed(1);
@@ -319,19 +379,24 @@ document.addEventListener('DOMContentLoaded', () => {
       abDurationHint.textContent = `${duration} ticks = ${seconds} seconds duration`;
     }
 
-    const fullMessage = prefix + messageText;
-    const escapedMessage = fullMessage.replace(/"/g, '\\"');
-    const boldJson = bold ? ',"bold":true' : '';
-    const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
+    if (!isPlayerValid || !isDurationValid || !isTextValid) {
+      abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
+      abCommandOutput.style.color = 'var(--text-muted)';
+    } else {
+      abCommandOutput.style.color = 'var(--accent-yellow)';
+      const fullMessage = prefix + messageText;
+      const escapedMessage = fullMessage.replace(/"/g, '\\"');
+      const boldJson = bold ? ',"bold":true' : '';
+      const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
 
-    const command = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
-
-    abCommandOutput.textContent = command;
+      abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
+    }
 
     let previewHtml = '';
     const colMain = colorMap[color];
 
-    if (prefix) previewHtml += buildSpan(prefix, colMain, bold, false);
+    const displayPrefix = prefix || '[INFO] ';
+    previewHtml += buildSpan(displayPrefix, colMain, bold, false);
     previewHtml += buildSpan(messageText, colMain, bold, false);
 
     abActionbarPreview.innerHTML = previewHtml;
@@ -354,25 +419,73 @@ document.addEventListener('DOMContentLoaded', () => {
   // ⚡ EVENT CONFIGURATOR
   // ==========================================
   const egTypeInput = document.getElementById('eg-type');
-  const egFnLabel = document.getElementById('eg-fn-label');
   const egEventInput = document.getElementById('eg-event');
   const egItemInput = document.getElementById('eg-item');
+  const egItemLabel = document.getElementById('eg-item-label');
+  const egItemHint = document.getElementById('eg-item-hint');
   const egCdInput = document.getElementById('eg-cd');
   const egFnInput = document.getElementById('eg-fn');
+  const egFnLabel = document.getElementById('eg-fn-label');
   const egCommandOutput = document.getElementById('eg-commandOutput');
   const egCopyBtn = document.getElementById('eg-copyBtn');
+
+  const validRightClickItems = [
+    'carrot_on_a_stick',
+    'minecraft:carrot_on_a_stick',
+    'warped_fungus_on_a_stick',
+    'minecraft:warped_fungus_on_a_stick'
+  ];
 
   function updateEventGen() {
     if (!egEventInput) return;
     const actionType = egTypeInput ? egTypeInput.value : 'command';
     const eventName = egEventInput.value;
     const item = egItemInput.value.trim();
-    const cd = egCdInput.value.trim() || '{id:"ascend"}';
-    const fn = egFnInput.value.trim() || (actionType === 'command' ? 'scoreboard players add @s fb.t_fire 1' : 'my_pack:cast_spell');
+    const cd = egCdInput.value.trim();
+    const fn = egFnInput.value.trim();
 
-    if (egFnLabel) {
-      egFnLabel.textContent = actionType === 'command' ? 'Target Command' : 'Target Function';
+    // 1. Update Target Command / Function Label & Placeholder dynamically
+    if (egFnLabel && egFnInput) {
+      if (actionType === 'command') {
+        egFnLabel.textContent = 'Target Command *';
+        egFnInput.placeholder = 'e.g. scoreboard players add @s fb.t_fire 1';
+      } else {
+        egFnLabel.textContent = 'Target Function *';
+        egFnInput.placeholder = 'e.g. my_pack:cast_spell';
+      }
     }
+
+    // 2. Validate onRightClick item requirement
+    const isRightClick = eventName === 'onRightClick';
+    let isItemValid = true;
+
+    if (egItemLabel && egItemHint) {
+      if (isRightClick) {
+        egItemLabel.textContent = 'Required Item ID (Carrot or Warped Fungus on a Stick) *';
+        egItemHint.style.display = 'flex';
+        const cleanItem = item.toLowerCase();
+        isItemValid = validRightClickItems.includes(cleanItem);
+
+        if (!isItemValid && item.length > 0) {
+          egItemHint.className = 'field-error';
+          egItemHint.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Error: onRightClick only supports 'carrot_on_a_stick' or 'warped_fungus_on_a_stick'!`;
+        } else {
+          egItemHint.className = 'field-info';
+          egItemHint.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Required for onRightClick: minecraft:carrot_on_a_stick or minecraft:warped_fungus_on_a_stick`;
+        }
+      } else {
+        egItemLabel.textContent = 'Required Item ID (Optional)';
+        egItemHint.style.display = 'none';
+        isItemValid = true;
+      }
+    }
+
+    const isCdValid = cd.length > 0;
+    const isFnValid = fn.length > 0;
+
+    validateInput(egItemInput, isItemValid && (isRightClick ? item.length > 0 : true));
+    validateInput(egCdInput, isCdValid);
+    validateInput(egFnInput, isFnValid);
 
     const hasItem = item.length > 0;
     let fnName = '';
@@ -383,14 +496,22 @@ document.addEventListener('DOMContentLoaded', () => {
       fnName = hasItem ? 'register_item' : 'register';
     }
 
-    let command = '';
-    if (hasItem) {
-      command = `/function fb:event/${fnName} {name:"${eventName}",item_id:"${item}",custom_data:${cd},fn:"${fn}"}`;
+    if (!isCdValid || !isFnValid || (isRightClick && (!item || !isItemValid))) {
+      if (isRightClick && item && !isItemValid) {
+        egCommandOutput.textContent = `<Error: onRightClick requires item_id to be 'carrot_on_a_stick' or 'warped_fungus_on_a_stick'>`;
+        egCommandOutput.style.color = '#ff5555';
+      } else {
+        egCommandOutput.textContent = '<Fill required fields (*) above to generate registration command>';
+        egCommandOutput.style.color = 'var(--text-muted)';
+      }
     } else {
-      command = `/function fb:event/${fnName} {name:"${eventName}",fn:"${fn}"}`;
+      egCommandOutput.style.color = 'var(--accent-yellow)';
+      if (hasItem) {
+        egCommandOutput.textContent = `/function fb:event/${fnName} {name:"${eventName}",item_id:"${item}",custom_data:${cd},fn:"${fn}"}`;
+      } else {
+        egCommandOutput.textContent = `/function fb:event/${fnName} {name:"${eventName}",fn:"${fn}"}`;
+      }
     }
-
-    egCommandOutput.textContent = command;
   }
 
   const egInputs = [egTypeInput, egEventInput, egItemInput, egCdInput, egFnInput];

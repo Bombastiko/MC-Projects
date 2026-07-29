@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=11.0">
+  <link rel="stylesheet" href="style.css?v=12.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -81,7 +81,10 @@
         <div class="shortcut-grid">
           <div class="shortcut-card" onclick="switchPage('configurator-page')">
             <div>
-              <h3>⏱️ Stopwatch Configurator</h3>
+              <h3>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Stopwatch Configurator
+              </h3>
               <p>Generate clean actionbar timer commands with customizable formats, colors, and live previews.</p>
             </div>
             <div class="shortcut-arrow">Open Configurator →</div>
@@ -89,7 +92,10 @@
 
           <div class="shortcut-card" onclick="switchPage('cd-configurator-page')">
             <div>
-              <h3>⏳ Countdown Configurator</h3>
+              <h3>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M5 2h14M5 22h14M19 2v4c0 3-3 5-7 7-4-2-7-4-7-7V2M5 22v-4c0-3 3-5 7-7 4 2 7 4 7 7v4"></path></svg>
+                Countdown Configurator
+              </h3>
               <p>Configure actionbar countdowns with custom expiry callbacks and live previews.</p>
             </div>
             <div class="shortcut-arrow">Open Configurator →</div>
@@ -97,7 +103,10 @@
 
           <div class="shortcut-card" onclick="switchPage('ab-configurator-page')">
             <div>
-              <h3>📱 Actionbar Overwrite Configurator</h3>
+              <h3>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+                Actionbar Overwrite Configurator
+              </h3>
               <p>Generate <code>/function fb:display/ab/overwrite</code> commands for temporary custom JSON text actionbars.</p>
             </div>
             <div class="shortcut-arrow">Open Configurator →</div>
@@ -105,7 +114,10 @@
 
           <div class="shortcut-card" onclick="switchPage('event-generator-page')">
             <div>
-              <h3>⚡ Event Configurator</h3>
+              <h3>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                Event Configurator
+              </h3>
               <p>Register reactive player events with item ID and custom_data NBT component filters.</p>
             </div>
             <div class="shortcut-arrow">Open Configurator →</div>
@@ -118,7 +130,10 @@
         <div class="shortcut-grid">
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-events');">
             <div>
-              <h3>⚡ Event System Guide</h3>
+              <h3>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                Event System Guide
+              </h3>
               <p>Learn how to register <code>onRightClick</code>, <code>onHoldItem</code>, and NBT filters.</p>
             </div>
             <div class="shortcut-arrow">Read Guide →</div>
@@ -126,7 +141,10 @@
 
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-actionbar');">
             <div>
-              <h3>📱 Actionbar Overwrite System</h3>
+              <h3>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+                Actionbar Overwrite System
+              </h3>
               <p>Learn how temporary JSON actionbar text overrides, duration ticks, and <code>fb.ab_over</code> work.</p>
             </div>
             <div class="shortcut-arrow">Read Guide →</div>
@@ -134,7 +152,10 @@
 
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-stopwatches');">
             <div>
-              <h3>⏱️ Stopwatch API</h3>
+              <h3>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Stopwatch API
+              </h3>
               <p>Complete function reference for creating, pausing, deleting, and displaying stopwatches.</p>
             </div>
             <div class="shortcut-arrow">Read Reference →</div>
@@ -142,7 +163,10 @@
 
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-countdowns');">
             <div>
-              <h3>⏳ Countdown API</h3>
+              <h3>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M5 2h14M5 22h14M19 2v4c0 3-3 5-7 7-4-2-7-4-7-7V2M5 22v-4c0-3 3-5 7-7 4 2 7 4 7 7v4"></path></svg>
+                Countdown API
+              </h3>
               <p>Complete function reference for countdown creation, expiry commands, and actionbars.</p>
             </div>
             <div class="shortcut-arrow">Read Reference →</div>
@@ -165,8 +189,8 @@
           <form id="configForm" onsubmit="event.preventDefault();">
             <div class="form-grid">
               <div class="field">
-                <label for="player">Target Selector / Player</label>
-                <input type="text" id="player" value="@a" required>
+                <label for="player">Target Selector / Player *</label>
+                <input type="text" id="player" placeholder="e.g. @a, @s, or player name">
               </div>
 
               <div class="field" id="global-type-group">
@@ -178,8 +202,8 @@
               </div>
 
               <div class="field">
-                <label for="sw">Stopwatch Name</label>
-                <input type="text" id="sw" value="demo" required>
+                <label for="sw">Stopwatch Name *</label>
+                <input type="text" id="sw" placeholder="e.g. demo">
               </div>
 
               <div class="field">
@@ -225,12 +249,12 @@
 
               <div class="field full-width">
                 <label for="prefix">Prefix Text</label>
-                <input type="text" id="prefix" value="Timer: ">
+                <input type="text" id="prefix" placeholder="e.g. Timer: ">
               </div>
 
               <div class="field full-width">
                 <label for="suffix">Suffix Text</label>
-                <input type="text" id="suffix" value="">
+                <input type="text" id="suffix" placeholder="e.g.  (Active)">
               </div>
 
               <div class="field toggle-field full-width">
@@ -289,8 +313,8 @@
           <form id="cdConfigForm" onsubmit="event.preventDefault();">
             <div class="form-grid">
               <div class="field">
-                <label for="cd-player">Target Selector / Player</label>
-                <input type="text" id="cd-player" value="@a" required>
+                <label for="cd-player">Target Selector / Player *</label>
+                <input type="text" id="cd-player" placeholder="e.g. @a, @s, or player name">
               </div>
 
               <div class="field" id="cd-global-type-group">
@@ -302,8 +326,8 @@
               </div>
 
               <div class="field">
-                <label for="cd-name">Countdown Name</label>
-                <input type="text" id="cd-name" value="timer1" required>
+                <label for="cd-name">Countdown Name *</label>
+                <input type="text" id="cd-name" placeholder="e.g. timer1">
               </div>
 
               <div class="field">
@@ -318,17 +342,17 @@
 
               <div class="field">
                 <label for="cd-h">Hours</label>
-                <input type="number" id="cd-h" value="0" min="0">
+                <input type="number" id="cd-h" placeholder="0" min="0">
               </div>
 
               <div class="field">
                 <label for="cd-m">Minutes</label>
-                <input type="number" id="cd-m" value="1" min="0">
+                <input type="number" id="cd-m" placeholder="1" min="0">
               </div>
 
               <div class="field">
                 <label for="cd-s">Seconds</label>
-                <input type="number" id="cd-s" value="30" min="0">
+                <input type="number" id="cd-s" placeholder="30" min="0">
               </div>
 
               <div class="field">
@@ -343,12 +367,12 @@
 
               <div class="field full-width">
                 <label for="cd-prefix">Prefix Text</label>
-                <input type="text" id="cd-prefix" value="Time Left: ">
+                <input type="text" id="cd-prefix" placeholder="e.g. Time Left: ">
               </div>
 
               <div class="field full-width">
-                <label for="cd-cmd">Expiry Callback Command</label>
-                <input type="text" id="cd-cmd" value="" placeholder="Optional command on timer expiry (e.g. say Done!)">
+                <label for="cd-cmd">Expiry Callback Command (Optional)</label>
+                <input type="text" id="cd-cmd" placeholder="Optional command on timer expiry (e.g. say Done!)">
                 <span style="font-size:0.75rem; color:var(--text-dim);">If left empty, a silent command with no chat output or side effect will be used.</span>
               </div>
 
@@ -414,19 +438,19 @@
           <form id="abConfigForm" onsubmit="event.preventDefault();">
             <div class="form-grid">
               <div class="field full-width">
-                <label for="ab-player">Target Player / Selector</label>
-                <input type="text" id="ab-player" value="@a" required placeholder="e.g. @a, @s, or player name">
+                <label for="ab-player">Target Player / Selector *</label>
+                <input type="text" id="ab-player" placeholder="e.g. @a, @s, or player name">
               </div>
 
               <div class="field full-width">
-                <label for="ab-duration">Duration in Ticks (20 Ticks = 1 Second)</label>
-                <input type="number" id="ab-duration" value="100" min="1" required>
+                <label for="ab-duration">Duration in Ticks (20 Ticks = 1 Second) *</label>
+                <input type="number" id="ab-duration" placeholder="e.g. 100" min="1">
                 <span style="font-size:0.75rem; color:var(--text-dim);" id="ab-duration-hint">100 ticks = 5.0 seconds duration</span>
               </div>
 
               <div class="field full-width">
-                <label for="ab-custom-text">Message Text</label>
-                <input type="text" id="ab-custom-text" value="Speed Boost Active!" placeholder="e.g. Speed Boost Active!">
+                <label for="ab-custom-text">Message Text *</label>
+                <input type="text" id="ab-custom-text" placeholder="e.g. Speed Boost Active!">
               </div>
 
               <div class="field">
@@ -444,7 +468,7 @@
 
               <div class="field">
                 <label for="ab-prefix">Prefix Text</label>
-                <input type="text" id="ab-prefix" value="[INFO] ">
+                <input type="text" id="ab-prefix" placeholder="e.g. [INFO] ">
               </div>
 
               <div class="field full-width toggle-field">
@@ -518,19 +542,23 @@
               </div>
 
               <div class="field full-width">
-                <label for="eg-item">Required Item ID (Optional)</label>
-                <input type="text" id="eg-item" value="carrot_on_a_stick" placeholder="e.g. carrot_on_a_stick">
+                <label for="eg-item" id="eg-item-label">Required Item ID *</label>
+                <input type="text" id="eg-item" placeholder="e.g. carrot_on_a_stick or warped_fungus_on_a_stick">
+                <span id="eg-item-hint" class="field-info">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                  Required for onRightClick: minecraft:carrot_on_a_stick or minecraft:warped_fungus_on_a_stick
+                </span>
               </div>
 
               <div class="field full-width">
-                <label for="eg-cd">Required Custom Data NBT Compound</label>
-                <input type="text" id="eg-cd" value='{id:"ascend"}' placeholder='e.g. {id:"ascend"} or {id:"fire"}'>
+                <label for="eg-cd">Required Custom Data NBT Compound *</label>
+                <input type="text" id="eg-cd" placeholder='e.g. {id:"ascend"} or {id:"fire"}'>
                 <span style="font-size:0.75rem; color:var(--text-dim);">Matches items with modern Minecraft 1.20.5+ custom_data component (e.g. /give @s carrot_on_a_stick[custom_data={id:"ascend"}]).</span>
               </div>
 
               <div class="field full-width">
-                <label for="eg-fn" id="eg-fn-label">Target Command</label>
-                <input type="text" id="eg-fn" value='scoreboard players add @s fb.t_fire 1' placeholder='e.g. scoreboard players add @s fb.t_fire 1 or my_pack:cast_spell'>
+                <label for="eg-fn" id="eg-fn-label">Target Command *</label>
+                <input type="text" id="eg-fn" placeholder="e.g. scoreboard players add @s fb.t_fire 1">
               </div>
             </div>
           </form>
@@ -566,7 +594,10 @@
       <!-- DOC: OVERVIEW -->
       <div id="doc-overview" class="doc-content active">
         <div class="card doc-block">
-          <h2>🚀 Framework Overview</h2>
+          <h2>
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+            Framework Overview
+          </h2>
           <p>FuseBox handles complex NBT parsing, item detection, and actionbar UI management out-of-the-box in Minecraft 1.20.5+ / 1.21+.</p>
 
           <table class="wiki-table">
@@ -605,7 +636,10 @@
       <!-- DOC: ACTIONBAR SYSTEM -->
       <div id="doc-actionbar" class="doc-content">
         <div class="card doc-block">
-          <h2>📱 Actionbar Overwrite & Priority System</h2>
+          <h2>
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+            Actionbar Overwrite & Priority System
+          </h2>
           <p>FuseBox features a built-in actionbar overwrite engine that allows datapacks to display temporary custom JSON text messages for a set duration without interfering with active timers.</p>
 
           <h3>1. Actionbar Overwrite Function: <code>/function fb:display/ab/overwrite</code></h3>
@@ -653,7 +687,10 @@
       <!-- DOC: EVENT SYSTEM -->
       <div id="doc-events" class="doc-content">
         <div class="card doc-block">
-          <h2>⚡ Event System API</h2>
+          <h2>
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            Event System API
+          </h2>
           <p>Register reactive player events with <code>item_id</code> and <code>custom_data</code> NBT component filters.</p>
 
           <h3>Standard Events</h3>
@@ -693,7 +730,10 @@
       <!-- DOC: STOPWATCHES API -->
       <div id="doc-stopwatches" class="doc-content">
         <div class="card doc-block">
-          <h2>⏱️ Stopwatch API Reference</h2>
+          <h2>
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg>
+            Stopwatch API Reference
+          </h2>
           <p>Create and display live actionbar stopwatches for players with full control over formats, colors, and global display priorities.</p>
 
           <h3>Parameter Reference</h3>
@@ -766,7 +806,10 @@
       <!-- DOC: COUNTDOWNS API -->
       <div id="doc-countdowns" class="doc-content">
         <div class="card doc-block">
-          <h2>⏳ Countdown API Reference</h2>
+          <h2>
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M5 2h14M5 22h14M19 2v4c0 3-3 5-7 7-4-2-7-4-7-7V2M5 22v-4c0-3 3-5 7-7 4 2 7 4 7 7v4"></path></svg>
+            Countdown API Reference
+          </h2>
           <p>Create countdowns with automatic expiry commands and custom actionbar displays.</p>
 
           <h3>Parameter Reference</h3>
@@ -838,7 +881,10 @@
       <!-- DOC: DEPENDENCY CHECK -->
       <div id="doc-dependency" class="doc-content">
         <div class="card doc-block">
-          <h2>📦 Datapack Dependency Check</h2>
+          <h2>
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            Datapack Dependency Check
+          </h2>
           <p>If you are developing a custom datapack that requires FuseBox, add this check to your pack's <code>load.mcfunction</code> to verify if FuseBox is installed and up-to-date:</p>
 
           <pre><code># 1. Initialize temporary check objective
@@ -857,7 +903,10 @@ execute if score #fb_installed fb.version matches 1.. if score #fb_installed fb.
       <!-- DOC: DEBUGGING -->
       <div id="doc-troubleshooting" class="doc-content">
         <div class="card doc-block">
-          <h2>🛠️ Debugging & Diagnostics</h2>
+          <h2>
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+            Debugging & Diagnostics
+          </h2>
           <p>FuseBox features built-in tools to inspect NBT storages and toggle chat diagnostics.</p>
 
           <h3>1. In-Game Debug Menu</h3>
