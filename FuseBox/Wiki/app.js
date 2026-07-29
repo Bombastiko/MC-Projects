@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sw = isSwValid ? rawSw : 'demo';
     const isGlobalTarget = player === '@a';
     
+    // Dynamically show/hide global_type field (only applies to global @a)
     if (globalTypeGroup) globalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
 
     const globalType = isGlobalTarget ? globalTypeInput.value : 'soft';
@@ -259,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cdName = isNameValid ? rawName : 'timer1';
     const isGlobalTarget = player === '@a';
     
+    // Dynamically show/hide global_type field (only applies to global @a)
     if (cdGlobalTypeGroup) cdGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
 
     const globalType = isGlobalTarget ? cdGlobalTypeInput.value : 'soft';
@@ -420,9 +422,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const egTypeInput = document.getElementById('eg-type');
   const egEventInput = document.getElementById('eg-event');
+  const egItemGroup = document.getElementById('eg-item-group');
   const egItemInput = document.getElementById('eg-item');
   const egItemLabel = document.getElementById('eg-item-label');
   const egItemHint = document.getElementById('eg-item-hint');
+  const egCdGroup = document.getElementById('eg-cd-group');
   const egCdInput = document.getElementById('eg-cd');
   const egFnInput = document.getElementById('eg-fn');
   const egFnLabel = document.getElementById('eg-fn-label');
@@ -436,6 +440,8 @@ document.addEventListener('DOMContentLoaded', () => {
     'minecraft:warped_fungus_on_a_stick'
   ];
 
+  const itemEvents = ['onRightClick', 'onHoldItem'];
+
   function updateEventGen() {
     if (!egEventInput) return;
     const actionType = egTypeInput ? egTypeInput.value : 'command';
@@ -444,7 +450,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const cd = egCdInput.value.trim();
     const fn = egFnInput.value.trim();
 
-    // 1. Update Target Command / Function Label & Placeholder dynamically
+    const isItemEvent = itemEvents.includes(eventName);
+    const isRightClick = eventName === 'onRightClick';
+
+    // 1. DYNAMICALLY SHOW/HIDE ITEM AND CUSTOM_DATA FIELDS FOR NON-ITEM EVENTS
+    if (egItemGroup) egItemGroup.style.display = isItemEvent ? 'flex' : 'none';
+    if (egCdGroup) egCdGroup.style.display = isItemEvent ? 'flex' : 'none';
+
+    // 2. Update Target Command / Function Label & Placeholder dynamically
     if (egFnLabel && egFnInput) {
       if (actionType === 'command') {
         egFnLabel.textContent = 'Target Command *';
@@ -455,61 +468,62 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // 2. Validate onRightClick item requirement
-    const isRightClick = eventName === 'onRightClick';
+    // 3. Validate onRightClick & onHoldItem requirements
     let isItemValid = true;
-
-    if (egItemLabel && egItemHint) {
+    if (isItemEvent) {
       if (isRightClick) {
-        egItemLabel.textContent = 'Required Item ID (Carrot or Warped Fungus on a Stick) *';
-        egItemHint.style.display = 'flex';
+        if (egItemLabel) egItemLabel.textContent = 'Required Item ID (Carrot or Warped Fungus on a Stick) *';
+        if (egItemHint) egItemHint.style.display = 'flex';
         const cleanItem = item.toLowerCase();
         isItemValid = validRightClickItems.includes(cleanItem);
 
         if (!isItemValid && item.length > 0) {
-          egItemHint.className = 'field-error';
-          egItemHint.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Error: onRightClick only supports 'carrot_on_a_stick' or 'warped_fungus_on_a_stick'!`;
-        } else {
+          if (egItemHint) {
+            egItemHint.className = 'field-error';
+            egItemHint.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Error: onRightClick only supports 'carrot_on_a_stick' or 'warped_fungus_on_a_stick'!`;
+          }
+        } else if (egItemHint) {
           egItemHint.className = 'field-info';
           egItemHint.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Required for onRightClick: minecraft:carrot_on_a_stick or minecraft:warped_fungus_on_a_stick`;
         }
       } else {
-        egItemLabel.textContent = 'Required Item ID (Optional)';
-        egItemHint.style.display = 'none';
-        isItemValid = true;
+        if (egItemLabel) egItemLabel.textContent = 'Required Item ID *';
+        if (egItemHint) egItemHint.style.display = 'none';
+        isItemValid = item.length > 0;
       }
+      validateInput(egItemInput, isItemValid);
+      validateInput(egCdInput, cd.length > 0);
     }
 
-    const isCdValid = cd.length > 0;
     const isFnValid = fn.length > 0;
-
-    validateInput(egItemInput, isItemValid && (isRightClick ? item.length > 0 : true));
-    validateInput(egCdInput, isCdValid);
     validateInput(egFnInput, isFnValid);
 
-    const hasItem = item.length > 0;
-    let fnName = '';
-
-    if (actionType === 'command') {
-      fnName = hasItem ? 'register_item_cmd' : 'register_cmd';
-    } else {
-      fnName = hasItem ? 'register_item' : 'register';
-    }
-
-    if (!isCdValid || !isFnValid || (isRightClick && (!item || !isItemValid))) {
-      if (isRightClick && item && !isItemValid) {
-        egCommandOutput.textContent = `<Error: onRightClick requires item_id to be 'carrot_on_a_stick' or 'warped_fungus_on_a_stick'>`;
-        egCommandOutput.style.color = '#ff5555';
+    // 4. Generate Output Command
+    if (isItemEvent) {
+      const isCdValid = cd.length > 0;
+      if (!isCdValid || !isFnValid || !item || !isItemValid) {
+        if (isRightClick && item && !isItemValid) {
+          egCommandOutput.textContent = `<Error: onRightClick requires item_id to be 'carrot_on_a_stick' or 'warped_fungus_on_a_stick'>`;
+          egCommandOutput.style.color = '#ff5555';
+        } else {
+          egCommandOutput.textContent = '<Fill required fields (*) above to generate registration command>';
+          egCommandOutput.style.color = 'var(--text-muted)';
+        }
       } else {
-        egCommandOutput.textContent = '<Fill required fields (*) above to generate registration command>';
-        egCommandOutput.style.color = 'var(--text-muted)';
+        egCommandOutput.style.color = 'var(--accent-yellow)';
+        const fnName = actionType === 'command' ? 'register_item_cmd' : 'register_item';
+        egCommandOutput.textContent = `/function fb:event/${fnName} {name:"${eventName}",item_id:"${item}",custom_data:${cd},fn:"${fn}"}`;
       }
     } else {
-      egCommandOutput.style.color = 'var(--accent-yellow)';
-      if (hasItem) {
-        egCommandOutput.textContent = `/function fb:event/${fnName} {name:"${eventName}",item_id:"${item}",custom_data:${cd},fn:"${fn}"}`;
+      // Standard events (onJoin, onDeath, onLeave, onKillPlayer, onDamage, whileOnline, whileOffline)
+      if (!isFnValid) {
+        egCommandOutput.textContent = '<Fill required fields (*) above to generate registration command>';
+        egCommandOutput.style.color = 'var(--text-muted)';
       } else {
-        egCommandOutput.textContent = `/function fb:event/${fnName} {name:"${eventName}",fn:"${fn}"}`;
+        egCommandOutput.style.color = 'var(--accent-yellow)';
+        const fnName = actionType === 'command' ? 'register_cmd' : 'register';
+        const fnKey = actionType === 'command' ? 'cmd' : 'fn';
+        egCommandOutput.textContent = `/function fb:event/${fnName} {name:"${eventName}",${fnKey}:"${fn}"}`;
       }
     }
   }

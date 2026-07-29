@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=12.0">
+  <link rel="stylesheet" href="style.css?v=13.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -541,7 +541,8 @@
                 </select>
               </div>
 
-              <div class="field full-width">
+              <!-- ITEM-RELATED FIELDS (HIDES AUTOMATICALLY FOR NON-ITEM EVENTS) -->
+              <div class="field full-width" id="eg-item-group">
                 <label for="eg-item" id="eg-item-label">Required Item ID *</label>
                 <input type="text" id="eg-item" placeholder="e.g. carrot_on_a_stick or warped_fungus_on_a_stick">
                 <span id="eg-item-hint" class="field-info">
@@ -550,7 +551,7 @@
                 </span>
               </div>
 
-              <div class="field full-width">
+              <div class="field full-width" id="eg-cd-group">
                 <label for="eg-cd">Required Custom Data NBT Compound *</label>
                 <input type="text" id="eg-cd" placeholder='e.g. {id:"ascend"} or {id:"fire"}'>
                 <span style="font-size:0.75rem; color:var(--text-dim);">Matches items with modern Minecraft 1.20.5+ custom_data component (e.g. /give @s carrot_on_a_stick[custom_data={id:"ascend"}]).</span>
