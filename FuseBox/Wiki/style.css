@@ -267,14 +267,14 @@ input::placeholder {
   font-style: normal;
 }
 
-/* RED BORDER FOR INVALID / EMPTY REQUIRED INPUTS */
+/* ONLY THE BORDER TURNS RED FOR INVALID / UNFILLED FIELDS */
 input.input-invalid, select.input-invalid {
   border-color: #ff4444 !important;
-  background-color: rgba(255, 68, 68, 0.05) !important;
 }
 
-input:focus.input-invalid, select:focus.input-invalid {
-  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.25) !important;
+/* UTILITY TO BULLETPROOF HIDE UNUSED FIELDS */
+.hidden-field {
+  display: none !important;
 }
 
 .field-error {

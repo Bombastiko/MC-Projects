@@ -145,7 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const isGlobalTarget = player === '@a';
     
     // Dynamically show/hide global_type field (only applies to global @a)
-    if (globalTypeGroup) globalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
+    if (globalTypeGroup) {
+      if (isGlobalTarget) {
+        globalTypeGroup.classList.remove('hidden-field');
+      } else {
+        globalTypeGroup.classList.add('hidden-field');
+      }
+    }
 
     const globalType = isGlobalTarget ? globalTypeInput.value : 'soft';
     const format = formatInput.value;
@@ -261,7 +267,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const isGlobalTarget = player === '@a';
     
     // Dynamically show/hide global_type field (only applies to global @a)
-    if (cdGlobalTypeGroup) cdGlobalTypeGroup.style.display = isGlobalTarget ? 'flex' : 'none';
+    if (cdGlobalTypeGroup) {
+      if (isGlobalTarget) {
+        cdGlobalTypeGroup.classList.remove('hidden-field');
+      } else {
+        cdGlobalTypeGroup.classList.add('hidden-field');
+      }
+    }
 
     const globalType = isGlobalTarget ? cdGlobalTypeInput.value : 'soft';
     const h = parseInt(cdHInput.value) || 0;
@@ -454,8 +466,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const isRightClick = eventName === 'onRightClick';
 
     // 1. DYNAMICALLY SHOW/HIDE ITEM AND CUSTOM_DATA FIELDS FOR NON-ITEM EVENTS
-    if (egItemGroup) egItemGroup.style.display = isItemEvent ? 'flex' : 'none';
-    if (egCdGroup) egCdGroup.style.display = isItemEvent ? 'flex' : 'none';
+    if (egItemGroup) {
+      if (isItemEvent) {
+        egItemGroup.classList.remove('hidden-field');
+      } else {
+        egItemGroup.classList.add('hidden-field');
+      }
+    }
+    if (egCdGroup) {
+      if (isItemEvent) {
+        egCdGroup.classList.remove('hidden-field');
+      } else {
+        egCdGroup.classList.add('hidden-field');
+      }
+    }
 
     // 2. Update Target Command / Function Label & Placeholder dynamically
     if (egFnLabel && egFnInput) {
@@ -491,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (egItemHint) egItemHint.style.display = 'none';
         isItemValid = item.length > 0;
       }
-      validateInput(egItemInput, isItemValid);
+      validateInput(egItemInput, isItemValid && item.length > 0);
       validateInput(egCdInput, cd.length > 0);
     }
 
