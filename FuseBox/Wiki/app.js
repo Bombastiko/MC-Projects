@@ -123,8 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const prefixInput = document.getElementById('prefix');
   const suffixInput = document.getElementById('suffix');
   const boldInput = document.getElementById('bold');
+
+  const swCommandOutputCreate = document.getElementById('sw-commandOutputCreate');
   const commandOutput = document.getElementById('commandOutput');
+  const swCommandOutputPause = document.getElementById('sw-commandOutputPause');
+  const swCommandOutputResume = document.getElementById('sw-commandOutputResume');
+
+  const swCopyBtnCreate = document.getElementById('sw-copyBtnCreate');
   const copyBtn = document.getElementById('copyBtn');
+  const swCopyBtnPause = document.getElementById('sw-copyBtnPause');
+  const swCopyBtnResume = document.getElementById('sw-copyBtnResume');
   
   const previewPaused = document.getElementById('preview-paused');
   const actionbarPreview = document.getElementById('actionbarPreview');
@@ -164,13 +172,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const isPaused = previewPaused.checked;
 
     if (!isPlayerValid || !isSwValid) {
-      commandOutput.textContent = '<Fill required fields (*) above to generate command>';
+      swCommandOutputCreate.textContent = '<Fill required fields (*) above to generate commands>';
+      commandOutput.textContent = '<Fill required fields (*) above to generate commands>';
+      swCommandOutputPause.textContent = '<Fill required fields (*) above to generate commands>';
+      swCommandOutputResume.textContent = '<Fill required fields (*) above to generate commands>';
+
+      swCommandOutputCreate.style.color = 'var(--text-muted)';
       commandOutput.style.color = 'var(--text-muted)';
+      swCommandOutputPause.style.color = 'var(--text-muted)';
+      swCommandOutputResume.style.color = 'var(--text-muted)';
     } else {
+      swCommandOutputCreate.style.color = 'var(--accent-yellow)';
       commandOutput.style.color = 'var(--accent-yellow)';
+      swCommandOutputPause.style.color = 'var(--accent-yellow)';
+      swCommandOutputResume.style.color = 'var(--accent-yellow)';
+
       const escapedPrefix = prefix.replace(/"/g, '\\"');
       const escapedSuffix = suffix.replace(/"/g, '\\"');
+
+      swCommandOutputCreate.textContent = `/function fb:sw/create {name:"${sw}"}`;
       commandOutput.textContent = `/function fb:sw/display_ab_custom {player:"${player}",sw:"${sw}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
+      swCommandOutputPause.textContent = `/function fb:sw/pause {name:"${sw}"}`;
+      swCommandOutputResume.textContent = `/function fb:sw/resume {name:"${sw}"}`;
     }
 
     let previewHtml = '';
@@ -224,7 +247,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  if (swCopyBtnCreate) swCopyBtnCreate.addEventListener('click', () => copyToClipboard(swCommandOutputCreate.textContent, swCopyBtnCreate));
   if (copyBtn) copyBtn.addEventListener('click', () => copyToClipboard(commandOutput.textContent, copyBtn));
+  if (swCopyBtnPause) swCopyBtnPause.addEventListener('click', () => copyToClipboard(swCommandOutputPause.textContent, swCopyBtnPause));
+  if (swCopyBtnResume) swCopyBtnResume.addEventListener('click', () => copyToClipboard(swCommandOutputResume.textContent, swCopyBtnResume));
 
   // ==========================================
   // ⏳ COUNTDOWN CONFIGURATOR
@@ -360,133 +386,66 @@ document.addEventListener('DOMContentLoaded', () => {
   const abPlayerInput = document.getElementById('ab-player');
   const abDurationInput = document.getElementById('ab-duration');
   const abDurationHint = document.getElementById('ab-duration-hint');
-  const abModeInput = document.getElementById('ab-mode');
-  const abTextGroup = document.getElementById('ab-text-group');
-  const abColorGroup = document.getElementById('ab-color-group');
-  const abBoldGroup = document.getElementById('ab-bold-group');
-  const abJsonGroup = document.getElementById('ab-json-group');
   const abCustomTextInput = document.getElementById('ab-custom-text');
-  const abRawJsonInput = document.getElementById('ab-raw-json');
   const abColorInput = document.getElementById('ab-color');
+  const abPrefixInput = document.getElementById('ab-prefix');
   const abBoldInput = document.getElementById('ab-bold');
   const abActionbarPreview = document.getElementById('ab-actionbarPreview');
   const abCommandOutput = document.getElementById('ab-commandOutput');
   const abCopyBtn = document.getElementById('ab-copyBtn');
 
-  function parseJsonComponentToHtml(jsonInput) {
-    try {
-      const parsed = JSON.parse(jsonInput);
-      function renderItem(obj) {
-        if (typeof obj === 'string') {
-          return buildSpan(obj, colorMap.white, false, false);
-        }
-        if (typeof obj === 'object' && obj !== null) {
-          let text = obj.text || '';
-          let c = colorMap[obj.color] || (obj.color ? obj.color : colorMap.white);
-          let isB = !!obj.bold;
-          let isI = !!obj.italic;
-          let html = buildSpan(text, c, isB, isI);
-          if (Array.isArray(obj.extra)) {
-            obj.extra.forEach(child => {
-              html += renderItem(child);
-            });
-          }
-          return html;
-        }
-        return '';
-      }
-
-      if (Array.isArray(parsed)) {
-        return parsed.map(renderItem).join('');
-      } else {
-        return renderItem(parsed);
-      }
-    } catch (e) {
-      return buildSpan(jsonInput, colorMap.white, false, false);
-    }
-  }
-
   function updateAb() {
-    if (!abPlayerInput) return;
+    if (!abCustomTextInput) return;
     const rawPlayer = abPlayerInput.value.trim();
     const rawDuration = abDurationInput.value.trim();
-    const mode = abModeInput ? abModeInput.value : 'plain';
+    const rawText = abCustomTextInput.value.trim();
 
     const isPlayerValid = rawPlayer.length > 0;
     const isDurationValid = rawDuration.length > 0 && parseInt(rawDuration) > 0;
+    const isTextValid = rawText.length > 0;
 
     validateInput(abPlayerInput, isPlayerValid);
     validateInput(abDurationInput, isDurationValid);
-
-    // Show/Hide fields based on mode
-    if (mode === 'plain') {
-      if (abTextGroup) { abTextGroup.classList.remove('hidden-field'); abTextGroup.style.display = 'flex'; }
-      if (abColorGroup) { abColorGroup.classList.remove('hidden-field'); abColorGroup.style.display = 'flex'; }
-      if (abBoldGroup) { abBoldGroup.classList.remove('hidden-field'); abBoldGroup.style.display = 'flex'; }
-      if (abJsonGroup) { abJsonGroup.classList.add('hidden-field'); abJsonGroup.style.display = 'none'; }
-    } else {
-      if (abTextGroup) { abTextGroup.classList.add('hidden-field'); abTextGroup.style.display = 'none'; }
-      if (abColorGroup) { abColorGroup.classList.add('hidden-field'); abColorGroup.style.display = 'none'; }
-      if (abBoldGroup) { abBoldGroup.classList.add('hidden-field'); abBoldGroup.style.display = 'none'; }
-      if (abJsonGroup) { abJsonGroup.classList.remove('hidden-field'); abJsonGroup.style.display = 'flex'; }
-    }
+    validateInput(abCustomTextInput, isTextValid);
 
     const player = isPlayerValid ? rawPlayer : '@a';
     const duration = isDurationValid ? parseInt(rawDuration) : 100;
+    const messageText = isTextValid ? rawText : 'Speed Boost Active!';
+    const color = abColorInput.value;
+    const prefix = abPrefixInput.value.trim();
+    const bold = abBoldInput.checked;
 
     const seconds = (duration / 20).toFixed(1);
     if (abDurationHint) {
       abDurationHint.textContent = `${duration} ticks = ${seconds} seconds duration`;
     }
 
-    if (mode === 'plain') {
-      validateInput(abRawJsonInput, true);
-      const rawText = abCustomTextInput ? abCustomTextInput.value.trim() : '';
-      const isTextValid = rawText.length > 0;
-      validateInput(abCustomTextInput, isTextValid);
-
-      const messageText = isTextValid ? rawText : 'Speed Boost Active!';
-      const color = abColorInput.value;
-      const bold = abBoldInput.checked;
-
-      if (!isPlayerValid || !isDurationValid || !isTextValid) {
-        abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
-        abCommandOutput.style.color = 'var(--text-muted)';
-      } else {
-        abCommandOutput.style.color = 'var(--accent-yellow)';
-        const escapedMessage = messageText.replace(/"/g, '\\"');
-        const boldJson = bold ? ',"bold":true' : '';
-        const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
-
-        abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
-      }
-
-      const colMain = colorMap[color];
-      abActionbarPreview.innerHTML = buildSpan(messageText, colMain, bold, false);
-
+    if (!isPlayerValid || !isDurationValid || !isTextValid) {
+      abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
+      abCommandOutput.style.color = 'var(--text-muted)';
     } else {
-      // RAW JSON MODE
-      validateInput(abCustomTextInput, true);
-      const rawJson = abRawJsonInput ? abRawJsonInput.value.trim() : '';
-      const isJsonValid = rawJson.length > 0;
-      validateInput(abRawJsonInput, isJsonValid);
+      abCommandOutput.style.color = 'var(--accent-yellow)';
+      const fullMessage = prefix + messageText;
+      const escapedMessage = fullMessage.replace(/"/g, '\\"');
+      const boldJson = bold ? ',"bold":true' : '';
+      const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
 
-      if (!isPlayerValid || !isDurationValid || !isJsonValid) {
-        abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
-        abCommandOutput.style.color = 'var(--text-muted)';
-      } else {
-        abCommandOutput.style.color = 'var(--accent-yellow)';
-        abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${rawJson}',duration:${duration}}`;
-      }
-
-      const displayJson = isJsonValid ? rawJson : '[{"text":"test text","color":"gold","bold":true}]';
-      abActionbarPreview.innerHTML = parseJsonComponentToHtml(displayJson);
+      abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
     }
+
+    let previewHtml = '';
+    const colMain = colorMap[color];
+
+    const displayPrefix = prefix || '[INFO] ';
+    previewHtml += buildSpan(displayPrefix, colMain, bold, false);
+    previewHtml += buildSpan(messageText, colMain, bold, false);
+
+    abActionbarPreview.innerHTML = previewHtml;
   }
 
   const abInputs = [
-    abPlayerInput, abDurationInput, abModeInput, abCustomTextInput, abRawJsonInput,
-    abColorInput, abBoldInput
+    abPlayerInput, abDurationInput, abCustomTextInput,
+    abColorInput, abPrefixInput, abBoldInput
   ];
   abInputs.forEach(i => {
     if (i) {
@@ -619,7 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     } else {
-      // Standard events (onJoin, onDeath, onLeave, onKillPlayer, onKilledByPlayer, onDamage, onEntityKill, whileOnline, whileOffline)
+      // Standard events (onJoin, onDeath, onLeave, onKillPlayer, onDamage, whileOnline, whileOffline)
       if (!isFnValid) {
         egCommandOutput.textContent = '<Fill required fields (*) above to generate registration command>';
         egCommandOutput.style.color = 'var(--text-muted)';
@@ -643,12 +602,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if (egCopyBtn) egCopyBtn.addEventListener('click', () => copyToClipboard(egCommandOutput.textContent, egCopyBtn));
-
-  const bannerCopyBtn = document.getElementById('banner-copyBtn');
-  const bannerMarkdownCode = document.getElementById('banner-markdown-code');
-  if (bannerCopyBtn && bannerMarkdownCode) {
-    bannerCopyBtn.addEventListener('click', () => copyToClipboard(bannerMarkdownCode.textContent, bannerCopyBtn));
-  }
 
   // Initial runs
   updateSw();

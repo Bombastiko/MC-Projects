@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=15.0">
+  <link rel="stylesheet" href="style.css?v=16.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -153,7 +153,7 @@
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-stopwatches');">
             <div>
               <h3>
-                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 Stopwatch API
               </h3>
               <p>Complete function reference for creating, pausing, deleting, and displaying stopwatches.</p>
@@ -179,7 +179,7 @@
     <div id="configurator-page" class="page">
       <div class="page-header">
         <h1>Stopwatch Configurator</h1>
-        <p>Generate <code>/function fb:sw/display_ab_custom</code> commands for actionbar timers.</p>
+        <p>Generate complete stopwatch creation, actionbar display, pause, and resume commands.</p>
       </div>
 
       <div class="config-layout">
@@ -284,15 +284,25 @@
             </div>
           </div>
 
-          <!-- COMMAND CARD -->
+          <!-- COMMANDS CARD -->
           <div class="card brand-border-card">
-            <div class="card-title">Generated Command</div>
+            <div class="card-title">Generated Commands</div>
             <div class="command-container">
+              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">1. Create Stopwatch</label>
+              <div class="command-code"><code id="sw-commandOutputCreate">/function fb:sw/create {name:"demo"}</code></div>
+              <button id="sw-copyBtnCreate" class="btn-copy-compact">Copy Create</button>
+
+              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:6px;">2. Display Actionbar</label>
               <div class="command-code"><code id="commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code></div>
-              <button id="copyBtn" class="btn-copy-compact">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-                Copy Command
-              </button>
+              <button id="copyBtn" class="btn-copy-compact">Copy Display</button>
+
+              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:6px;">3. Pause Stopwatch</label>
+              <div class="command-code"><code id="sw-commandOutputPause">/function fb:sw/pause {name:"demo"}</code></div>
+              <button id="sw-copyBtnPause" class="btn-copy-compact">Copy Pause</button>
+
+              <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:6px;">4. Resume Stopwatch</label>
+              <div class="command-code"><code id="sw-commandOutputResume">/function fb:sw/resume {name:"demo"}</code></div>
+              <button id="sw-copyBtnResume" class="btn-copy-compact">Copy Resume</button>
             </div>
           </div>
         </div>
