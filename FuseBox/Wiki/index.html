@@ -743,16 +743,15 @@
               Execution Context & Macro Arguments (Crucial!)
             </h4>
             <p style="font-size: 0.85rem; margin: 0 0 8px 0; color: var(--text-main);">
-              All callbacks (both direct commands and functions) execute <strong>as the player (<code>@s</code>)</strong> who triggered the event.
+              All callbacks (both direct commands and function calls) execute <strong>as the player (<code>@s</code>)</strong> who triggered the event.
             </p>
             <p style="font-size: 0.85rem; margin: 0; color: var(--text-main);">
-              When executing target callback functions, FuseBox invokes them as a <strong>Macro Function</strong>. Your custom callback function can read:
+              When executing target callback functions, FuseBox passes parameters to your function as a <strong>Macro Function</strong>. The primary argument sent is:
             </p>
             <ul style="font-size: 0.85rem; margin: 6px 0 0 18px; color: var(--text-muted);">
               <li><code>$(player)</code>: The player's username string (e.g. <code>"Bombastiko"</code>).</li>
               <li><code>$(event)</code>: The name of the triggered event (e.g. <code>"onJoin"</code>, <code>"onRightClick"</code>).</li>
               <li><code>$(type)</code>: Callback type (<code>"function"</code> or <code>"command"</code>).</li>
-              <li><code>$(item_id)</code>: Required item ID filter (for item events).</li>
             </ul>
           </div>
 
@@ -789,11 +788,11 @@
           <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{id:"ascend"}}</code></pre>
 
           <h3>Example Custom Macro Callback Function</h3>
-          <p>Create a macro function in your custom datapack that uses the passed <code>$(player)</code> and <code>$(event)</code> macro variables:</p>
+          <p>Create a macro function in your custom datapack that receives the <code>$(player)</code> macro argument from FuseBox:</p>
           <pre><code># my_pack/data/my_pack/function/welcome_macro.mcfunction
 # Macro Arguments: player, event
 
-$tellraw @a [{"text":"[Server] ","color":"gold","bold":true},{"text":"$(player)","color":"yellow","bold":true},{"text":" triggered event: $(event)","color":"gray"}]</code></pre>
+$tellraw @a [{"text":"[Server] Welcome ","color":"gold"},{"text":"$(player)","color":"yellow","bold":true},{"text":"!","color":"gold"}]</code></pre>
         </div>
       </div>
 
@@ -805,6 +804,20 @@ $tellraw @a [{"text":"[Server] ","color":"gold","bold":true},{"text":"$(player)"
             Stopwatch API Reference
           </h2>
           <p>Create and display live actionbar stopwatches for players with full control over formats, colors, and global display priorities.</p>
+
+          <h3>Full Command Usage Examples</h3>
+          <p><strong>1. Create a Stopwatch Instance:</strong></p>
+          <pre><code>/function fb:sw/create {name:"demo"}</code></pre>
+
+          <p><strong>2a. Enable Actionbar Display (Default Formatting):</strong></p>
+          <pre><code>/function fb:sw/display_ab {player:"@a", sw:"demo"}</code></pre>
+
+          <p><strong>2b. Enable Actionbar Display (Custom Formatting & Priority):</strong></p>
+          <pre><code>/function fb:sw/display_ab_custom {player:"@a", sw:"demo", format:"digital_short", color:"gold", color_sec:"yellow", color_num:"white", prefix:"Timer: ", suffix:"", bold:"false", global_type:"soft"}</code></pre>
+
+          <p><strong>3. Pause / Resume Stopwatch:</strong></p>
+          <pre><code>/function fb:sw/pause {name:"demo"}
+/function fb:sw/resume {name:"demo"}</code></pre>
 
           <h3>Parameter Reference</h3>
           <table class="wiki-table">
@@ -839,17 +852,17 @@ $tellraw @a [{"text":"[Server] ","color":"gold","bold":true},{"text":"$(player)"
               <tr>
                 <td><code>color</code></td>
                 <td>String</td>
-                <td>Primary color tag: <code>gold</code>, <code>yellow</code>, <code>white</code>, <code>gray</code>, <code>red</code>, <code>green</code>, <code>blue</code>.</td>
+                <td>Primary text color: <code>gold</code>, <code>yellow</code>, <code>white</code>, <code>gray</code>, <code>red</code>, <code>green</code>, <code>blue</code>.</td>
               </tr>
               <tr>
                 <td><code>color_sec</code></td>
                 <td>String</td>
-                <td>Separator color tag: <code>yellow</code>, <code>gold</code>, <code>white</code>, <code>gray</code>.</td>
+                <td>Separator symbol color: <code>yellow</code>, <code>gold</code>, <code>white</code>, <code>gray</code>.</td>
               </tr>
               <tr>
                 <td><code>color_num</code></td>
                 <td>String</td>
-                <td>Number color tag: <code>white</code>, <code>gold</code>, <code>yellow</code>.</td>
+                <td>Digit numbers color: <code>white</code>, <code>gold</code>, <code>yellow</code>.</td>
               </tr>
               <tr>
                 <td><code>prefix</code></td>
@@ -869,7 +882,7 @@ $tellraw @a [{"text":"[Server] ","color":"gold","bold":true},{"text":"$(player)"
               <tr>
                 <td><code>global_type</code></td>
                 <td>String</td>
-                <td>Display priority for <code>@a</code>: <code>"soft"</code> (allows player overwrites) or <code>"hard"</code> (forces actionbar on all players).</td>
+                <td>Display priority for <code>@a</code>: <code>"soft"</code> (allows individual player overwrites) or <code>"hard"</code> (forces actionbar on all players).</td>
               </tr>
             </tbody>
           </table>
@@ -878,28 +891,39 @@ $tellraw @a [{"text":"[Server] ","color":"gold","bold":true},{"text":"$(player)"
           <table class="wiki-table">
             <thead>
               <tr>
-                <th>Command</th>
+                <th>Function Call</th>
+                <th>Full Macro Arguments Signature</th>
                 <th>Description</th>
               </tr>
             </thead>
             <tbody>
               <tr>
+                <td><code>fb:sw/create</code></td>
                 <td><code>/function fb:sw/create {name:"demo"}</code></td>
-                <td>Creates and initializes a new stopwatch instance named <code>demo</code> (starts at 00:00:00).</td>
+                <td>Creates and initializes a new stopwatch instance named <code>demo</code> (starts counting from 0).</td>
               </tr>
               <tr>
+                <td><code>fb:sw/pause</code></td>
                 <td><code>/function fb:sw/pause {name:"demo"}</code></td>
                 <td>Pauses tick counting for stopwatch <code>demo</code>.</td>
               </tr>
               <tr>
+                <td><code>fb:sw/resume</code></td>
                 <td><code>/function fb:sw/resume {name:"demo"}</code></td>
                 <td>Resumes tick counting for stopwatch <code>demo</code>.</td>
               </tr>
               <tr>
-                <td><code>/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
-                <td>Enables live actionbar rendering for target players.</td>
+                <td><code>fb:sw/display_ab</code></td>
+                <td><code>/function fb:sw/display_ab {player:"@a", sw:"demo"}</code></td>
+                <td>Binds stopwatch <code>demo</code> to actionbar display with default styling.</td>
               </tr>
               <tr>
+                <td><code>fb:sw/display_ab_custom</code></td>
+                <td><code>/function fb:sw/display_ab_custom {player:"@a", sw:"demo", format:"digital_short", color:"gold", color_sec:"yellow", color_num:"white", prefix:"Timer: ", suffix:"", bold:"false", global_type:"soft"}</code></td>
+                <td>Binds stopwatch <code>demo</code> to actionbar display with full custom formatting and global priority settings.</td>
+              </tr>
+              <tr>
+                <td><code>fb:sw/reset-db</code></td>
                 <td><code>/function fb:sw/reset-db</code></td>
                 <td>Wipes all stopwatch instances and scoreboards.</td>
               </tr>
@@ -917,6 +941,24 @@ $tellraw @a [{"text":"[Server] ","color":"gold","bold":true},{"text":"$(player)"
           </h2>
           <p>Create countdowns with automatic expiry commands and custom actionbar displays.</p>
 
+          <h3>Full Command Usage Examples</h3>
+          <p><strong>1. Create Countdown Instance (Hours, Minutes, Seconds & Expiry Command):</strong></p>
+          <pre><code>/function fb:cd/create {name:"timer1", h:0, m:1, s:30, on_complete:'say Time is up!'}</code></pre>
+
+          <p><strong>2. Start Countdown:</strong></p>
+          <pre><code>/function fb:cd/start {name:"timer1"}</code></pre>
+
+          <p><strong>3a. Enable Actionbar Display (Default Formatting):</strong></p>
+          <pre><code>/function fb:cd/display_ab {player:"@a", cd:"timer1"}</code></pre>
+
+          <p><strong>3b. Enable Actionbar Display (Custom Formatting & Priority):</strong></p>
+          <pre><code>/function fb:cd/display_ab_custom {player:"@a", cd:"timer1", format:"digital_short", color:"gold", color_sec:"gray", color_num:"white", prefix:"Time Left: ", suffix:"", bold:"false", global_type:"soft"}</code></pre>
+
+          <p><strong>4. Pause, Resume or Delete Countdown:</strong></p>
+          <pre><code>/function fb:cd/pause {name:"timer1"}
+/function fb:cd/resume {name:"timer1"}
+/function fb:cd/delete {name:"timer1"}</code></pre>
+
           <h3>Parameter Reference</h3>
           <table class="wiki-table">
             <thead>
@@ -930,12 +972,12 @@ $tellraw @a [{"text":"[Server] ","color":"gold","bold":true},{"text":"$(player)"
               <tr>
                 <td><code>name</code></td>
                 <td>String</td>
-                <td>Countdown identifier string (e.g. <code>timer1</code>).</td>
+                <td>Countdown identifier string (e.g. <code>timer1</code>). Used in <code>create</code>, <code>start</code>, <code>pause</code>, <code>resume</code>, <code>delete</code>.</td>
               </tr>
               <tr>
                 <td><code>h</code>, <code>m</code>, <code>s</code></td>
                 <td>Integer</td>
-                <td>Hours, minutes, and seconds initial duration integers.</td>
+                <td>Initial duration hours, minutes, and seconds.</td>
               </tr>
               <tr>
                 <td><code>on_complete</code></td>
@@ -974,36 +1016,49 @@ $tellraw @a [{"text":"[Server] ","color":"gold","bold":true},{"text":"$(player)"
           <table class="wiki-table">
             <thead>
               <tr>
-                <th>Command</th>
+                <th>Function Call</th>
+                <th>Full Macro Arguments Signature</th>
                 <th>Description</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><code>/function fb:cd/create {name:"timer1",h:0,m:1,s:30,on_complete:'data get storage fb:tmp dummy'}</code></td>
+                <td><code>fb:cd/create</code></td>
+                <td><code>/function fb:cd/create {name:"timer1", h:0, m:1,s:30, on_complete:'say Time is up!'}</code></td>
                 <td>Creates a countdown timer instance with initial duration and expiry command.</td>
               </tr>
               <tr>
+                <td><code>fb:cd/start</code></td>
                 <td><code>/function fb:cd/start {name:"timer1"}</code></td>
                 <td>Starts running countdown <code>timer1</code>.</td>
               </tr>
               <tr>
+                <td><code>fb:cd/pause</code></td>
                 <td><code>/function fb:cd/pause {name:"timer1"}</code></td>
                 <td>Pauses running countdown <code>timer1</code>.</td>
               </tr>
               <tr>
+                <td><code>fb:cd/resume</code></td>
                 <td><code>/function fb:cd/resume {name:"timer1"}</code></td>
                 <td>Resumes countdown <code>timer1</code>.</td>
               </tr>
               <tr>
+                <td><code>fb:cd/delete</code></td>
                 <td><code>/function fb:cd/delete {name:"timer1"}</code></td>
                 <td>Deletes countdown <code>timer1</code> instance and resets its scoreboards.</td>
               </tr>
               <tr>
-                <td><code>/function fb:cd/display_ab_custom {player:"@a",cd:"timer1",format:"digital_short",color:"gold",color_sec:"gray",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
-                <td>Enables live actionbar rendering for target players.</td>
+                <td><code>fb:cd/display_ab</code></td>
+                <td><code>/function fb:cd/display_ab {player:"@a", cd:"timer1"}</code></td>
+                <td>Binds countdown <code>timer1</code> to actionbar display with default styling.</td>
               </tr>
               <tr>
+                <td><code>fb:cd/display_ab_custom</code></td>
+                <td><code>/function fb:cd/display_ab_custom {player:"@a", cd:"timer1", format:"digital_short", color:"gold", color_sec:"gray", color_num:"white", prefix:"Time Left: ", suffix:"", bold:"false", global_type:"soft"}</code></td>
+                <td>Binds countdown <code>timer1</code> to actionbar display with full custom formatting and global priority settings.</td>
+              </tr>
+              <tr>
+                <td><code>fb:cd/reset-db</code></td>
                 <td><code>/function fb:cd/reset-db</code></td>
                 <td>Wipes all countdown instances and scoreboards.</td>
               </tr>
