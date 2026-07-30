@@ -449,34 +449,52 @@
               </div>
 
               <div class="field full-width">
-                <label for="ab-custom-text">Message Text *</label>
-                <input type="text" id="ab-custom-text" placeholder="e.g. Speed Boost Active!">
-              </div>
-
-              <div class="field">
-                <label for="ab-color">Text Color</label>
-                <select id="ab-color">
-                  <option value="gold" selected>Gold</option>
-                  <option value="yellow">Yellow</option>
-                  <option value="white">White</option>
-                  <option value="gray">Gray</option>
-                  <option value="red">Red</option>
-                  <option value="green">Green</option>
-                  <option value="blue">Blue</option>
+                <label for="ab-mode">Format Mode</label>
+                <select id="ab-mode">
+                  <option value="plain" selected>Plain Text Builder</option>
+                  <option value="json">Raw JSON Component</option>
                 </select>
               </div>
 
-              <div class="field">
-                <label for="ab-prefix">Prefix Text</label>
-                <input type="text" id="ab-prefix" placeholder="e.g. [INFO] ">
+              <!-- PLAIN TEXT BUILDER FIELDS -->
+              <div class="form-grid full-width" id="ab-plain-group">
+                <div class="field full-width">
+                  <label for="ab-custom-text">Message Text *</label>
+                  <input type="text" id="ab-custom-text" placeholder="e.g. Speed Boost Active!">
+                </div>
+
+                <div class="field">
+                  <label for="ab-color">Text Color</label>
+                  <select id="ab-color">
+                    <option value="gold" selected>Gold</option>
+                    <option value="yellow">Yellow</option>
+                    <option value="white">White</option>
+                    <option value="gray">Gray</option>
+                    <option value="red">Red</option>
+                    <option value="green">Green</option>
+                    <option value="blue">Blue</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="ab-prefix">Prefix Text</label>
+                  <input type="text" id="ab-prefix" placeholder="e.g. [INFO] ">
+                </div>
+
+                <div class="field full-width toggle-field">
+                  <label for="ab-bold">Apply Bold Formatting</label>
+                  <label class="switch">
+                    <input type="checkbox" id="ab-bold" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
               </div>
 
-              <div class="field full-width toggle-field">
-                <label for="ab-bold">Apply Bold Formatting</label>
-                <label class="switch">
-                  <input type="checkbox" id="ab-bold" checked>
-                  <span class="slider"></span>
-                </label>
+              <!-- RAW JSON COMPONENT FIELDS -->
+              <div class="field full-width hidden-field" id="ab-json-group">
+                <label for="ab-raw-json">Raw JSON Text Component *</label>
+                <input type="text" id="ab-raw-json" placeholder='e.g. [{"text":"test text","color":"gold","bold":true}]'>
+                <span style="font-size:0.75rem; color:var(--text-dim);">Enter raw Minecraft NBT JSON text component string or array.</span>
               </div>
             </div>
           </form>

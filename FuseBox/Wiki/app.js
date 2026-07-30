@@ -360,7 +360,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const abPlayerInput = document.getElementById('ab-player');
   const abDurationInput = document.getElementById('ab-duration');
   const abDurationHint = document.getElementById('ab-duration-hint');
+  const abModeInput = document.getElementById('ab-mode');
+  const abPlainGroup = document.getElementById('ab-plain-group');
+  const abJsonGroup = document.getElementById('ab-json-group');
   const abCustomTextInput = document.getElementById('ab-custom-text');
+  const abRawJsonInput = document.getElementById('ab-raw-json');
   const abColorInput = document.getElementById('ab-color');
   const abPrefixInput = document.getElementById('ab-prefix');
   const abBoldInput = document.getElementById('ab-bold');
@@ -368,57 +372,123 @@ document.addEventListener('DOMContentLoaded', () => {
   const abCommandOutput = document.getElementById('ab-commandOutput');
   const abCopyBtn = document.getElementById('ab-copyBtn');
 
+  function parseJsonComponentToHtml(jsonInput) {
+    try {
+      const parsed = JSON.parse(jsonInput);
+      function renderItem(obj) {
+        if (typeof obj === 'string') {
+          return buildSpan(obj, colorMap.white, false, false);
+        }
+        if (typeof obj === 'object' && obj !== null) {
+          let text = obj.text || '';
+          let c = colorMap[obj.color] || (obj.color ? obj.color : colorMap.white);
+          let isB = !!obj.bold;
+          let isI = !!obj.italic;
+          let html = buildSpan(text, c, isB, isI);
+          if (Array.isArray(obj.extra)) {
+            obj.extra.forEach(child => {
+              html += renderItem(child);
+            });
+          }
+          return html;
+        }
+        return '';
+      }
+
+      if (Array.isArray(parsed)) {
+        return parsed.map(renderItem).join('');
+      } else {
+        return renderItem(parsed);
+      }
+    } catch (e) {
+      return buildSpan(jsonInput, colorMap.white, false, false);
+    }
+  }
+
   function updateAb() {
-    if (!abCustomTextInput) return;
+    if (!abPlayerInput) return;
     const rawPlayer = abPlayerInput.value.trim();
     const rawDuration = abDurationInput.value.trim();
-    const rawText = abCustomTextInput.value.trim();
+    const mode = abModeInput ? abModeInput.value : 'plain';
 
     const isPlayerValid = rawPlayer.length > 0;
     const isDurationValid = rawDuration.length > 0 && parseInt(rawDuration) > 0;
-    const isTextValid = rawText.length > 0;
 
     validateInput(abPlayerInput, isPlayerValid);
     validateInput(abDurationInput, isDurationValid);
-    validateInput(abCustomTextInput, isTextValid);
+
+    // Show/Hide fields based on mode
+    if (abPlainGroup && abJsonGroup) {
+      if (mode === 'plain') {
+        abPlainGroup.classList.remove('hidden-field');
+        abJsonGroup.classList.add('hidden-field');
+      } else {
+        abPlainGroup.classList.add('hidden-field');
+        abJsonGroup.classList.remove('hidden-field');
+      }
+    }
 
     const player = isPlayerValid ? rawPlayer : '@a';
     const duration = isDurationValid ? parseInt(rawDuration) : 100;
-    const messageText = isTextValid ? rawText : 'Speed Boost Active!';
-    const color = abColorInput.value;
-    const prefix = abPrefixInput.value.trim();
-    const bold = abBoldInput.checked;
 
     const seconds = (duration / 20).toFixed(1);
     if (abDurationHint) {
       abDurationHint.textContent = `${duration} ticks = ${seconds} seconds duration`;
     }
 
-    if (!isPlayerValid || !isDurationValid || !isTextValid) {
-      abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
-      abCommandOutput.style.color = 'var(--text-muted)';
+    if (mode === 'plain') {
+      validateInput(abRawJsonInput, true);
+      const rawText = abCustomTextInput ? abCustomTextInput.value.trim() : '';
+      const isTextValid = rawText.length > 0;
+      validateInput(abCustomTextInput, isTextValid);
+
+      const messageText = isTextValid ? rawText : 'Speed Boost Active!';
+      const color = abColorInput.value;
+      const prefix = abPrefixInput.value.trim();
+      const bold = abBoldInput.checked;
+
+      if (!isPlayerValid || !isDurationValid || !isTextValid) {
+        abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
+        abCommandOutput.style.color = 'var(--text-muted)';
+      } else {
+        abCommandOutput.style.color = 'var(--accent-yellow)';
+        const fullMessage = prefix + messageText;
+        const escapedMessage = fullMessage.replace(/"/g, '\\"');
+        const boldJson = bold ? ',"bold":true' : '';
+        const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
+
+        abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
+      }
+
+      let previewHtml = '';
+      const colMain = colorMap[color];
+      const displayPrefix = prefix || '[INFO] ';
+      previewHtml += buildSpan(displayPrefix, colMain, bold, false);
+      previewHtml += buildSpan(messageText, colMain, bold, false);
+      abActionbarPreview.innerHTML = previewHtml;
+
     } else {
-      abCommandOutput.style.color = 'var(--accent-yellow)';
-      const fullMessage = prefix + messageText;
-      const escapedMessage = fullMessage.replace(/"/g, '\\"');
-      const boldJson = bold ? ',"bold":true' : '';
-      const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
+      // RAW JSON MODE
+      validateInput(abCustomTextInput, true);
+      const rawJson = abRawJsonInput ? abRawJsonInput.value.trim() : '';
+      const isJsonValid = rawJson.length > 0;
+      validateInput(abRawJsonInput, isJsonValid);
 
-      abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
+      if (!isPlayerValid || !isDurationValid || !isJsonValid) {
+        abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
+        abCommandOutput.style.color = 'var(--text-muted)';
+      } else {
+        abCommandOutput.style.color = 'var(--accent-yellow)';
+        abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${rawJson}',duration:${duration}}`;
+      }
+
+      const displayJson = isJsonValid ? rawJson : '[{"text":"test text","color":"gold","bold":true}]';
+      abActionbarPreview.innerHTML = parseJsonComponentToHtml(displayJson);
     }
-
-    let previewHtml = '';
-    const colMain = colorMap[color];
-
-    const displayPrefix = prefix || '[INFO] ';
-    previewHtml += buildSpan(displayPrefix, colMain, bold, false);
-    previewHtml += buildSpan(messageText, colMain, bold, false);
-
-    abActionbarPreview.innerHTML = previewHtml;
   }
 
   const abInputs = [
-    abPlayerInput, abDurationInput, abCustomTextInput,
+    abPlayerInput, abDurationInput, abModeInput, abCustomTextInput, abRawJsonInput,
     abColorInput, abPrefixInput, abBoldInput
   ];
   abInputs.forEach(i => {
