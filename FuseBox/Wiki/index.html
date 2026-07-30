@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=16.0">
+  <link rel="stylesheet" href="style.css?v=17.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -280,7 +280,7 @@
               </div>
             </div>
             <div class="preview-box">
-              <div id="actionbarPreview" class="actionbar-text">Timer: 00:00.00</div>
+              <div id="actionbarPreview" class="actionbar-text">00:00.00</div>
             </div>
           </div>
 
@@ -293,7 +293,7 @@
               <button id="sw-copyBtnCreate" class="btn-copy-compact">Copy Create</button>
 
               <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:6px;">2. Display Actionbar</label>
-              <div class="command-code"><code id="commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code></div>
+              <div class="command-code"><code id="commandOutput">/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"",suffix:"",bold:"false",global_type:"soft"}</code></div>
               <button id="copyBtn" class="btn-copy-compact">Copy Display</button>
 
               <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:6px;">3. Pause Stopwatch</label>
@@ -409,7 +409,7 @@
               </div>
             </div>
             <div class="preview-box">
-              <div id="cd-actionbarPreview" class="actionbar-text">Time Left: 01:30.00</div>
+              <div id="cd-actionbarPreview" class="actionbar-text">01:30.00</div>
             </div>
           </div>
 
@@ -426,7 +426,7 @@
               <button id="cd-copyBtnStart" class="btn-copy-compact">Copy Start</button>
 
               <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:6px;">3. Display Actionbar</label>
-              <div class="command-code"><code id="cd-commandOutputDisplay">/function fb:cd/display_ab_custom {player:"@a",cd:"timer1",format:"digital_short",color:"red",color_sec:"gray",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></div>
+              <div class="command-code"><code id="cd-commandOutputDisplay">/function fb:cd/display_ab_custom {player:"@a",cd:"timer1",format:"digital_short",color:"red",color_sec:"gray",color_num:"white",prefix:"",suffix:"",bold:"false",global_type:"soft"}</code></div>
               <button id="cd-copyBtnDisplay" class="btn-copy-compact">Copy Display</button>
             </div>
           </div>

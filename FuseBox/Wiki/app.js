@@ -221,8 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const colNum = isPaused ? colorMap.dark_gray : colorMap[colorNum];
     const isItalic = isPaused;
 
-    const displayPrefix = prefix || 'Timer: ';
-    previewHtml += buildSpan(displayPrefix, colMain, bold, isItalic);
+    // Show prefix in preview ONLY if filled
+    if (prefix) {
+      previewHtml += buildSpan(prefix, colMain, bold, isItalic);
+    }
 
     if (format === 'digital') {
       previewHtml += buildSpan('00', colNum, bold, isItalic);
@@ -250,7 +252,10 @@ document.addEventListener('DOMContentLoaded', () => {
       previewHtml += buildSpan('s', colSec, bold, isItalic);
     }
 
-    if (suffix) previewHtml += buildSpan(suffix, colMain, bold, isItalic);
+    // Show suffix in preview ONLY if filled
+    if (suffix) {
+      previewHtml += buildSpan(suffix, colMain, bold, isItalic);
+    }
 
     actionbarPreview.innerHTML = previewHtml;
   }
@@ -375,8 +380,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const colNum = colorMap.white;
     const isItalic = isPaused;
 
-    const displayPrefix = prefix || 'Time Left: ';
-    previewHtml += buildSpan(displayPrefix, colMain, bold, isItalic);
+    // Show prefix in preview ONLY if filled
+    if (prefix) {
+      previewHtml += buildSpan(prefix, colMain, bold, isItalic);
+    }
 
     const pad = (n) => (n < 10 ? '0' + n : n);
     if (format === 'digital') {
@@ -470,8 +477,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let previewHtml = '';
     const colMain = colorMap[color];
 
-    const displayPrefix = prefix || '[INFO] ';
-    previewHtml += buildSpan(displayPrefix, colMain, bold, false);
+    if (prefix) {
+      previewHtml += buildSpan(prefix, colMain, bold, false);
+    }
     previewHtml += buildSpan(messageText, colMain, bold, false);
 
     abActionbarPreview.innerHTML = previewHtml;
