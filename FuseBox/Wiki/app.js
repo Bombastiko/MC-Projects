@@ -89,7 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
     red: '#ff5555',
     green: '#55ff55',
     blue: '#5555ff',
-    dark_gray: '#555555'
+    dark_gray: '#555555',
+    aqua: '#55ffff',
+    dark_aqua: '#00aaaa',
+    dark_blue: '#0000aa',
+    dark_green: '#00aa00',
+    dark_red: '#aa0000',
+    purple: '#ff55ff',
+    dark_purple: '#aa00aa',
+    black: '#000000'
   };
 
   function buildSpan(text, textColor, isBold, isItalic) {
@@ -98,6 +106,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const italicStyle = isItalic ? 'font-style: italic;' : 'font-style: normal;';
     const style = `color: ${textColor}; text-shadow: 2px 2px 0px ${dropShadowColor}; ${boldStyle} ${italicStyle}`;
     return `<span style="${style}">${text}</span>`;
+  }
+
+  function renderJsonComponentToHtml(jsonObj) {
+    if (typeof jsonObj === 'string') {
+      return buildSpan(jsonObj, '#ffffff', false, false);
+    }
+    if (Array.isArray(jsonObj)) {
+      return jsonObj.map(item => renderJsonComponentToHtml(item)).join('');
+    }
+    if (typeof jsonObj === 'object' && jsonObj !== null) {
+      const text = jsonObj.text || '';
+      const colorKey = jsonObj.color || 'white';
+      const textColor = colorMap[colorKey] || colorKey || '#ffffff';
+      const isBold = !!jsonObj.bold;
+      const isItalic = !!jsonObj.italic;
+      let html = buildSpan(text, textColor, isBold, isItalic);
+      if (jsonObj.extra && Array.isArray(jsonObj.extra)) {
+        html += jsonObj.extra.map(item => renderJsonComponentToHtml(item)).join('');
+      }
+      return html;
+    }
+    return '';
   }
 
   function validateInput(inputElement, isValid) {
@@ -221,8 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const colNum = isPaused ? colorMap.dark_gray : colorMap[colorNum];
     const isItalic = isPaused;
 
-    // Show prefix in preview ONLY if filled
-    if (prefix) {
+    // Show prefix in preview ONLY if non-empty string entered
+    if (prefix.length > 0) {
       previewHtml += buildSpan(prefix, colMain, bold, isItalic);
     }
 
@@ -252,8 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
       previewHtml += buildSpan('s', colSec, bold, isItalic);
     }
 
-    // Show suffix in preview ONLY if filled
-    if (suffix) {
+    // Show suffix in preview ONLY if non-empty string entered
+    if (suffix.length > 0) {
       previewHtml += buildSpan(suffix, colMain, bold, isItalic);
     }
 
@@ -380,8 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const colNum = colorMap.white;
     const isItalic = isPaused;
 
-    // Show prefix in preview ONLY if filled
-    if (prefix) {
+    // Show prefix in preview ONLY if non-empty string entered
+    if (prefix.length > 0) {
       previewHtml += buildSpan(prefix, colMain, bold, isItalic);
     }
 
@@ -424,70 +454,135 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // 📱 ACTIONBAR OVERWRITE CONFIGURATOR (/function fb:display/ab/overwrite)
   // ==========================================
+  const abModeInput = document.getElementById('ab-mode');
   const abPlayerInput = document.getElementById('ab-player');
   const abDurationInput = document.getElementById('ab-duration');
   const abDurationHint = document.getElementById('ab-duration-hint');
+
+  const abCustomTextGroup = document.getElementById('ab-custom-text-group');
   const abCustomTextInput = document.getElementById('ab-custom-text');
+  const abColorGroup = document.getElementById('ab-color-group');
   const abColorInput = document.getElementById('ab-color');
+  const abPrefixGroup = document.getElementById('ab-prefix-group');
   const abPrefixInput = document.getElementById('ab-prefix');
+  const abBoldGroup = document.getElementById('ab-bold-group');
   const abBoldInput = document.getElementById('ab-bold');
+
+  const abRawJsonGroup = document.getElementById('ab-raw-json-group');
+  const abRawJsonInput = document.getElementById('ab-raw-json');
+  const abJsonHint = document.getElementById('ab-json-hint');
+
   const abActionbarPreview = document.getElementById('ab-actionbarPreview');
   const abCommandOutput = document.getElementById('ab-commandOutput');
   const abCopyBtn = document.getElementById('ab-copyBtn');
 
   function updateAb() {
-    if (!abCustomTextInput) return;
+    if (!abModeInput) return;
+    const mode = abModeInput.value;
     const rawPlayer = abPlayerInput.value.trim();
     const rawDuration = abDurationInput.value.trim();
-    const rawText = abCustomTextInput.value.trim();
 
     const isPlayerValid = rawPlayer.length > 0;
     const isDurationValid = rawDuration.length > 0 && parseInt(rawDuration) > 0;
-    const isTextValid = rawText.length > 0;
 
     validateInput(abPlayerInput, isPlayerValid);
     validateInput(abDurationInput, isDurationValid);
-    validateInput(abCustomTextInput, isTextValid);
 
     const player = isPlayerValid ? rawPlayer : '@a';
     const duration = isDurationValid ? parseInt(rawDuration) : 100;
-    const messageText = isTextValid ? rawText : 'Speed Boost Active!';
-    const color = abColorInput.value;
-    const prefix = abPrefixInput.value.trim();
-    const bold = abBoldInput.checked;
 
     const seconds = (duration / 20).toFixed(1);
     if (abDurationHint) {
       abDurationHint.textContent = `${duration} ticks = ${seconds} seconds duration`;
     }
 
-    if (!isPlayerValid || !isDurationValid || !isTextValid) {
-      abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
-      abCommandOutput.style.color = 'var(--text-muted)';
+    if (mode === 'plain') {
+      // 1. Show Plain Text fields, Hide Raw JSON field
+      if (abCustomTextGroup) abCustomTextGroup.classList.remove('hidden-field');
+      if (abColorGroup) abColorGroup.classList.remove('hidden-field');
+      if (abPrefixGroup) abPrefixGroup.classList.remove('hidden-field');
+      if (abBoldGroup) abBoldGroup.classList.remove('hidden-field');
+      if (abRawJsonGroup) abRawJsonGroup.classList.add('hidden-field');
+
+      const rawText = abCustomTextInput.value.trim();
+      const isTextValid = rawText.length > 0;
+      validateInput(abCustomTextInput, isTextValid);
+
+      const messageText = isTextValid ? rawText : 'Speed Boost Active!';
+      const color = abColorInput.value;
+      const prefix = abPrefixInput.value.trim();
+      const bold = abBoldInput.checked;
+
+      if (!isPlayerValid || !isDurationValid || !isTextValid) {
+        abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
+        abCommandOutput.style.color = 'var(--text-muted)';
+      } else {
+        abCommandOutput.style.color = 'var(--accent-yellow)';
+        const fullMessage = prefix + messageText;
+        const escapedMessage = fullMessage.replace(/"/g, '\\"');
+        const boldJson = bold ? ',"bold":true' : '';
+        const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
+
+        abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
+      }
+
+      let previewHtml = '';
+      const colMain = colorMap[color];
+
+      if (prefix.length > 0) {
+        previewHtml += buildSpan(prefix, colMain, bold, false);
+      }
+      previewHtml += buildSpan(messageText, colMain, bold, false);
+
+      abActionbarPreview.innerHTML = previewHtml;
+
     } else {
-      abCommandOutput.style.color = 'var(--accent-yellow)';
-      const fullMessage = prefix + messageText;
-      const escapedMessage = fullMessage.replace(/"/g, '\\"');
-      const boldJson = bold ? ',"bold":true' : '';
-      const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
+      // 2. RAW JSON MODE
+      if (abCustomTextGroup) abCustomTextGroup.classList.add('hidden-field');
+      if (abColorGroup) abColorGroup.classList.add('hidden-field');
+      if (abPrefixGroup) abPrefixGroup.classList.add('hidden-field');
+      if (abBoldGroup) abBoldGroup.classList.add('hidden-field');
+      if (abRawJsonGroup) abRawJsonGroup.classList.remove('hidden-field');
 
-      abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
+      const rawJson = abRawJsonInput.value.trim();
+      let isJsonValid = false;
+      let parsedObj = null;
+
+      if (rawJson.length > 0) {
+        try {
+          parsedObj = JSON.parse(rawJson);
+          isJsonValid = true;
+        } catch (e) {
+          isJsonValid = false;
+        }
+      }
+
+      validateInput(abRawJsonInput, isJsonValid);
+
+      if (!isPlayerValid || !isDurationValid || !isJsonValid) {
+        if (rawJson.length > 0 && !isJsonValid) {
+          abCommandOutput.textContent = '<Error: Invalid JSON text component syntax>';
+          abCommandOutput.style.color = '#ff5555';
+          if (abJsonHint) abJsonHint.textContent = '❌ Syntax Error in JSON! Please check quotes and brackets.';
+        } else {
+          abCommandOutput.textContent = '<Fill required fields (*) above to generate command>';
+          abCommandOutput.style.color = 'var(--text-muted)';
+          if (abJsonHint) abJsonHint.textContent = 'Enter valid Minecraft JSON component array or object.';
+        }
+        abActionbarPreview.innerHTML = buildSpan('Invalid or Empty JSON', '#ff5555', false, true);
+      } else {
+        if (abJsonHint) abJsonHint.textContent = '✓ Valid JSON Component!';
+        abCommandOutput.style.color = 'var(--accent-yellow)';
+        abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${rawJson}',duration:${duration}}`;
+
+        abActionbarPreview.innerHTML = renderJsonComponentToHtml(parsedObj);
+      }
     }
-
-    let previewHtml = '';
-    const colMain = colorMap[color];
-
-    if (prefix) {
-      previewHtml += buildSpan(prefix, colMain, bold, false);
-    }
-    previewHtml += buildSpan(messageText, colMain, bold, false);
-
-    abActionbarPreview.innerHTML = previewHtml;
   }
 
   const abInputs = [
-    abPlayerInput, abDurationInput, abCustomTextInput,
-    abColorInput, abPrefixInput, abBoldInput
+    abModeInput, abPlayerInput, abDurationInput, abCustomTextInput,
+    abColorInput, abPrefixInput, abBoldInput, abRawJsonInput
   ];
   abInputs.forEach(i => {
     if (i) {

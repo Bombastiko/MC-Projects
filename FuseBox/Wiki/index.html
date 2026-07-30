@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=17.0">
+  <link rel="stylesheet" href="style.css?v=18.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -153,7 +153,7 @@
           <div class="shortcut-card" onclick="switchPage('docs-page'); switchDocTab('doc-stopwatches');">
             <div>
               <h3>
-                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg>
                 Stopwatch API
               </h3>
               <p>Complete function reference for creating, pausing, deleting, and displaying stopwatches.</p>
@@ -458,12 +458,22 @@
                 <span style="font-size:0.75rem; color:var(--text-dim);" id="ab-duration-hint">100 ticks = 5.0 seconds duration</span>
               </div>
 
+              <!-- INPUT MODE TOGGLE SWITCH (PLAIN TEXT vs RAW JSON) -->
               <div class="field full-width">
+                <label for="ab-mode">Input Mode</label>
+                <select id="ab-mode">
+                  <option value="plain" selected>Plain Text & Visual Styling</option>
+                  <option value="json">Raw JSON Component (Advanced Array/Object)</option>
+                </select>
+              </div>
+
+              <!-- PLAIN TEXT MODE FIELDS -->
+              <div class="field full-width" id="ab-custom-text-group">
                 <label for="ab-custom-text">Message Text *</label>
                 <input type="text" id="ab-custom-text" placeholder="e.g. Speed Boost Active!">
               </div>
 
-              <div class="field">
+              <div class="field" id="ab-color-group">
                 <label for="ab-color">Text Color</label>
                 <select id="ab-color">
                   <option value="gold" selected>Gold</option>
@@ -476,17 +486,24 @@
                 </select>
               </div>
 
-              <div class="field">
+              <div class="field" id="ab-prefix-group">
                 <label for="ab-prefix">Prefix Text</label>
                 <input type="text" id="ab-prefix" placeholder="e.g. [INFO] ">
               </div>
 
-              <div class="field full-width toggle-field">
+              <div class="field full-width toggle-field" id="ab-bold-group">
                 <label for="ab-bold">Apply Bold Formatting</label>
                 <label class="switch">
                   <input type="checkbox" id="ab-bold" checked>
                   <span class="slider"></span>
                 </label>
+              </div>
+
+              <!-- RAW JSON MODE FIELD (HIDDEN BY DEFAULT) -->
+              <div class="field full-width hidden-field" id="ab-raw-json-group">
+                <label for="ab-raw-json">Raw JSON Text Component Payload *</label>
+                <input type="text" id="ab-raw-json" placeholder='e.g. [{"text":"★ ","color":"yellow"},{"text":"ULTIMATE READY!","color":"gold","bold":true}]'>
+                <span style="font-size:0.75rem; color:var(--text-dim);" id="ab-json-hint">Enter valid Minecraft JSON component array or object.</span>
               </div>
             </div>
           </form>
@@ -499,7 +516,7 @@
               <span>Actionbar Live Preview</span>
             </div>
             <div class="preview-box">
-              <div id="ab-actionbarPreview" class="actionbar-text">[INFO] Speed Boost Active!</div>
+              <div id="ab-actionbarPreview" class="actionbar-text">Speed Boost Active!</div>
             </div>
           </div>
 
@@ -507,7 +524,7 @@
             <div class="card-title">Generated Command</div>
             <div class="command-container">
               <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Actionbar Overwrite Command</label>
-              <div class="command-code"><code id="ab-commandOutput">/function fb:display/ab/overwrite {player:"@a",text:'{"text":"[INFO] Speed Boost Active!","color":"gold","bold":true}',duration:100}</code></div>
+              <div class="command-code"><code id="ab-commandOutput">/function fb:display/ab/overwrite {player:"@a",text:'{"text":"Speed Boost Active!","color":"gold","bold":true}',duration:100}</code></div>
               <button id="ab-copyBtn" class="btn-copy-compact">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
                 Copy Overwrite Command
