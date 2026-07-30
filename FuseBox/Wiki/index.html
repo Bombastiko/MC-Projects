@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FuseBox Wiki & Configurator</title>
-  <link rel="stylesheet" href="style.css?v=14.0">
+  <link rel="stylesheet" href="style.css?v=15.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -449,20 +449,11 @@
               </div>
 
               <div class="field full-width">
-                <label for="ab-mode">Format Mode</label>
-                <select id="ab-mode">
-                  <option value="plain" selected>Plain Text Builder</option>
-                  <option value="json">Raw JSON Component</option>
-                </select>
-              </div>
-
-              <!-- PLAIN TEXT BUILDER FIELDS -->
-              <div class="field full-width" id="ab-text-group">
                 <label for="ab-custom-text">Message Text *</label>
                 <input type="text" id="ab-custom-text" placeholder="e.g. Speed Boost Active!">
               </div>
 
-              <div class="field" id="ab-color-group">
+              <div class="field">
                 <label for="ab-color">Text Color</label>
                 <select id="ab-color">
                   <option value="gold" selected>Gold</option>
@@ -475,19 +466,17 @@
                 </select>
               </div>
 
-              <div class="field toggle-field" id="ab-bold-group">
+              <div class="field">
+                <label for="ab-prefix">Prefix Text</label>
+                <input type="text" id="ab-prefix" placeholder="e.g. [INFO] ">
+              </div>
+
+              <div class="field full-width toggle-field">
                 <label for="ab-bold">Apply Bold Formatting</label>
                 <label class="switch">
                   <input type="checkbox" id="ab-bold" checked>
                   <span class="slider"></span>
                 </label>
-              </div>
-
-              <!-- RAW JSON COMPONENT FIELDS -->
-              <div class="field full-width hidden-field" id="ab-json-group">
-                <label for="ab-raw-json">Raw JSON Text Component *</label>
-                <input type="text" id="ab-raw-json" placeholder='e.g. [{"text":"test text","color":"gold","bold":true}]'>
-                <span style="font-size:0.75rem; color:var(--text-dim);">Enter raw Minecraft NBT JSON text component string or array.</span>
               </div>
             </div>
           </form>
@@ -548,11 +537,7 @@
                   <option value="onDeath">onDeath</option>
                   <option value="onLeave">onLeave</option>
                   <option value="onKillPlayer">onKillPlayer</option>
-                  <option value="onKilledByPlayer">onKilledByPlayer</option>
                   <option value="onDamage">onDamage</option>
-                  <option value="onEntityKill">onEntityKill</option>
-                  <option value="whileOnline">whileOnline</option>
-                  <option value="whileOffline">whileOffline</option>
                 </select>
               </div>
 
@@ -584,10 +569,7 @@
           <div class="card-title">Registration Command</div>
           <div class="command-container">
             <div class="command-code"><code id="eg-commandOutput">/function fb:event/register_item_cmd {event:"onRightClick",item_id:"carrot_on_a_stick",custom_data:{id:"ascend"},cmd:"scoreboard players add @s fb.t_fire 1"}</code></div>
-            <button id="eg-copyBtn" class="btn-copy-compact">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-              Copy Registration Command
-            </button>
+            <button id="eg-copyBtn" class="btn-copy-compact">Copy Registration Command</button>
           </div>
         </div>
       </div>
@@ -649,31 +631,6 @@
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <!-- BUILT WITH FUSEBOX BANNER CARD -->
-        <div class="card doc-block brand-border-card" style="margin-top: 24px;">
-          <h2>
-            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-            Show Support: "Built with FuseBox" Badge
-          </h2>
-          <p>Developing a datapack powered by FuseBox? Feel free to add the official <strong>"Built with FuseBox"</strong> banner to your Modrinth, PlanetMinecraft, or GitHub project page!</p>
-          <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:14px;"><em>Note: Adding this banner to your project description is completely optional, but very much appreciated! ❤️</em></p>
-
-          <div style="margin-bottom: 16px; text-align: center; background: rgba(0,0,0,0.35); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-            <a href="https://modrinth.com/project/fusebox" target="_blank" rel="noopener">
-              <img src="https://raw.githubusercontent.com/Bombastiko/MC-Projects/main/FB-Banner.png" alt="Built with FuseBox" style="max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
-            </a>
-          </div>
-
-          <div class="command-container">
-            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Modrinth / GitHub Markdown Code</label>
-            <div class="command-code"><code id="banner-markdown-code">[![Built with FuseBox](https://raw.githubusercontent.com/Bombastiko/MC-Projects/main/FB-Banner.png)](https://modrinth.com/project/fusebox)</code></div>
-            <button id="banner-copyBtn" class="btn-copy-compact">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-              Copy Markdown Code
-            </button>
-          </div>
         </div>
       </div>
 
@@ -743,16 +700,20 @@
               Execution Context & Macro Arguments (Crucial!)
             </h4>
             <p style="font-size: 0.85rem; margin: 0 0 8px 0; color: var(--text-main);">
-              All callbacks (both direct commands and function calls) execute <strong>as the player (<code>@s</code>)</strong> who triggered the event.
+              All callbacks (both direct commands and function calls) execute <strong>as and at the player (<code>@s</code>)</strong> who triggered the event.
             </p>
-            <p style="font-size: 0.85rem; margin: 0; color: var(--text-main);">
-              When executing target callback functions, FuseBox passes parameters to your function as a <strong>Macro Function</strong>. The primary argument sent is:
+            <p style="font-size: 0.85rem; margin: 0 0 6px 0; color: var(--text-main);">
+              When executing target callback functions (e.g. <code>my_pack:cast_spell</code>), FuseBox executes the target function as a <strong>Macro Function</strong> with NBT storage parameters. The macro parameters passed into your function are:
             </p>
-            <ul style="font-size: 0.85rem; margin: 6px 0 0 18px; color: var(--text-muted);">
+            <ul style="font-size: 0.85rem; margin: 0 0 0 18px; color: var(--text-muted);">
               <li><code>$(player)</code>: The player's username string (e.g. <code>"Bombastiko"</code>).</li>
-              <li><code>$(event)</code>: The name of the triggered event (e.g. <code>"onJoin"</code>, <code>"onRightClick"</code>).</li>
-              <li><code>$(type)</code>: Callback type (<code>"function"</code> or <code>"command"</code>).</li>
+              <li><code>$(event)</code>: The name of the triggered event (e.g. <code>"onRightClick"</code>, <code>"onJoin"</code>).</li>
+              <li><code>$(item_id)</code>: The item ID string (for item events like <code>onRightClick</code> / <code>onHoldItem</code>).</li>
+              <li><code>$(custom_data)</code>: The custom NBT compound object (for item events).</li>
             </ul>
+            <p style="font-size: 0.82rem; margin: 8px 0 0 0; color: var(--text-dim);">
+              <em>Note: If your callback function doesn't use macro parameters, standard Minecraft commands inside your function will still execute directly on <code>@s</code> (the player)!</em>
+            </p>
           </div>
 
           <h3>Standard Events</h3>
@@ -788,11 +749,11 @@
           <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{id:"ascend"}}</code></pre>
 
           <h3>Example Custom Macro Callback Function</h3>
-          <p>Create a macro function in your custom datapack that receives the <code>$(player)</code> macro argument from FuseBox:</p>
+          <p>Create a macro function in your custom datapack that receives macro arguments from FuseBox:</p>
           <pre><code># my_pack/data/my_pack/function/welcome_macro.mcfunction
 # Macro Arguments: player, event
 
-$tellraw @a [{"text":"[Server] Welcome ","color":"gold"},{"text":"$(player)","color":"yellow","bold":true},{"text":"!","color":"gold"}]</code></pre>
+$tellraw @a [{"text":"[Server] Welcome ","color":"gold"},{"text":"$(player)","color":"yellow","bold":true},{"text":"! Triggered ","color":"gold"},{"text":"$(event)","color":"aqua"}]</code></pre>
         </div>
       </div>
 
@@ -805,19 +766,60 @@ $tellraw @a [{"text":"[Server] Welcome ","color":"gold"},{"text":"$(player)","co
           </h2>
           <p>Create and display live actionbar stopwatches for players with full control over formats, colors, and global display priorities.</p>
 
-          <h3>Full Command Usage Examples</h3>
-          <p><strong>1. Create a Stopwatch Instance:</strong></p>
+          <h3>Standard 3-Step Workflow</h3>
+          <p><strong>Step 1. Create / Initialize Stopwatch Instance:</strong></p>
           <pre><code>/function fb:sw/create {name:"demo"}</code></pre>
 
-          <p><strong>2a. Enable Actionbar Display (Default Formatting):</strong></p>
-          <pre><code>/function fb:sw/display_ab {player:"@a", sw:"demo"}</code></pre>
-
-          <p><strong>2b. Enable Actionbar Display (Custom Formatting & Priority):</strong></p>
+          <p><strong>Step 2. Bind Actionbar Display (Custom Formatting & Priority):</strong></p>
           <pre><code>/function fb:sw/display_ab_custom {player:"@a", sw:"demo", format:"digital_short", color:"gold", color_sec:"yellow", color_num:"white", prefix:"Timer: ", suffix:"", bold:"false", global_type:"soft"}</code></pre>
 
-          <p><strong>3. Pause / Resume Stopwatch:</strong></p>
+          <p><strong>Step 3. State Control (Pause, Resume, Reset):</strong></p>
           <pre><code>/function fb:sw/pause {name:"demo"}
-/function fb:sw/resume {name:"demo"}</code></pre>
+/function fb:sw/resume {name:"demo"}
+/function fb:sw/reset-db</code></pre>
+
+          <h3>Stopwatch Functions & Macro Signatures</h3>
+          <table class="wiki-table">
+            <thead>
+              <tr>
+                <th>Function Call</th>
+                <th>Exact NBT Macro Arguments Signature</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>fb:sw/create</code></td>
+                <td><code>/function fb:sw/create {name:"demo"}</code></td>
+                <td>Initializes a new stopwatch instance named <code>demo</code> (starts timer scores at 0).</td>
+              </tr>
+              <tr>
+                <td><code>fb:sw/display_ab_custom</code></td>
+                <td><code>/function fb:sw/display_ab_custom {player:"@a", sw:"demo", format:"digital_short", color:"gold", color_sec:"yellow", color_num:"white", prefix:"Timer: ", suffix:"", bold:"false", global_type:"soft"}</code></td>
+                <td>Configures custom actionbar display for <code>demo</code> timer with colors, prefix, format, and global priority.</td>
+              </tr>
+              <tr>
+                <td><code>fb:sw/display_ab</code></td>
+                <td><code>/function fb:sw/display_ab {player:"@a", sw:"demo"}</code></td>
+                <td>Binds stopwatch <code>demo</code> to actionbar display using default formatting.</td>
+              </tr>
+              <tr>
+                <td><code>fb:sw/pause</code></td>
+                <td><code>/function fb:sw/pause {name:"demo"}</code></td>
+                <td>Pauses tick counting for stopwatch <code>demo</code>.</td>
+              </tr>
+              <tr>
+                <td><code>fb:sw/resume</code></td>
+                <td><code>/function fb:sw/resume {name:"demo"}</code></td>
+                <td>Resumes tick counting for stopwatch <code>demo</code>.</td>
+              </tr>
+              <tr>
+                <td><code>fb:sw/reset-db</code></td>
+                <td><code>/function fb:sw/reset-db</code></td>
+                <td>Wipes all stopwatch instances and scoreboards.</td>
+              </tr>
+            </tbody>
+          </table>
 
           <h3>Parameter Reference</h3>
           <table class="wiki-table">
@@ -842,7 +844,7 @@ $tellraw @a [{"text":"[Server] Welcome ","color":"gold"},{"text":"$(player)","co
               <tr>
                 <td><code>sw</code></td>
                 <td>String</td>
-                <td>Stopwatch identifier string used for actionbar display routing (e.g. <code>demo</code>).</td>
+                <td>Stopwatch identifier string passed to <code>display_ab_custom</code> (e.g. <code>demo</code>).</td>
               </tr>
               <tr>
                 <td><code>format</code></td>
@@ -850,82 +852,14 @@ $tellraw @a [{"text":"[Server] Welcome ","color":"gold"},{"text":"$(player)","co
                 <td><code>digital</code> (HH:MM:SS), <code>digital_short</code> (MM:SS.ms), <code>letters</code> (Xd Xh Xm Xs), <code>dynamic</code>.</td>
               </tr>
               <tr>
-                <td><code>color</code></td>
+                <td><code>color</code>, <code>color_sec</code>, <code>color_num</code></td>
                 <td>String</td>
-                <td>Primary text color: <code>gold</code>, <code>yellow</code>, <code>white</code>, <code>gray</code>, <code>red</code>, <code>green</code>, <code>blue</code>.</td>
+                <td>Color tag options for primary text, separators, and digit numbers.</td>
               </tr>
               <tr>
-                <td><code>color_sec</code></td>
+                <td><code>prefix</code>, <code>suffix</code>, <code>bold</code>, <code>global_type</code></td>
                 <td>String</td>
-                <td>Separator symbol color: <code>yellow</code>, <code>gold</code>, <code>white</code>, <code>gray</code>.</td>
-              </tr>
-              <tr>
-                <td><code>color_num</code></td>
-                <td>String</td>
-                <td>Digit numbers color: <code>white</code>, <code>gold</code>, <code>yellow</code>.</td>
-              </tr>
-              <tr>
-                <td><code>prefix</code></td>
-                <td>String</td>
-                <td>Prefix text string displayed before timer.</td>
-              </tr>
-              <tr>
-                <td><code>suffix</code></td>
-                <td>String</td>
-                <td>Suffix text string displayed after timer.</td>
-              </tr>
-              <tr>
-                <td><code>bold</code></td>
-                <td>String</td>
-                <td>Bold formatting boolean string (<code>"true"</code> / <code>"false"</code>).</td>
-              </tr>
-              <tr>
-                <td><code>global_type</code></td>
-                <td>String</td>
-                <td>Display priority for <code>@a</code>: <code>"soft"</code> (allows individual player overwrites) or <code>"hard"</code> (forces actionbar on all players).</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h3>Stopwatch Functions</h3>
-          <table class="wiki-table">
-            <thead>
-              <tr>
-                <th>Function Call</th>
-                <th>Full Macro Arguments Signature</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>fb:sw/create</code></td>
-                <td><code>/function fb:sw/create {name:"demo"}</code></td>
-                <td>Creates and initializes a new stopwatch instance named <code>demo</code> (starts counting from 0).</td>
-              </tr>
-              <tr>
-                <td><code>fb:sw/pause</code></td>
-                <td><code>/function fb:sw/pause {name:"demo"}</code></td>
-                <td>Pauses tick counting for stopwatch <code>demo</code>.</td>
-              </tr>
-              <tr>
-                <td><code>fb:sw/resume</code></td>
-                <td><code>/function fb:sw/resume {name:"demo"}</code></td>
-                <td>Resumes tick counting for stopwatch <code>demo</code>.</td>
-              </tr>
-              <tr>
-                <td><code>fb:sw/display_ab</code></td>
-                <td><code>/function fb:sw/display_ab {player:"@a", sw:"demo"}</code></td>
-                <td>Binds stopwatch <code>demo</code> to actionbar display with default styling.</td>
-              </tr>
-              <tr>
-                <td><code>fb:sw/display_ab_custom</code></td>
-                <td><code>/function fb:sw/display_ab_custom {player:"@a", sw:"demo", format:"digital_short", color:"gold", color_sec:"yellow", color_num:"white", prefix:"Timer: ", suffix:"", bold:"false", global_type:"soft"}</code></td>
-                <td>Binds stopwatch <code>demo</code> to actionbar display with full custom formatting and global priority settings.</td>
-              </tr>
-              <tr>
-                <td><code>fb:sw/reset-db</code></td>
-                <td><code>/function fb:sw/reset-db</code></td>
-                <td>Wipes all stopwatch instances and scoreboards.</td>
+                <td>Display prefix, suffix, bold formatting, and global priority settings (<code>"soft"</code> / <code>"hard"</code>).</td>
               </tr>
             </tbody>
           </table>
@@ -941,23 +875,73 @@ $tellraw @a [{"text":"[Server] Welcome ","color":"gold"},{"text":"$(player)","co
           </h2>
           <p>Create countdowns with automatic expiry commands and custom actionbar displays.</p>
 
-          <h3>Full Command Usage Examples</h3>
-          <p><strong>1. Create Countdown Instance (Hours, Minutes, Seconds & Expiry Command):</strong></p>
-          <pre><code>/function fb:cd/create {name:"timer1", h:0, m:1, s:30, on_complete:'say Time is up!'}</code></pre>
+          <h3>Standard 4-Step Workflow</h3>
+          <p><strong>Step 1. Create Countdown Instance (Duration & Expiry Command):</strong></p>
+          <pre><code>/function fb:cd/create {name:"timer1", h:0, m:1, s:30, on_complete:'data get storage fb:tmp dummy'}</code></pre>
 
-          <p><strong>2. Start Countdown:</strong></p>
+          <p><strong>Step 2. Bind Actionbar Display (Custom Formatting & Priority):</strong></p>
+          <pre><code>/function fb:cd/display_ab_custom {player:"@a", cd:"timer1", format:"digital_short", color:"red", color_sec:"gray", color_num:"white", prefix:"Time Left: ", suffix:"", bold:"false", global_type:"soft"}</code></pre>
+
+          <p><strong>Step 3. Start Countdown:</strong></p>
           <pre><code>/function fb:cd/start {name:"timer1"}</code></pre>
 
-          <p><strong>3a. Enable Actionbar Display (Default Formatting):</strong></p>
-          <pre><code>/function fb:cd/display_ab {player:"@a", cd:"timer1"}</code></pre>
-
-          <p><strong>3b. Enable Actionbar Display (Custom Formatting & Priority):</strong></p>
-          <pre><code>/function fb:cd/display_ab_custom {player:"@a", cd:"timer1", format:"digital_short", color:"gold", color_sec:"gray", color_num:"white", prefix:"Time Left: ", suffix:"", bold:"false", global_type:"soft"}</code></pre>
-
-          <p><strong>4. Pause, Resume or Delete Countdown:</strong></p>
+          <p><strong>Step 4. State Control (Pause, Resume, Delete):</strong></p>
           <pre><code>/function fb:cd/pause {name:"timer1"}
 /function fb:cd/resume {name:"timer1"}
 /function fb:cd/delete {name:"timer1"}</code></pre>
+
+          <h3>Countdown Functions & Macro Signatures</h3>
+          <table class="wiki-table">
+            <thead>
+              <tr>
+                <th>Function Call</th>
+                <th>Exact NBT Macro Arguments Signature</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>fb:cd/create</code></td>
+                <td><code>/function fb:cd/create {name:"timer1", h:0, m:1, s:30, on_complete:'data get storage fb:tmp dummy'}</code></td>
+                <td>Initializes countdown instance with hours, minutes, seconds, and expiry command.</td>
+              </tr>
+              <tr>
+                <td><code>fb:cd/display_ab_custom</code></td>
+                <td><code>/function fb:cd/display_ab_custom {player:"@a", cd:"timer1", format:"digital_short", color:"red", color_sec:"gray", color_num:"white", prefix:"Time Left: ", suffix:"", bold:"false", global_type:"soft"}</code></td>
+                <td>Configures custom actionbar display for <code>timer1</code> with colors, prefix, format, and global priority.</td>
+              </tr>
+              <tr>
+                <td><code>fb:cd/display_ab</code></td>
+                <td><code>/function fb:cd/display_ab {player:"@a", cd:"timer1"}</code></td>
+                <td>Binds countdown <code>timer1</code> to actionbar display using default formatting.</td>
+              </tr>
+              <tr>
+                <td><code>fb:cd/start</code></td>
+                <td><code>/function fb:cd/start {name:"timer1"}</code></td>
+                <td>Starts running countdown <code>timer1</code>.</td>
+              </tr>
+              <tr>
+                <td><code>fb:cd/pause</code></td>
+                <td><code>/function fb:cd/pause {name:"timer1"}</code></td>
+                <td>Pauses running countdown <code>timer1</code>.</td>
+              </tr>
+              <tr>
+                <td><code>fb:cd/resume</code></td>
+                <td><code>/function fb:cd/resume {name:"timer1"}</code></td>
+                <td>Resumes countdown <code>timer1</code>.</td>
+              </tr>
+              <tr>
+                <td><code>fb:cd/delete</code></td>
+                <td><code>/function fb:cd/delete {name:"timer1"}</code></td>
+                <td>Deletes countdown <code>timer1</code> instance and resets its scoreboards.</td>
+              </tr>
+              <tr>
+                <td><code>fb:cd/reset-db</code></td>
+                <td><code>/function fb:cd/reset-db</code></td>
+                <td>Wipes all countdown instances and scoreboards.</td>
+              </tr>
+            </tbody>
+          </table>
 
           <h3>Parameter Reference</h3>
           <table class="wiki-table">
@@ -992,75 +976,12 @@ $tellraw @a [{"text":"[Server] Welcome ","color":"gold"},{"text":"$(player)","co
               <tr>
                 <td><code>cd</code></td>
                 <td>String</td>
-                <td>Countdown identifier string used for actionbar display routing (e.g. <code>timer1</code>).</td>
+                <td>Countdown identifier string passed to <code>display_ab_custom</code> (e.g. <code>timer1</code>).</td>
               </tr>
               <tr>
-                <td><code>format</code></td>
+                <td><code>format</code>, <code>color</code>, <code>prefix</code></td>
                 <td>String</td>
-                <td><code>digital</code> (HH:MM:SS), <code>digital_short</code> (MM:SS.ms), <code>letters</code> (Xd Xh Xm Xs), <code>dynamic</code>.</td>
-              </tr>
-              <tr>
-                <td><code>color</code>, <code>color_sec</code>, <code>color_num</code></td>
-                <td>String</td>
-                <td>Color tag options for primary text, separators, and numbers.</td>
-              </tr>
-              <tr>
-                <td><code>prefix</code>, <code>suffix</code>, <code>bold</code>, <code>global_type</code></td>
-                <td>String</td>
-                <td>Display prefix, suffix, bold formatting, and global priority settings.</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h3>Countdown Functions</h3>
-          <table class="wiki-table">
-            <thead>
-              <tr>
-                <th>Function Call</th>
-                <th>Full Macro Arguments Signature</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>fb:cd/create</code></td>
-                <td><code>/function fb:cd/create {name:"timer1", h:0, m:1,s:30, on_complete:'say Time is up!'}</code></td>
-                <td>Creates a countdown timer instance with initial duration and expiry command.</td>
-              </tr>
-              <tr>
-                <td><code>fb:cd/start</code></td>
-                <td><code>/function fb:cd/start {name:"timer1"}</code></td>
-                <td>Starts running countdown <code>timer1</code>.</td>
-              </tr>
-              <tr>
-                <td><code>fb:cd/pause</code></td>
-                <td><code>/function fb:cd/pause {name:"timer1"}</code></td>
-                <td>Pauses running countdown <code>timer1</code>.</td>
-              </tr>
-              <tr>
-                <td><code>fb:cd/resume</code></td>
-                <td><code>/function fb:cd/resume {name:"timer1"}</code></td>
-                <td>Resumes countdown <code>timer1</code>.</td>
-              </tr>
-              <tr>
-                <td><code>fb:cd/delete</code></td>
-                <td><code>/function fb:cd/delete {name:"timer1"}</code></td>
-                <td>Deletes countdown <code>timer1</code> instance and resets its scoreboards.</td>
-              </tr>
-              <tr>
-                <td><code>fb:cd/display_ab</code></td>
-                <td><code>/function fb:cd/display_ab {player:"@a", cd:"timer1"}</code></td>
-                <td>Binds countdown <code>timer1</code> to actionbar display with default styling.</td>
-              </tr>
-              <tr>
-                <td><code>fb:cd/display_ab_custom</code></td>
-                <td><code>/function fb:cd/display_ab_custom {player:"@a", cd:"timer1", format:"digital_short", color:"gold", color_sec:"gray", color_num:"white", prefix:"Time Left: ", suffix:"", bold:"false", global_type:"soft"}</code></td>
-                <td>Binds countdown <code>timer1</code> to actionbar display with full custom formatting and global priority settings.</td>
-              </tr>
-              <tr>
-                <td><code>fb:cd/reset-db</code></td>
-                <td><code>/function fb:cd/reset-db</code></td>
-                <td>Wipes all countdown instances and scoreboards.</td>
+                <td>Formatting settings for the countdown actionbar display.</td>
               </tr>
             </tbody>
           </table>
@@ -1071,7 +992,7 @@ $tellraw @a [{"text":"[Server] Welcome ","color":"gold"},{"text":"$(player)","co
       <div id="doc-dependency" class="doc-content">
         <div class="card doc-block">
           <h2>
-            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 16V8a2 2 0 0 1-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
             Datapack Dependency Check
           </h2>
           <p>If you are developing a custom datapack that requires FuseBox, add this check to your pack's <code>load.mcfunction</code> to verify if FuseBox is installed and up-to-date:</p>
