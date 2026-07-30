@@ -361,12 +361,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const abDurationInput = document.getElementById('ab-duration');
   const abDurationHint = document.getElementById('ab-duration-hint');
   const abModeInput = document.getElementById('ab-mode');
-  const abPlainGroup = document.getElementById('ab-plain-group');
+  const abTextGroup = document.getElementById('ab-text-group');
+  const abColorGroup = document.getElementById('ab-color-group');
+  const abBoldGroup = document.getElementById('ab-bold-group');
   const abJsonGroup = document.getElementById('ab-json-group');
   const abCustomTextInput = document.getElementById('ab-custom-text');
   const abRawJsonInput = document.getElementById('ab-raw-json');
   const abColorInput = document.getElementById('ab-color');
-  const abPrefixInput = document.getElementById('ab-prefix');
   const abBoldInput = document.getElementById('ab-bold');
   const abActionbarPreview = document.getElementById('ab-actionbarPreview');
   const abCommandOutput = document.getElementById('ab-commandOutput');
@@ -418,14 +419,16 @@ document.addEventListener('DOMContentLoaded', () => {
     validateInput(abDurationInput, isDurationValid);
 
     // Show/Hide fields based on mode
-    if (abPlainGroup && abJsonGroup) {
-      if (mode === 'plain') {
-        abPlainGroup.classList.remove('hidden-field');
-        abJsonGroup.classList.add('hidden-field');
-      } else {
-        abPlainGroup.classList.add('hidden-field');
-        abJsonGroup.classList.remove('hidden-field');
-      }
+    if (mode === 'plain') {
+      if (abTextGroup) abTextGroup.classList.remove('hidden-field');
+      if (abColorGroup) abColorGroup.classList.remove('hidden-field');
+      if (abBoldGroup) abBoldGroup.classList.remove('hidden-field');
+      if (abJsonGroup) abJsonGroup.classList.add('hidden-field');
+    } else {
+      if (abTextGroup) abTextGroup.classList.add('hidden-field');
+      if (abColorGroup) abColorGroup.classList.add('hidden-field');
+      if (abBoldGroup) abBoldGroup.classList.add('hidden-field');
+      if (abJsonGroup) abJsonGroup.classList.remove('hidden-field');
     }
 
     const player = isPlayerValid ? rawPlayer : '@a';
@@ -444,7 +447,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const messageText = isTextValid ? rawText : 'Speed Boost Active!';
       const color = abColorInput.value;
-      const prefix = abPrefixInput.value.trim();
       const bold = abBoldInput.checked;
 
       if (!isPlayerValid || !isDurationValid || !isTextValid) {
@@ -452,20 +454,15 @@ document.addEventListener('DOMContentLoaded', () => {
         abCommandOutput.style.color = 'var(--text-muted)';
       } else {
         abCommandOutput.style.color = 'var(--accent-yellow)';
-        const fullMessage = prefix + messageText;
-        const escapedMessage = fullMessage.replace(/"/g, '\\"');
+        const escapedMessage = messageText.replace(/"/g, '\\"');
         const boldJson = bold ? ',"bold":true' : '';
         const jsonComponent = `{"text":"${escapedMessage}","color":"${color}"${boldJson}}`;
 
         abCommandOutput.textContent = `/function fb:display/ab/overwrite {player:"${player}",text:'${jsonComponent}',duration:${duration}}`;
       }
 
-      let previewHtml = '';
       const colMain = colorMap[color];
-      const displayPrefix = prefix || '[INFO] ';
-      previewHtml += buildSpan(displayPrefix, colMain, bold, false);
-      previewHtml += buildSpan(messageText, colMain, bold, false);
-      abActionbarPreview.innerHTML = previewHtml;
+      abActionbarPreview.innerHTML = buildSpan(messageText, colMain, bold, false);
 
     } else {
       // RAW JSON MODE
@@ -489,7 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const abInputs = [
     abPlayerInput, abDurationInput, abModeInput, abCustomTextInput, abRawJsonInput,
-    abColorInput, abPrefixInput, abBoldInput
+    abColorInput, abBoldInput
   ];
   abInputs.forEach(i => {
     if (i) {

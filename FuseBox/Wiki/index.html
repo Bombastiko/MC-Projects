@@ -457,37 +457,30 @@
               </div>
 
               <!-- PLAIN TEXT BUILDER FIELDS -->
-              <div class="form-grid full-width" id="ab-plain-group">
-                <div class="field full-width">
-                  <label for="ab-custom-text">Message Text *</label>
-                  <input type="text" id="ab-custom-text" placeholder="e.g. Speed Boost Active!">
-                </div>
+              <div class="field full-width" id="ab-text-group">
+                <label for="ab-custom-text">Message Text *</label>
+                <input type="text" id="ab-custom-text" placeholder="e.g. Speed Boost Active!">
+              </div>
 
-                <div class="field">
-                  <label for="ab-color">Text Color</label>
-                  <select id="ab-color">
-                    <option value="gold" selected>Gold</option>
-                    <option value="yellow">Yellow</option>
-                    <option value="white">White</option>
-                    <option value="gray">Gray</option>
-                    <option value="red">Red</option>
-                    <option value="green">Green</option>
-                    <option value="blue">Blue</option>
-                  </select>
-                </div>
+              <div class="field" id="ab-color-group">
+                <label for="ab-color">Text Color</label>
+                <select id="ab-color">
+                  <option value="gold" selected>Gold</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="white">White</option>
+                  <option value="gray">Gray</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+                  <option value="blue">Blue</option>
+                </select>
+              </div>
 
-                <div class="field">
-                  <label for="ab-prefix">Prefix Text</label>
-                  <input type="text" id="ab-prefix" placeholder="e.g. [INFO] ">
-                </div>
-
-                <div class="field full-width toggle-field">
-                  <label for="ab-bold">Apply Bold Formatting</label>
-                  <label class="switch">
-                    <input type="checkbox" id="ab-bold" checked>
-                    <span class="slider"></span>
-                  </label>
-                </div>
+              <div class="field toggle-field" id="ab-bold-group">
+                <label for="ab-bold">Apply Bold Formatting</label>
+                <label class="switch">
+                  <input type="checkbox" id="ab-bold" checked>
+                  <span class="slider"></span>
+                </label>
               </div>
 
               <!-- RAW JSON COMPONENT FIELDS -->
