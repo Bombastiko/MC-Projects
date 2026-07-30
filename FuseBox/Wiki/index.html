@@ -737,6 +737,25 @@
           </h2>
           <p>Register reactive player events with <code>item_id</code> and <code>custom_data</code> NBT component filters.</p>
 
+          <div style="background: rgba(255, 170, 0, 0.08); border-left: 4px solid var(--accent-yellow); padding: 14px 16px; border-radius: var(--radius-md); margin: 18px 0;">
+            <h4 style="margin: 0 0 6px 0; color: var(--accent-yellow); font-size: 0.92rem; display: flex; align-items: center; gap: 6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Execution Context & Macro Arguments (Crucial!)
+            </h4>
+            <p style="font-size: 0.85rem; margin: 0 0 8px 0; color: var(--text-main);">
+              All callbacks (both direct commands and functions) execute <strong>as the player (<code>@s</code>)</strong> who triggered the event.
+            </p>
+            <p style="font-size: 0.85rem; margin: 0; color: var(--text-main);">
+              When executing target callback functions, FuseBox invokes them as a <strong>Macro Function</strong>. Your custom callback function can read:
+            </p>
+            <ul style="font-size: 0.85rem; margin: 6px 0 0 18px; color: var(--text-muted);">
+              <li><code>$(player)</code>: The player's username string (e.g. <code>"Bombastiko"</code>).</li>
+              <li><code>$(event)</code>: The name of the triggered event (e.g. <code>"onJoin"</code>, <code>"onRightClick"</code>).</li>
+              <li><code>$(type)</code>: Callback type (<code>"function"</code> or <code>"command"</code>).</li>
+              <li><code>$(item_id)</code>: Required item ID filter (for item events).</li>
+            </ul>
+          </div>
+
           <h3>Standard Events</h3>
           <ul>
             <li><code>onJoin</code>: Fires when a player logs in or joins the world.</li>
@@ -768,6 +787,13 @@
 
           <p><strong>4. Direct Command Callbacks (Item Events with custom_data):</strong></p>
           <pre><code>/function fb:event/register_item_cmd {event:"onRightClick", cmd:"effect give @s speed 5 1", item_id:"minecraft:carrot_on_a_stick", custom_data:{id:"ascend"}}</code></pre>
+
+          <h3>Example Custom Macro Callback Function</h3>
+          <p>Create a macro function in your custom datapack that uses the passed <code>$(player)</code> and <code>$(event)</code> macro variables:</p>
+          <pre><code># my_pack/data/my_pack/function/welcome_macro.mcfunction
+# Macro Arguments: player, event
+
+$tellraw @a [{"text":"[Server] ","color":"gold","bold":true},{"text":"$(player)","color":"yellow","bold":true},{"text":" triggered event: $(event)","color":"gray"}]</code></pre>
         </div>
       </div>
 
@@ -791,14 +817,19 @@
             </thead>
             <tbody>
               <tr>
+                <td><code>name</code></td>
+                <td>String</td>
+                <td>Stopwatch identifier string (e.g. <code>demo</code>). Used in <code>create</code>, <code>pause</code>, <code>resume</code>.</td>
+              </tr>
+              <tr>
                 <td><code>player</code></td>
                 <td>String</td>
-                <td>Target selector (e.g. <code>@a</code>, <code>@s</code>, or player name).</td>
+                <td>Target selector or player name (e.g. <code>@a</code>, <code>@s</code>, or player name).</td>
               </tr>
               <tr>
                 <td><code>sw</code></td>
                 <td>String</td>
-                <td>Stopwatch identifier string (e.g. <code>demo</code>).</td>
+                <td>Stopwatch identifier string used for actionbar display routing (e.g. <code>demo</code>).</td>
               </tr>
               <tr>
                 <td><code>format</code></td>
@@ -809,6 +840,36 @@
                 <td><code>color</code></td>
                 <td>String</td>
                 <td>Primary color tag: <code>gold</code>, <code>yellow</code>, <code>white</code>, <code>gray</code>, <code>red</code>, <code>green</code>, <code>blue</code>.</td>
+              </tr>
+              <tr>
+                <td><code>color_sec</code></td>
+                <td>String</td>
+                <td>Separator color tag: <code>yellow</code>, <code>gold</code>, <code>white</code>, <code>gray</code>.</td>
+              </tr>
+              <tr>
+                <td><code>color_num</code></td>
+                <td>String</td>
+                <td>Number color tag: <code>white</code>, <code>gold</code>, <code>yellow</code>.</td>
+              </tr>
+              <tr>
+                <td><code>prefix</code></td>
+                <td>String</td>
+                <td>Prefix text string displayed before timer.</td>
+              </tr>
+              <tr>
+                <td><code>suffix</code></td>
+                <td>String</td>
+                <td>Suffix text string displayed after timer.</td>
+              </tr>
+              <tr>
+                <td><code>bold</code></td>
+                <td>String</td>
+                <td>Bold formatting boolean string (<code>"true"</code> / <code>"false"</code>).</td>
+              </tr>
+              <tr>
+                <td><code>global_type</code></td>
+                <td>String</td>
+                <td>Display priority for <code>@a</code>: <code>"soft"</code> (allows player overwrites) or <code>"hard"</code> (forces actionbar on all players).</td>
               </tr>
             </tbody>
           </table>
@@ -824,19 +885,19 @@
             <tbody>
               <tr>
                 <td><code>/function fb:sw/create {name:"demo"}</code></td>
-                <td>Creates a new stopwatch instance named <code>demo</code>.</td>
+                <td>Creates and initializes a new stopwatch instance named <code>demo</code> (starts at 00:00:00).</td>
               </tr>
               <tr>
                 <td><code>/function fb:sw/pause {name:"demo"}</code></td>
-                <td>Pauses the <code>demo</code> stopwatch.</td>
+                <td>Pauses tick counting for stopwatch <code>demo</code>.</td>
               </tr>
               <tr>
                 <td><code>/function fb:sw/resume {name:"demo"}</code></td>
-                <td>Resumes the <code>demo</code> stopwatch.</td>
+                <td>Resumes tick counting for stopwatch <code>demo</code>.</td>
               </tr>
               <tr>
-                <td><code>/function fb:sw/delete {name:"demo"}</code></td>
-                <td>Deletes the <code>demo</code> stopwatch instance.</td>
+                <td><code>/function fb:sw/display_ab_custom {player:"@a",sw:"demo",format:"digital_short",color:"gold",color_sec:"yellow",color_num:"white",prefix:"Timer: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
+                <td>Enables live actionbar rendering for target players.</td>
               </tr>
               <tr>
                 <td><code>/function fb:sw/reset-db</code></td>
@@ -874,12 +935,37 @@
               <tr>
                 <td><code>h</code>, <code>m</code>, <code>s</code></td>
                 <td>Integer</td>
-                <td>Hours, minutes, and seconds duration.</td>
+                <td>Hours, minutes, and seconds initial duration integers.</td>
               </tr>
               <tr>
                 <td><code>on_complete</code></td>
                 <td>String</td>
-                <td>Expiry callback command executed as player when timer reaches 0. Default silent command: <code>data get storage fb:tmp dummy</code>.</td>
+                <td>Expiry command executed as player when countdown reaches 0 (e.g. <code>'say Time is up!'</code>).</td>
+              </tr>
+              <tr>
+                <td><code>player</code></td>
+                <td>String</td>
+                <td>Target selector or player name (e.g. <code>@a</code>, <code>@s</code>, or player name).</td>
+              </tr>
+              <tr>
+                <td><code>cd</code></td>
+                <td>String</td>
+                <td>Countdown identifier string used for actionbar display routing (e.g. <code>timer1</code>).</td>
+              </tr>
+              <tr>
+                <td><code>format</code></td>
+                <td>String</td>
+                <td><code>digital</code> (HH:MM:SS), <code>digital_short</code> (MM:SS.ms), <code>letters</code> (Xd Xh Xm Xs), <code>dynamic</code>.</td>
+              </tr>
+              <tr>
+                <td><code>color</code>, <code>color_sec</code>, <code>color_num</code></td>
+                <td>String</td>
+                <td>Color tag options for primary text, separators, and numbers.</td>
+              </tr>
+              <tr>
+                <td><code>prefix</code>, <code>suffix</code>, <code>bold</code>, <code>global_type</code></td>
+                <td>String</td>
+                <td>Display prefix, suffix, bold formatting, and global priority settings.</td>
               </tr>
             </tbody>
           </table>
@@ -895,23 +981,27 @@
             <tbody>
               <tr>
                 <td><code>/function fb:cd/create {name:"timer1",h:0,m:1,s:30,on_complete:'data get storage fb:tmp dummy'}</code></td>
-                <td>Creates a countdown timer instance.</td>
+                <td>Creates a countdown timer instance with initial duration and expiry command.</td>
               </tr>
               <tr>
                 <td><code>/function fb:cd/start {name:"timer1"}</code></td>
-                <td>Starts the <code>timer1</code> countdown.</td>
+                <td>Starts running countdown <code>timer1</code>.</td>
               </tr>
               <tr>
                 <td><code>/function fb:cd/pause {name:"timer1"}</code></td>
-                <td>Pauses the <code>timer1</code> countdown.</td>
+                <td>Pauses running countdown <code>timer1</code>.</td>
               </tr>
               <tr>
                 <td><code>/function fb:cd/resume {name:"timer1"}</code></td>
-                <td>Resumes the <code>timer1</code> countdown.</td>
+                <td>Resumes countdown <code>timer1</code>.</td>
               </tr>
               <tr>
                 <td><code>/function fb:cd/delete {name:"timer1"}</code></td>
-                <td>Deletes the <code>timer1</code> countdown instance.</td>
+                <td>Deletes countdown <code>timer1</code> instance and resets its scoreboards.</td>
+              </tr>
+              <tr>
+                <td><code>/function fb:cd/display_ab_custom {player:"@a",cd:"timer1",format:"digital_short",color:"gold",color_sec:"gray",color_num:"white",prefix:"Time Left: ",suffix:"",bold:"false",global_type:"soft"}</code></td>
+                <td>Enables live actionbar rendering for target players.</td>
               </tr>
               <tr>
                 <td><code>/function fb:cd/reset-db</code></td>
