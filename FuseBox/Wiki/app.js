@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     } else {
-      // Standard events (onJoin, onDeath, onLeave, onKillPlayer, onDamage, whileOnline, whileOffline)
+      // Standard events (onJoin, onDeath, onLeave, onKillPlayer, onKilledByPlayer, onDamage, onEntityKill, whileOnline, whileOffline)
       if (!isFnValid) {
         egCommandOutput.textContent = '<Fill required fields (*) above to generate registration command>';
         egCommandOutput.style.color = 'var(--text-muted)';
