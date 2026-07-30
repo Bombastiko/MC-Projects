@@ -420,15 +420,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Show/Hide fields based on mode
     if (mode === 'plain') {
-      if (abTextGroup) abTextGroup.classList.remove('hidden-field');
-      if (abColorGroup) abColorGroup.classList.remove('hidden-field');
-      if (abBoldGroup) abBoldGroup.classList.remove('hidden-field');
-      if (abJsonGroup) abJsonGroup.classList.add('hidden-field');
+      if (abTextGroup) { abTextGroup.classList.remove('hidden-field'); abTextGroup.style.display = 'flex'; }
+      if (abColorGroup) { abColorGroup.classList.remove('hidden-field'); abColorGroup.style.display = 'flex'; }
+      if (abBoldGroup) { abBoldGroup.classList.remove('hidden-field'); abBoldGroup.style.display = 'flex'; }
+      if (abJsonGroup) { abJsonGroup.classList.add('hidden-field'); abJsonGroup.style.display = 'none'; }
     } else {
-      if (abTextGroup) abTextGroup.classList.add('hidden-field');
-      if (abColorGroup) abColorGroup.classList.add('hidden-field');
-      if (abBoldGroup) abBoldGroup.classList.add('hidden-field');
-      if (abJsonGroup) abJsonGroup.classList.remove('hidden-field');
+      if (abTextGroup) { abTextGroup.classList.add('hidden-field'); abTextGroup.style.display = 'none'; }
+      if (abColorGroup) { abColorGroup.classList.add('hidden-field'); abColorGroup.style.display = 'none'; }
+      if (abBoldGroup) { abBoldGroup.classList.add('hidden-field'); abBoldGroup.style.display = 'none'; }
+      if (abJsonGroup) { abJsonGroup.classList.remove('hidden-field'); abJsonGroup.style.display = 'flex'; }
     }
 
     const player = isPlayerValid ? rawPlayer : '@a';
