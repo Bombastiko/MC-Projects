@@ -171,29 +171,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const bold = boldInput.checked;
     const isPaused = previewPaused.checked;
 
-    if (!isPlayerValid || !isSwValid) {
-      swCommandOutputCreate.textContent = '<Fill required fields (*) above to generate commands>';
-      commandOutput.textContent = '<Fill required fields (*) above to generate commands>';
-      swCommandOutputPause.textContent = '<Fill required fields (*) above to generate commands>';
-      swCommandOutputResume.textContent = '<Fill required fields (*) above to generate commands>';
-
-      swCommandOutputCreate.style.color = 'var(--text-muted)';
-      commandOutput.style.color = 'var(--text-muted)';
-      swCommandOutputPause.style.color = 'var(--text-muted)';
-      swCommandOutputResume.style.color = 'var(--text-muted)';
+    // 1. Name-only commands (create, pause, resume) depend ONLY on isSwValid
+    if (!isSwValid) {
+      if (swCommandOutputCreate) {
+        swCommandOutputCreate.textContent = '<Fill Stopwatch Name (*) above to generate command>';
+        swCommandOutputCreate.style.color = 'var(--text-muted)';
+      }
+      if (swCommandOutputPause) {
+        swCommandOutputPause.textContent = '<Fill Stopwatch Name (*) above to generate command>';
+        swCommandOutputPause.style.color = 'var(--text-muted)';
+      }
+      if (swCommandOutputResume) {
+        swCommandOutputResume.textContent = '<Fill Stopwatch Name (*) above to generate command>';
+        swCommandOutputResume.style.color = 'var(--text-muted)';
+      }
     } else {
-      swCommandOutputCreate.style.color = 'var(--accent-yellow)';
-      commandOutput.style.color = 'var(--accent-yellow)';
-      swCommandOutputPause.style.color = 'var(--accent-yellow)';
-      swCommandOutputResume.style.color = 'var(--accent-yellow)';
+      if (swCommandOutputCreate) {
+        swCommandOutputCreate.style.color = 'var(--accent-yellow)';
+        swCommandOutputCreate.textContent = `/function fb:sw/create {name:"${sw}"}`;
+      }
+      if (swCommandOutputPause) {
+        swCommandOutputPause.style.color = 'var(--accent-yellow)';
+        swCommandOutputPause.textContent = `/function fb:sw/pause {name:"${sw}"}`;
+      }
+      if (swCommandOutputResume) {
+        swCommandOutputResume.style.color = 'var(--accent-yellow)';
+        swCommandOutputResume.textContent = `/function fb:sw/resume {name:"${sw}"}`;
+      }
+    }
 
-      const escapedPrefix = prefix.replace(/"/g, '\\"');
-      const escapedSuffix = suffix.replace(/"/g, '\\"');
-
-      swCommandOutputCreate.textContent = `/function fb:sw/create {name:"${sw}"}`;
-      commandOutput.textContent = `/function fb:sw/display_ab_custom {player:"${player}",sw:"${sw}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
-      swCommandOutputPause.textContent = `/function fb:sw/pause {name:"${sw}"}`;
-      swCommandOutputResume.textContent = `/function fb:sw/resume {name:"${sw}"}`;
+    // 2. Display Actionbar command depends on BOTH player & sw
+    if (!isPlayerValid || !isSwValid) {
+      if (commandOutput) {
+        commandOutput.textContent = '<Fill required fields (*) above to generate command>';
+        commandOutput.style.color = 'var(--text-muted)';
+      }
+    } else {
+      if (commandOutput) {
+        commandOutput.style.color = 'var(--accent-yellow)';
+        const escapedPrefix = prefix.replace(/"/g, '\\"');
+        const escapedSuffix = suffix.replace(/"/g, '\\"');
+        commandOutput.textContent = `/function fb:sw/display_ab_custom {player:"${player}",sw:"${sw}",format:"${format}",color:"${color}",color_sec:"${colorSec}",color_num:"${colorNum}",prefix:"${escapedPrefix}",suffix:"${escapedSuffix}",bold:"${bold}",global_type:"${globalType}"}`;
+      }
     }
 
     let previewHtml = '';
@@ -314,25 +333,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const bold = cdBoldInput.checked;
     const isPaused = cdPreviewPaused.checked;
 
-    if (!isPlayerValid || !isNameValid) {
-      cdCommandOutputCreate.textContent = '<Fill required fields (*) above to generate commands>';
-      cdCommandOutputStart.textContent = '<Fill required fields (*) above to generate commands>';
-      cdCommandOutputDisplay.textContent = '<Fill required fields (*) above to generate commands>';
-      cdCommandOutputCreate.style.color = 'var(--text-muted)';
-      cdCommandOutputStart.style.color = 'var(--text-muted)';
-      cdCommandOutputDisplay.style.color = 'var(--text-muted)';
+    // 1. Name-only commands (create, start) depend ONLY on isNameValid
+    if (!isNameValid) {
+      if (cdCommandOutputCreate) {
+        cdCommandOutputCreate.textContent = '<Fill Countdown Name (*) above to generate command>';
+        cdCommandOutputCreate.style.color = 'var(--text-muted)';
+      }
+      if (cdCommandOutputStart) {
+        cdCommandOutputStart.textContent = '<Fill Countdown Name (*) above to generate command>';
+        cdCommandOutputStart.style.color = 'var(--text-muted)';
+      }
     } else {
-      cdCommandOutputCreate.style.color = 'var(--accent-yellow)';
-      cdCommandOutputStart.style.color = 'var(--accent-yellow)';
-      cdCommandOutputDisplay.style.color = 'var(--accent-yellow)';
-
       const escapedCdCmd = cdCmd.replace(/'/g, "\\'");
-      const escapedPrefix = prefix.replace(/"/g, '\\"');
+      if (cdCommandOutputCreate) {
+        cdCommandOutputCreate.style.color = 'var(--accent-yellow)';
+        cdCommandOutputCreate.textContent = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},on_complete:'${escapedCdCmd}'}`;
+      }
+      if (cdCommandOutputStart) {
+        cdCommandOutputStart.style.color = 'var(--accent-yellow)';
+        cdCommandOutputStart.textContent = `/function fb:cd/start {name:"${cdName}"}`;
+      }
+    }
 
-      // EXPLICIT DATAPACK MACRO ARGUMENT: on_complete
-      cdCommandOutputCreate.textContent = `/function fb:cd/create {name:"${cdName}",h:${h},m:${m},s:${s},on_complete:'${escapedCdCmd}'}`;
-      cdCommandOutputStart.textContent = `/function fb:cd/start {name:"${cdName}"}`;
-      cdCommandOutputDisplay.textContent = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"gray",color_num:"white",prefix:"${escapedPrefix}",suffix:"",bold:"${bold}",global_type:"${globalType}"}`;
+    // 2. Display command depends on BOTH player & cdName
+    if (!isPlayerValid || !isNameValid) {
+      if (cdCommandOutputDisplay) {
+        cdCommandOutputDisplay.textContent = '<Fill required fields (*) above to generate command>';
+        cdCommandOutputDisplay.style.color = 'var(--text-muted)';
+      }
+    } else {
+      if (cdCommandOutputDisplay) {
+        cdCommandOutputDisplay.style.color = 'var(--accent-yellow)';
+        const escapedPrefix = prefix.replace(/"/g, '\\"');
+        cdCommandOutputDisplay.textContent = `/function fb:cd/display_ab_custom {player:"${player}",cd:"${cdName}",format:"${format}",color:"${color}",color_sec:"gray",color_num:"white",prefix:"${escapedPrefix}",suffix:"",bold:"${bold}",global_type:"${globalType}"}`;
+      }
     }
 
     let previewHtml = '';
