@@ -644,6 +644,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (egCopyBtn) egCopyBtn.addEventListener('click', () => copyToClipboard(egCommandOutput.textContent, egCopyBtn));
 
+  const bannerCopyBtn = document.getElementById('banner-copyBtn');
+  const bannerMarkdownCode = document.getElementById('banner-markdown-code');
+  if (bannerCopyBtn && bannerMarkdownCode) {
+    bannerCopyBtn.addEventListener('click', () => copyToClipboard(bannerMarkdownCode.textContent, bannerCopyBtn));
+  }
+
   // Initial runs
   updateSw();
   updateCd();
