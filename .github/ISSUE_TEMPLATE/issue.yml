@@ -9,6 +9,7 @@ body:
       label: "Please select the relevant project"
       options:
         - "Announcer"
+        - "Ascend"
         - "EZ Timer"
         - "FuseBox"
         - "Join Play Time"
